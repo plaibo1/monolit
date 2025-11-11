@@ -81,7 +81,7 @@ export type ActionPayload = {
 // Internal message types for UI
 export type ChatMessage = {
   id: string;
-  role: "user" | "assistant";
+  role: "user" | "agent";
   content: string;
   timestamp: string;
   isError?: boolean;
