@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { ActionButton, ChatMessage } from "@/types/chat";
+import type { ActionButton, ChatMessage, ExecutionStep } from "@/types/chat";
 
 export function useChatMessages() {
   const [messages, setMessages] = useState<Map<string, ChatMessage>>(new Map());
   const [messageOrder, setMessageOrder] = useState<string[]>([]);
 
   const addMessage = useCallback((message: ChatMessage) => {
+    console.log("🚀 ~ useChatMessages ~ message:", message);
     setMessages((prev) => {
       const newMap = new Map(prev);
       newMap.set(message.id, message);
@@ -47,6 +48,43 @@ export function useChatMessages() {
     []
   );
 
+  const addStepToMessage = useCallback(
+    (messageId: string, step: ExecutionStep) => {
+      setMessages((prev) => {
+        const newMap = new Map(prev);
+        const existing = newMap.get(messageId);
+        if (existing) {
+          newMap.set(messageId, {
+            ...existing,
+            steps: [...(existing.steps || []), step],
+          });
+        }
+        return newMap;
+      });
+    },
+    []
+  );
+
+  const updateStepInMessage = useCallback(
+    (messageId: string, stepId: string, updates: Partial<ExecutionStep>) => {
+      setMessages((prev) => {
+        const newMap = new Map(prev);
+        const existing = newMap.get(messageId);
+        if (existing && existing.steps) {
+          const updatedSteps = existing.steps.map((step) =>
+            step.id === stepId ? { ...step, ...updates } : step
+          );
+          newMap.set(messageId, {
+            ...existing,
+            steps: updatedSteps,
+          });
+        }
+        return newMap;
+      });
+    },
+    []
+  );
+
   const clearMessages = useCallback(() => {
     setMessages(new Map());
     setMessageOrder([]);
@@ -64,6 +102,8 @@ export function useChatMessages() {
     addMessage,
     updateMessage,
     addActionToMessage,
+    addStepToMessage,
+    updateStepInMessage,
     clearMessages,
     getOrderedMessages,
   };

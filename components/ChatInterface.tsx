@@ -3,11 +3,9 @@
 import { useState, useCallback } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useChatMessages } from "@/hooks/useChatMessages";
-import { useChatSteps } from "@/hooks/useChatSteps";
 import { WebSocketMessageHandler } from "@/lib/websocket-handler";
 import { MessageList } from "./MessageList";
 import { InputArea } from "./InputArea";
-import { StepsPanel } from "./StepsPanel";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -19,28 +17,46 @@ type ChatInterfaceProps = {
 export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
+  const [currentAssistantMessageId, setCurrentAssistantMessageId] = useState<
+    string | null
+  >(null);
 
-  const { addMessage, updateMessage, addActionToMessage, getOrderedMessages } =
-    useChatMessages();
-
-  const { addStep, updateStep, clearSteps, getOrderedSteps } = useChatSteps();
+  const {
+    addMessage,
+    updateMessage,
+    addActionToMessage,
+    addStepToMessage,
+    updateStepInMessage,
+    getOrderedMessages,
+  } = useChatMessages();
 
   const handleWebSocketMessage = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (data: any) => {
       const handler = new WebSocketMessageHandler({
         onUserMessage: addMessage,
-        onAssistantMessage: addMessage,
+        onAssistantMessage: (message) => {
+          setCurrentAssistantMessageId(message.id);
+          addMessage(message);
+        },
         onUpdateAssistantMessage: updateMessage,
-        onStep: addStep,
-        onUpdateStep: updateStep,
+        onStep: (step) => {
+          if (currentAssistantMessageId) {
+            addStepToMessage(currentAssistantMessageId, step);
+          }
+        },
+        onUpdateStep: (id, updates) => {
+          if (currentAssistantMessageId) {
+            updateStepInMessage(currentAssistantMessageId, id, updates);
+          }
+        },
         onAction: addActionToMessage,
         onTaskStart: () => {
           setIsProcessing(true);
-          clearSteps();
         },
         onTaskEnd: () => {
           setIsProcessing(false);
+          setCurrentAssistantMessageId(null);
         },
         onFirstInteraction: (data) => {
           setThreadId(data.thread_id);
@@ -59,9 +75,9 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
       addMessage,
       updateMessage,
       addActionToMessage,
-      addStep,
-      updateStep,
-      clearSteps,
+      addStepToMessage,
+      updateStepInMessage,
+      currentAssistantMessageId,
     ]
   );
 
@@ -91,7 +107,6 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
   );
 
   const messages = getOrderedMessages();
-  const steps = getOrderedSteps();
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -116,36 +131,29 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Messages Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          {status === "error" && (
-            <Alert variant="destructive" className="m-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Failed to connect to the chat server. Please check your
-                connection and try again.
-              </AlertDescription>
-            </Alert>
-          )}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {status === "error" && (
+          <Alert variant="destructive" className="m-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Failed to connect to the chat server. Please check your connection
+              and try again.
+            </AlertDescription>
+          </Alert>
+        )}
 
+        <div className="flex-1 overflow-y-auto">
           <MessageList
             messages={messages}
             isProcessing={isProcessing}
             onActionClick={handleActionClick}
           />
-
-          <InputArea
-            onSendMessage={handleSendMessage}
-            disabled={status !== "connected" || isProcessing}
-          />
         </div>
 
-        {/* Steps Panel */}
-        <div className="hidden lg:block">
-          <StepsPanel steps={steps} isProcessing={isProcessing} />
-        </div>
+        <InputArea
+          onSendMessage={handleSendMessage}
+          disabled={status !== "connected" || isProcessing}
+        />
       </div>
     </div>
   );

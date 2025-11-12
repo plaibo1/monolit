@@ -87,6 +87,7 @@ export type ChatMessage = {
   isError?: boolean;
   streaming?: boolean;
   actions?: ActionButton[];
+  steps?: ExecutionStep[];
 };
 
 export type ExecutionStep = {

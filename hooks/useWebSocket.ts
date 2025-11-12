@@ -9,111 +9,189 @@ type UseWebSocketOptions = {
   onError?: (error: Event) => void;
   reconnectAttempts?: number;
   reconnectInterval?: number;
+  onOpen?: () => void;
+  onClose?: () => void;
+  protocols?: string | string[];
+  shouldReconnect?: boolean;
+
+  devDisable?: boolean;
 };
 
-export function useWebSocket({
-  url,
-  onMessage,
-  onError,
-  reconnectAttempts = 0,
-  reconnectInterval = 10000,
-}: UseWebSocketOptions) {
+export const useWebSocket = (options: UseWebSocketOptions) => {
+  const {
+    url,
+    onMessage,
+    onError,
+    onOpen,
+    onClose,
+    reconnectAttempts = 0,
+    reconnectInterval = 3000,
+    protocols,
+    shouldReconnect = true,
+    devDisable = false,
+  } = options;
+
+  const ws = useRef<WebSocket | null>(null);
+  const reconnectCount = useRef(0);
+  const reconnectTimeout = useRef<NodeJS.Timeout>(null);
+  const isManuallyClosed = useRef(false);
+  const messageQueue = useRef<unknown[]>([]);
+
   const [status, setStatus] = useState<ConnectionStatus>("connecting");
-  const wsRef = useRef<WebSocket | null>(null);
-  const reconnectCountRef = useRef(0);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const [lastMessage, setLastMessage] = useState<SocketMessage | null>(null);
+
+  // Сохраняем коллбэки в рефы для стабильности
+  const onMessageRef = useRef(onMessage);
+  const onErrorRef = useRef(onError);
+  const onOpenRef = useRef(onOpen);
+  const onCloseRef = useRef(onClose);
+
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+    onErrorRef.current = onError;
+    onOpenRef.current = onOpen;
+    onCloseRef.current = onClose;
+  }, [onMessage, onError, onOpen, onClose]);
 
   const connect = useCallback(() => {
-    try {
-      const ws = new WebSocket(url);
-      wsRef.current = ws;
+    if (isManuallyClosed.current) return;
 
-      ws.onopen = () => {
-        console.log("[v0] WebSocket connected");
+    if (devDisable) {
+      console.log("🤖 WebSocket was manually disabled");
+      return;
+    }
+
+    try {
+      setStatus("connecting");
+
+      // Создаем новое подключение
+      ws.current = new WebSocket(url, protocols);
+
+      ws.current.onopen = () => {
+        console.log("WebSocket connected");
         setStatus("connected");
-        reconnectCountRef.current = 0;
+        reconnectCount.current = 0;
+
+        // Отправляем накопленные сообщения из очереди
+        while (messageQueue.current.length > 0) {
+          const msg = messageQueue.current.shift();
+          ws.current?.send(msg as string);
+        }
+
+        onOpenRef.current?.();
       };
 
-      ws.onmessage = (event) => {
+      ws.current.onmessage = (event: MessageEvent) => {
         try {
-          const data = JSON.parse(event.data) as SocketMessage;
-
-          if (Array.isArray(data) && data.length > 1) {
-            data.forEach((message) => {
-              onMessage(message);
-            });
-            return;
-          }
-
-          onMessage(data);
+          const data = JSON.parse(event.data);
+          setLastMessage(data);
+          onMessageRef.current(data);
         } catch (error) {
-          console.error("[v0] Failed to parse WebSocket message:", error);
+          console.error("Error parsing message:", error);
+          onMessageRef.current(event.data);
         }
       };
 
-      ws.onerror = (error) => {
-        console.error("[v0] WebSocket error:", error);
+      ws.current.onerror = (error: Event) => {
+        console.error("WebSocket error:", error);
         setStatus("error");
-        onError?.(error);
+        onErrorRef.current?.(error);
       };
 
-      ws.onclose = () => {
-        console.log("[v0] WebSocket disconnected");
+      ws.current.onclose = (event: CloseEvent) => {
+        console.log("WebSocket closed:", event.code, event.reason);
         setStatus("disconnected");
+        onCloseRef.current?.();
 
-        // Attempt to reconnect
-        if (reconnectCountRef.current < reconnectAttempts) {
-          reconnectCountRef.current += 1;
+        // Автоматическое переподключение
+        if (
+          shouldReconnect &&
+          !isManuallyClosed.current &&
+          reconnectCount.current < reconnectAttempts
+        ) {
+          reconnectCount.current++;
           console.log(
-            `[v0] Reconnecting... Attempt ${reconnectCountRef.current}/${reconnectAttempts}`
+            `Reconnecting... (${reconnectCount.current}/${reconnectAttempts})`
           );
 
-          reconnectTimeoutRef.current = setTimeout(() => {
-            setStatus("connecting");
+          reconnectTimeout.current = setTimeout(() => {
             // eslint-disable-next-line react-hooks/immutability
             connect();
           }, reconnectInterval);
-        } else {
-          console.error("[v0] Max reconnection attempts reached");
-          setStatus("error");
         }
       };
     } catch (error) {
-      console.error("[v0] Failed to create WebSocket connection:", error);
+      console.error("Error creating WebSocket:", error);
       setStatus("error");
     }
-  }, [url, onMessage, onError, reconnectAttempts, reconnectInterval]);
+  }, [
+    devDisable,
+    url,
+    protocols,
+    shouldReconnect,
+    reconnectAttempts,
+    reconnectInterval,
+  ]);
 
-  const disconnect = useCallback(() => {
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-    }
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
-  }, []);
+  // Отправка сообщений
+  const sendMessage = useCallback((data: unknown) => {
+    const message = typeof data === "string" ? data : JSON.stringify(data);
 
-  const sendMessage = useCallback((message: string) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(message);
+    if (ws.current?.readyState === WebSocket.OPEN) {
+      ws.current.send(message);
     } else {
-      console.warn("[v0] WebSocket is not connected. Cannot send message.");
+      console.warn("WebSocket is not connected. Message queued.");
+      messageQueue.current.push(message);
     }
   }, []);
 
+  // Ручное закрытие соединения
+  const disconnect = useCallback(() => {
+    isManuallyClosed.current = true;
+
+    if (reconnectTimeout.current) {
+      clearTimeout(reconnectTimeout.current);
+    }
+
+    if (ws.current) {
+      ws.current.close(1000, "Manual disconnect");
+      ws.current = null;
+    }
+
+    setStatus("disconnected");
+  }, []);
+
+  // Ручное переподключение
+  const reconnect = useCallback(() => {
+    disconnect();
+    isManuallyClosed.current = false;
+    reconnectCount.current = 0;
+    connect();
+  }, [connect, disconnect]);
+
+  // Подключение при монтировании
   useEffect(() => {
     connect();
 
     return () => {
-      disconnect();
+      isManuallyClosed.current = true;
+
+      if (reconnectTimeout.current) {
+        clearTimeout(reconnectTimeout.current);
+      }
+
+      if (ws.current) {
+        ws.current.close(1000, "Component unmounting");
+      }
     };
-  }, [connect, disconnect]);
+  }, [connect]);
 
   return {
     status,
+    lastMessage,
     sendMessage,
     disconnect,
-    reconnect: connect,
+    reconnect,
+    isConnected: status === "connected",
   };
-}
+};
