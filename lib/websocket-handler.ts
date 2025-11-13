@@ -29,6 +29,7 @@ export type WebSocketHandlerCallbacks = {
   onFirstInteraction: (data: FirstInteractionPayload) => void;
   onClearAsk: () => void;
   onClearCallFn: () => void;
+  onUnknownMessage: (message: ChatMessage) => void; // Added callback for unknown messages
 };
 
 export class WebSocketMessageHandler {
@@ -38,19 +39,59 @@ export class WebSocketMessageHandler {
     this.callbacks = callbacks;
   }
 
-  handleMessage(data: [SocketMessage]) {
-    console.log("🚀 ~ WebSocketMessageHandler ~ handleMessage ~ data:", data);
+  handleMessage(data: [SocketMessage] | unknown) {
+    try {
+      // Validate basic structure
+      if (!data || !Array.isArray(data) || data?.length === 0) {
+        console.log("JAMAL!!!");
+        this.handleUnknownMessage(data, "Invalid message structure");
+        return;
+      }
 
-    if (!Array.isArray(data)) {
-      this.handleAgentMessage(data);
-      return;
-    }
+      const message = data[0];
 
-    if (data[0].type === "user") {
-      this.handleUserMessage(data[0]);
-    } else if (data[0].type === "agent") {
-      this.handleAgentMessage(data[0]);
+      // Check if message has required type field
+      if (!message || typeof message !== "object" || !message.type) {
+        this.handleUnknownMessage(data, "Missing or invalid message type");
+        return;
+      }
+
+      // Process known message types
+      if (message.type === "user") {
+        this.handleUserMessage(message as UserMessage);
+      } else if (message.type === "agent") {
+        this.handleAgentMessage(message as AgentMessage);
+      } else {
+        // Unknown message type
+        this.handleUnknownMessage(
+          data,
+          `Unknown message type: ${message.type}`
+        );
+      }
+    } catch (error) {
+      if (typeof error === "object" && error !== null && "message" in error) {
+        this.handleUnknownMessage(
+          data,
+          `Error processing message: ${error.message}`
+        );
+      } else {
+        this.handleUnknownMessage(data, `Error processing message: ${error}`);
+      }
     }
+  }
+
+  private handleUnknownMessage(rawData: any, reason: string) {
+    console.warn("[v0] Unknown message received:", reason, rawData);
+
+    const unknownMessage: ChatMessage = {
+      id: generateId(),
+      role: "unknown",
+      content: reason,
+      timestamp: new Date().toISOString(),
+      rawData: rawData,
+    };
+
+    this.callbacks.onUnknownMessage(unknownMessage);
   }
 
   private handleUserMessage(data: UserMessage) {

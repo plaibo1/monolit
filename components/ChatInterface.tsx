@@ -67,6 +67,9 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
         onClearCallFn: () => {
           // Handle clear call function if needed
         },
+        onUnknownMessage: (message) => {
+          addMessage(message);
+        },
       });
 
       handler.handleMessage(data);

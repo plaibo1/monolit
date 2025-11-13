@@ -1,7 +1,7 @@
 import type { ChatMessage } from "@/types/chat";
 import { formatTimestamp } from "@/lib/message-utils";
 import { ActionButtons } from "./ActionButtons";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, HelpCircle } from "lucide-react"; // Added HelpCircle icon
 import ReactMarkdown from "react-markdown";
 import { StepItem } from "./StepItem";
 
@@ -11,8 +11,8 @@ type MessageBubbleProps = {
 };
 
 export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
-  console.log("🚀 ~ MessageBubble ~ message:", message);
   const isUser = message.role === "user";
+  const isUnknown = message.role === "unknown"; // Check for unknown message type
 
   return (
     <div
@@ -29,19 +29,44 @@ export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
           className={`rounded-lg px-4 py-3 ${
             isUser
               ? "bg-primary text-primary-foreground"
+              : isUnknown // Added styling for unknown messages
+              ? "bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900"
               : message.isError
               ? "bg-destructive/10 text-destructive border border-destructive/20"
               : "bg-muted text-foreground"
           }`}
         >
-          {message.isError && (
+          {isUnknown && (
+            <div className="flex items-center gap-2 mb-3 text-amber-600 dark:text-amber-500">
+              <HelpCircle className="w-4 h-4" />
+              <span className="text-xs font-medium">Unknown Message</span>
+            </div>
+          )}
+
+          {message.isError && !isUnknown && (
             <div className="flex items-center gap-2 mb-2 text-destructive">
               <AlertCircle className="w-4 h-4" />
               <span className="text-xs font-medium">Error</span>
             </div>
           )}
 
-          {isUser ? (
+          {isUnknown ? (
+            <div className="space-y-2">
+              <p className="text-sm text-amber-800 dark:text-amber-300">
+                {message.content}
+              </p>
+              <div className="mt-2">
+                <p className="text-xs font-medium text-amber-700 dark:text-amber-400 mb-1">
+                  Raw message data:
+                </p>
+                <pre className="bg-amber-100 dark:bg-amber-950/40 rounded p-2 text-xs overflow-x-auto border border-amber-200 dark:border-amber-900">
+                  <code className="text-amber-900 dark:text-amber-300">
+                    {JSON.stringify(message.rawData, null, 2)}
+                  </code>
+                </pre>
+              </div>
+            </div>
+          ) : isUser ? (
             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
           ) : (
             <div className="prose prose-sm dark:prose-invert max-w-none">
