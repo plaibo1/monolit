@@ -39,6 +39,13 @@ export class WebSocketMessageHandler {
   }
 
   handleMessage(data: [SocketMessage]) {
+    console.log("🚀 ~ WebSocketMessageHandler ~ handleMessage ~ data:", data);
+
+    if (!Array.isArray(data)) {
+      this.handleAgentMessage(data);
+      return;
+    }
+
     if (data[0].type === "user") {
       this.handleUserMessage(data[0]);
     } else if (data[0].type === "agent") {

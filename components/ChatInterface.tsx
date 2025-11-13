@@ -101,6 +101,7 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
 
   const handleActionClick = useCallback(
     (query: string) => {
+      console.log("🚀 ~ ChatInterface ~ query:", query);
       handleSendMessage(query);
     },
     [handleSendMessage]

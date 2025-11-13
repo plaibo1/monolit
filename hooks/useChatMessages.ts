@@ -85,6 +85,19 @@ export function useChatMessages() {
     []
   );
 
+  const loadHistory = useCallback((history: ChatMessage[]) => {
+    const newMessages = new Map<string, ChatMessage>();
+    const newOrder: string[] = [];
+
+    history.forEach((message) => {
+      newMessages.set(message.id, message);
+      newOrder.push(message.id);
+    });
+
+    setMessages(newMessages);
+    setMessageOrder(newOrder);
+  }, []);
+
   const clearMessages = useCallback(() => {
     setMessages(new Map());
     setMessageOrder([]);
@@ -104,6 +117,7 @@ export function useChatMessages() {
     addActionToMessage,
     addStepToMessage,
     updateStepInMessage,
+    loadHistory,
     clearMessages,
     getOrderedMessages,
   };
