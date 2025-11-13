@@ -5,6 +5,7 @@ import { AlertCircle, HelpCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { StepItem } from "./StepItem";
 import { MessageSkeleton } from "./MessageSkeleton";
+import { MarkdownContent } from "./MarkdownContent";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -73,9 +74,7 @@ export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
           ) : isUser ? (
             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
           ) : (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown>{message.content}</ReactMarkdown>
-            </div>
+            <MarkdownContent content={message.content} />
           )}
         </div>
 
