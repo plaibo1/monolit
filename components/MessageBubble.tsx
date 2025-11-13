@@ -1,9 +1,10 @@
 import type { ChatMessage } from "@/types/chat";
 import { formatTimestamp } from "@/lib/message-utils";
 import { ActionButtons } from "./ActionButtons";
-import { AlertCircle, HelpCircle } from "lucide-react"; // Added HelpCircle icon
+import { AlertCircle, HelpCircle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { StepItem } from "./StepItem";
+import { MessageSkeleton } from "./MessageSkeleton";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -12,7 +13,8 @@ type MessageBubbleProps = {
 
 export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
   const isUser = message.role === "user";
-  const isUnknown = message.role === "unknown"; // Check for unknown message type
+  const isUnknown = message.role === "unknown";
+  const isEmpty = !message.content || message.content.trim() === "";
 
   return (
     <div
@@ -29,7 +31,7 @@ export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
           className={`rounded-lg px-4 py-3 ${
             isUser
               ? "bg-primary text-primary-foreground"
-              : isUnknown // Added styling for unknown messages
+              : isUnknown
               ? "bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900"
               : message.isError
               ? "bg-destructive/10 text-destructive border border-destructive/20"
@@ -50,7 +52,9 @@ export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
             </div>
           )}
 
-          {isUnknown ? (
+          {isEmpty && !isUser && !isUnknown ? (
+            <MessageSkeleton />
+          ) : isUnknown ? (
             <div className="space-y-2">
               <p className="text-sm text-amber-800 dark:text-amber-300">
                 {message.content}
