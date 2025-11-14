@@ -11,9 +11,14 @@ import { useState } from "react";
 type MessageBubbleProps = {
   message: ChatMessage;
   onActionClick: (query: string) => void;
+  onActionHold?: (query: string) => void;
 };
 
-export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
+export function MessageBubble({
+  message,
+  onActionClick,
+  onActionHold,
+}: MessageBubbleProps) {
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
   const isEmpty = !message.content || message.content.trim() === "";
@@ -125,6 +130,7 @@ export function MessageBubble({ message, onActionClick }: MessageBubbleProps) {
           <ActionButtons
             actions={message.actions}
             onActionClick={onActionClick}
+            onActionHold={onActionHold}
           />
         )}
       </div>

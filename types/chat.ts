@@ -81,7 +81,7 @@ export type ActionPayload = {
 // Internal message types for UI
 export type ChatMessage = {
   id: string;
-  role: "user" | "assistant" | "unknown"; // Added "unknown" role for unhandled messages
+  role: "user" | "agent" | "unknown"; // Added "unknown" role for unhandled messages
   content: string;
   timestamp: string;
   isError?: boolean;

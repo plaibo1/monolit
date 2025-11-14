@@ -105,6 +105,14 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
 
   const handleActionClick = useCallback(
     (query: string) => {
+      // TODO: implement action click
+      handleSendMessage(query);
+    },
+    [handleSendMessage]
+  );
+
+  const handleActionHold = useCallback(
+    (query: string) => {
       console.log("🚀 ~ ChatInterface ~ query:", query);
       handleSendMessage(query);
     },
@@ -153,6 +161,7 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
             messages={messages}
             isProcessing={isProcessing}
             onActionClick={handleActionClick}
+            onActionHold={handleActionHold}
           />
         </div>
 
