@@ -9,7 +9,7 @@ type MarkdownContentProps = {
 
 export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:leading-relaxed prose-pre:p-0 prose-code:before:content-[''] prose-code:after:content-['']">
+    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:leading-relaxed prose-pre:p-0 prose-code:before:content-[''] prose-code:after:content-[''] break-words">
       <ReactMarkdown
         components={{
           code({ node, className, children, ...props }) {
