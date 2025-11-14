@@ -1,52 +1,11 @@
 "use client";
 
 import ReactMarkdown from "react-markdown";
-import { Copy, Check } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { CodeBlock } from "./CodeBlock";
 
 type MarkdownContentProps = {
   content: string;
 };
-
-function CodeBlock({ language, value }: { language: string; value: string }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <div className="relative group my-4">
-      <div className="absolute right-2 top-2 z-10">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity bg-background/80 hover:bg-background"
-          onClick={handleCopy}
-        >
-          {copied ? (
-            <Check className="h-4 w-4" />
-          ) : (
-            <Copy className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
-      {language && (
-        <div className="absolute left-4 top-2 text-xs text-muted-foreground font-mono uppercase tracking-wider">
-          {language}
-        </div>
-      )}
-      <pre className="bg-zinc-900 dark:bg-zinc-950 border border-zinc-800 rounded-lg overflow-x-auto p-4 pt-10">
-        <code className="text-sm font-mono text-zinc-100 leading-relaxed block">
-          {value}
-        </code>
-      </pre>
-    </div>
-  );
-}
 
 export function MarkdownContent({ content }: MarkdownContentProps) {
   return (

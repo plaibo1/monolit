@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, Check } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { Copy, Check, Database } from "lucide-react";
+import { MarkdownContent } from "./MarkdownContent";
+import { CodeBlock } from "./CodeBlock";
 
 type StepContentProps = {
   content: string;
@@ -30,6 +31,23 @@ function formatJSON(str: string): string {
   }
 }
 
+function extractSQLQuery(str: string): string | null {
+  try {
+    const parsed = JSON.parse(str);
+    if (
+      parsed &&
+      typeof parsed === "object" &&
+      "query" in parsed &&
+      typeof parsed.query === "string"
+    ) {
+      return parsed.query;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export function StepContent({ content, label, language }: StepContentProps) {
   const [copied, setCopied] = useState(false);
 
@@ -39,15 +57,56 @@ export function StepContent({ content, label, language }: StepContentProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sqlQuery = isValidJSON(content) ? extractSQLQuery(content) : null;
+
+  if (sqlQuery) {
+    return (
+      <div className="mb-3">
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-xs">
+              {label}
+            </Badge>
+            <Badge
+              variant="secondary"
+              className="text-xs flex items-center gap-1"
+            >
+              <Database className="w-3 h-3" />
+              SQL Query
+            </Badge>
+          </div>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-6 px-2 text-xs"
+            onClick={handleCopy}
+          >
+            {copied ? (
+              <>
+                <Check className="w-3 h-3 mr-1" />
+                Copied
+              </>
+            ) : (
+              <>
+                <Copy className="w-3 h-3 mr-1" />
+                Copy
+              </>
+            )}
+          </Button>
+        </div>
+        <CodeBlock language="sql" value={sqlQuery} showLanguage={false} />
+      </div>
+    );
+  }
+
   // Detect if content is JSON
   const isJSON = isValidJSON(content);
   const formattedContent = isJSON ? formatJSON(content) : content;
 
-  // If it's JSON, render as code block
   if (isJSON) {
     return (
       <div className="mb-3">
-        <div className="flex items-center justify-between mb-1">
+        <div className="flex items-center justify-between mb-2">
           <Badge variant="outline" className="text-xs">
             {label}
           </Badge>
@@ -70,79 +129,22 @@ export function StepContent({ content, label, language }: StepContentProps) {
             )}
           </Button>
         </div>
-        <div className="relative group">
-          <pre className="text-xs bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto border border-slate-700">
-            <code>{formattedContent}</code>
-          </pre>
-        </div>
+        <CodeBlock
+          language="json"
+          value={formattedContent}
+          showLanguage={false}
+        />
       </div>
     );
   }
 
-  // Otherwise, render as Markdown
   return (
     <div className="mb-3">
-      <Badge variant="outline" className="mb-1 text-xs">
+      <Badge variant="outline" className="mb-2 text-xs">
         {label}
       </Badge>
-      <div className="prose prose-sm dark:prose-invert max-w-none bg-muted/50 p-3 rounded-lg">
-        <ReactMarkdown
-          components={{
-            code({ children, ...props }) {
-              const content = String(children).replace(/\n$/, "");
-              const hasNewlines = content.includes("\n");
-
-              // Block code
-              if (hasNewlines) {
-                return (
-                  <pre className="bg-slate-900 text-slate-100 p-3 rounded-lg overflow-x-auto text-xs my-2">
-                    <code {...props}>{content}</code>
-                  </pre>
-                );
-              }
-
-              // Inline code
-              return (
-                <code
-                  className="bg-slate-800 text-slate-100 px-1.5 py-0.5 rounded text-xs"
-                  {...props}
-                >
-                  {content}
-                </code>
-              );
-            },
-            p: ({ children }) => (
-              <p className="text-sm mb-2 last:mb-0">{children}</p>
-            ),
-            ul: ({ children }) => (
-              <ul className="list-disc list-inside text-sm mb-2 space-y-1">
-                {children}
-              </ul>
-            ),
-            ol: ({ children }) => (
-              <ol className="list-decimal list-inside text-sm mb-2 space-y-1">
-                {children}
-              </ol>
-            ),
-            li: ({ children }) => <li className="text-sm">{children}</li>,
-            strong: ({ children }) => (
-              <strong className="font-semibold">{children}</strong>
-            ),
-            em: ({ children }) => <em className="italic">{children}</em>,
-            a: ({ children, href }) => (
-              <a
-                href={href}
-                className="text-blue-500 hover:text-blue-600 underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {children}
-              </a>
-            ),
-          }}
-        >
-          {content}
-        </ReactMarkdown>
+      <div className="bg-muted/50 p-3 rounded-lg">
+        <MarkdownContent content={content} />
       </div>
     </div>
   );
