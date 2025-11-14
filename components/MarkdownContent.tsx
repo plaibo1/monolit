@@ -17,8 +17,8 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             const value = String(children).replace(/\n$/, "");
             const isInline = !className && !value.includes("\n");
 
-            return !isInline && match ? (
-              <CodeBlock language={match[1]} value={value} />
+            return !isInline ? (
+              <CodeBlock language={match?.[1]} value={value} />
             ) : (
               <code
                 className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono border border-border"
@@ -45,9 +45,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             <ul className="list-disc list-inside space-y-1 my-3">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-inside space-y-1 my-3">
-              {children}
-            </ol>
+            <ol className="list-inside space-y-1 my-3">{children}</ol>
           ),
           li: ({ children }) => <li className="leading-relaxed">{children}</li>,
           blockquote: ({ children }) => (

@@ -75,24 +75,6 @@ export function StepContent({ content, label, language }: StepContentProps) {
               SQL Query
             </Badge>
           </div>
-          <Button
-            size="sm"
-            variant="ghost"
-            className="h-6 px-2 text-xs"
-            onClick={handleCopy}
-          >
-            {copied ? (
-              <>
-                <Check className="w-3 h-3 mr-1" />
-                Copied
-              </>
-            ) : (
-              <>
-                <Copy className="w-3 h-3 mr-1" />
-                Copy
-              </>
-            )}
-          </Button>
         </div>
         <CodeBlock language="sql" value={sqlQuery} showLanguage={false} />
       </div>

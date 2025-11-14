@@ -9,6 +9,7 @@ import { InputArea } from "./InputArea";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ThemeToggle } from "./ThemeToggle";
 
 type ChatInterfaceProps = {
   websocketUrl: string;
@@ -121,6 +122,7 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
           <p className="text-xs text-muted-foreground">Powered by Chainlit</p>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Badge
             variant={status === "connected" ? "default" : "destructive"}
             className="gap-1"
