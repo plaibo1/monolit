@@ -2,7 +2,6 @@
 
 import type { ExecutionStep } from "@/types/chat";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   Lightbulb,
   ListChecks,
@@ -19,6 +18,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { StepContent } from "./StepContent";
 
 type StepItemProps = {
   step: ExecutionStep;
@@ -84,24 +84,18 @@ export function StepItem({ step }: StepItemProps) {
 
         <CollapsibleContent className="mt-3">
           {step.showInput && step.input && (
-            <div className="mb-3">
-              <Badge variant="outline" className="mb-1 text-xs">
-                Input
-              </Badge>
-              <pre className="text-xs bg-muted p-2 rounded overflow-x-auto">
-                {step.input}
-              </pre>
-            </div>
+            <StepContent
+              content={step.input}
+              label="Input"
+              language={step.language}
+            />
           )}
 
-          <div>
-            <Badge variant="outline" className="mb-1 text-xs">
-              Output
-            </Badge>
-            <div className="text-sm whitespace-pre-wrap bg-muted p-2 rounded">
-              {step.output}
-            </div>
-          </div>
+          <StepContent
+            content={step.output}
+            label="Output"
+            language={step.language}
+          />
         </CollapsibleContent>
       </Collapsible>
     </Card>

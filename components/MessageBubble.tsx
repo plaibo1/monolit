@@ -2,7 +2,6 @@ import type { ChatMessage } from "@/types/chat";
 import { formatTimestamp } from "@/lib/message-utils";
 import { ActionButtons } from "./ActionButtons";
 import { AlertCircle, HelpCircle } from "lucide-react";
-import ReactMarkdown from "react-markdown";
 import { StepItem } from "./StepItem";
 import { MessageSkeleton } from "./MessageSkeleton";
 import { MarkdownContent } from "./MarkdownContent";
