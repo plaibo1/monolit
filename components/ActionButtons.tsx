@@ -9,14 +9,14 @@ type ActionButtonsProps = {
   actions: ActionButton[];
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
-  holdDuration?: number; // в миллисекундах, по умолчанию 3000
+  holdDuration?: number; // в миллисекундах, по умолчанию 1500
 };
 
 export function ActionButtons({
   actions,
   onActionClick,
   onActionHold,
-  holdDuration = 3000,
+  holdDuration = 1500,
 }: ActionButtonsProps) {
   const [holdingButton, setHoldingButton] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -104,7 +104,9 @@ export function ActionButtons({
             onPointerDown={() => handlePointerDown(action)}
             onPointerUp={() => handlePointerUp(action)}
             onPointerLeave={handlePointerLeave}
-            className="text-xs h-auto py-2 px-3 gap-2 active:scale-95 relative overflow-hidden touch-none select-none"
+            className={`text-xs h-auto py-2 px-3 gap-2 active:scale-95 relative overflow-hidden touch-none select-none transition-all duration-200 ${
+              isHolding && progress > 5 ? "pr-4" : ""
+            }`}
             title={action.tooltip}
             style={{
               // Предотвращаем выделение текста при длительном нажатии
@@ -116,7 +118,9 @@ export function ActionButtons({
             {/* Прогресс-бар на фоне */}
             {isHolding && (
               <div
-                className="absolute inset-0 bg-primary/20 transition-all"
+                className={
+                  "absolute inset-0 transition-all bg-amber-100 dark:bg-blue-500"
+                }
                 style={{
                   width: `${progress}%`,
                   transition: "none",
@@ -129,29 +133,36 @@ export function ActionButtons({
             <span className="relative z-10">{action.label}</span>
 
             {/* Круговой индикатор холда - справа от текста */}
-            {isHolding && progress > 5 && (
-              <div className="relative z-10 ml-1 shrink-0">
-                <svg
-                  className="w-4 h-4"
-                  viewBox="0 0 24 24"
-                  style={{ display: "block" }}
-                >
-                  {/* Обводка прогресса - зеленеющая, толстая */}
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="8"
-                    fill="none"
-                    stroke={`hsl(${120 * (progress / 100)}, 70%, 45%)`}
-                    strokeWidth="8"
-                    strokeDasharray={`${(progress / 100) * 50.27} 50.27`}
-                    strokeLinecap="round"
-                    transform="rotate(-90 12 12)"
-                    style={{ transition: "none" }}
-                  />
-                </svg>
-              </div>
-            )}
+            <div
+              className={`relative z-10 ml-1 shrink-0 transition-all duration-200 ease-in-out ${
+                isHolding && progress > 5 ? "opacity-100 w-4" : "opacity-0 w-0"
+              }`}
+              style={{
+                minWidth: isHolding && progress > 5 ? "1rem" : "0",
+                transition:
+                  "opacity 200ms ease-in-out, width 200ms ease-in-out, min-width 200ms ease-in-out",
+              }}
+            >
+              <svg
+                className="w-4 h-4"
+                viewBox="0 0 24 24"
+                style={{ display: "block" }}
+              >
+                {/* Обводка прогресса - зеленеющая, толстая */}
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="8"
+                  fill="none"
+                  stroke={`hsl(${120 * (progress / 100)}, 70%, 45%)`}
+                  strokeWidth="8"
+                  strokeDasharray={`${(progress / 100) * 50.27} 50.27`}
+                  strokeLinecap="round"
+                  transform="rotate(-90 12 12)"
+                  style={{ transition: "none" }}
+                />
+              </svg>
+            </div>
           </Button>
         );
       })}
