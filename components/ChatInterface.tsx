@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { WebSocketMessageHandler } from "@/lib/websocket-handler";
 import { MessageList } from "./MessageList";
-import { InputArea } from "./InputArea";
+import { InputArea, type InputAreaRef } from "./InputArea";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -21,6 +21,8 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
   const [currentAssistantMessageId, setCurrentAssistantMessageId] = useState<
     string | null
   >(null);
+
+  const inputRef = useRef<InputAreaRef>(null);
 
   const {
     addMessage,
@@ -103,14 +105,9 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
     [sendMessage, threadId]
   );
 
-  const handleActionClick = useCallback(
-    (query: string) => {
-      // TODO: implement action click
-      handleSendMessage(query);
-    },
-    [handleSendMessage]
-  );
-
+  const handleActionClick = useCallback((query: string) => {
+    inputRef.current?.setValue(query);
+  }, []);
   const handleActionHold = useCallback(
     (query: string) => {
       console.log("🚀 ~ ChatInterface ~ query:", query);
@@ -166,6 +163,7 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
         </div>
 
         <InputArea
+          ref={inputRef}
           onSendMessage={handleSendMessage}
           disabled={status !== "connected" || isProcessing}
         />
