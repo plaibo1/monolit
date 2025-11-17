@@ -5,12 +5,13 @@ import {
   useEffect,
   forwardRef,
   useImperativeHandle,
+  useRef,
   type KeyboardEvent,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Send, Mic, MicOff } from "lucide-react";
+import { Send, Mic, MicOff, StopCircle } from "lucide-react";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { cn } from "@/lib/utils";
 
 type InputAreaProps = {
   onSendMessage: (message: string) => void;
@@ -25,6 +26,7 @@ export type InputAreaRef = {
 export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
   ({ onSendMessage, disabled }, ref) => {
     const [input, setInput] = useState("");
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const {
       isListening,
@@ -38,24 +40,27 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
     useImperativeHandle(ref, () => ({
       setValue: (value: string) => {
         setInput(value);
+        setTimeout(() => textareaRef.current?.focus(), 0);
       },
       focus: () => {
-        // Could add focus logic here if needed
+        textareaRef.current?.focus();
       },
     }));
 
-    // Update input field with voice transcript
     useEffect(() => {
-      if (transcript) {
+      if (isListening && transcript) {
         setInput(transcript);
       }
-    }, [transcript]);
+    }, [transcript, isListening]);
 
     const handleSend = () => {
       if (input.trim() && !disabled) {
         onSendMessage(input.trim());
         setInput("");
         resetTranscript();
+        if (textareaRef.current) {
+          textareaRef.current.style.height = "auto";
+        }
       }
     };
 
@@ -70,50 +75,100 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
       if (isListening) {
         stopListening();
       } else {
+        resetTranscript();
         startListening();
       }
     };
 
+    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInput(e.target.value);
+      e.target.style.height = "auto";
+      e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
+    };
+
     return (
-      <div className="border-t bg-background p-4">
-        <div className="max-w-4xl mx-auto flex gap-2">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
-            disabled={disabled}
-            className="min-h-[60px] max-h-[200px] resize-none"
-            rows={2}
-          />
-          {isSupported && (
-            <Button
-              onClick={handleVoiceToggle}
-              disabled={disabled}
-              size="icon"
-              variant={isListening ? "destructive" : "outline"}
-              className="h-[60px] w-[60px] shrink-0"
-              title={isListening ? "Stop recording" : "Start voice input"}
-            >
-              {isListening ? (
-                <MicOff className="w-5 h-5" />
-              ) : (
-                <Mic className="w-5 h-5" />
-              )}
-              <span className="sr-only">
-                {isListening ? "Stop recording" : "Start voice input"}
-              </span>
-            </Button>
-          )}
-          <Button
-            onClick={handleSend}
-            disabled={disabled || !input.trim()}
-            size="icon"
-            className="h-[60px] w-[60px] shrink-0"
+      <div className="border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div
+            className={cn(
+              "relative flex items-end gap-2 rounded-3xl border border-input bg-background shadow-sm transition-all",
+              "focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent",
+              disabled && "opacity-50"
+            )}
           >
-            <Send className="w-5 h-5" />
-            <span className="sr-only">Send message</span>
-          </Button>
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={handleInput}
+              onKeyDown={handleKeyDown}
+              placeholder="Message..."
+              disabled={disabled}
+              rows={1}
+              className={cn(
+                "flex-1 bg-transparent px-4 py-3 text-sm resize-none outline-none",
+                "placeholder:text-muted-foreground",
+                "max-h-[200px] overflow-y-auto scrollbar-thin"
+              )}
+              style={{ minHeight: "24px" }}
+            />
+
+            <div className="flex items-center gap-1 pr-2 pb-2">
+              {isSupported && (
+                <Button
+                  onClick={handleVoiceToggle}
+                  disabled={disabled}
+                  size="icon"
+                  variant="ghost"
+                  className={cn(
+                    "h-8 w-8 rounded-full shrink-0 transition-all",
+                    isListening &&
+                      "bg-red-500 hover:bg-red-600 text-white animate-pulse"
+                  )}
+                  title={isListening ? "Stop recording" : "Start voice input"}
+                >
+                  {isListening ? (
+                    <StopCircle className="w-4 h-4" />
+                  ) : (
+                    <Mic className="w-4 h-4" />
+                  )}
+                </Button>
+              )}
+
+              <Button
+                onClick={handleSend}
+                disabled={disabled || !input.trim()}
+                size="icon"
+                className={cn(
+                  "h-8 w-8 rounded-full shrink-0 transition-all",
+                  input.trim() && !disabled
+                    ? "bg-primary hover:bg-primary/90"
+                    : "bg-muted hover:bg-muted"
+                )}
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {isListening && (
+            <div className="flex items-center justify-center gap-2 mt-2 text-xs text-muted-foreground">
+              <div className="flex gap-1">
+                <span
+                  className="w-1 h-3 bg-red-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "0ms" }}
+                />
+                <span
+                  className="w-1 h-3 bg-red-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "150ms" }}
+                />
+                <span
+                  className="w-1 h-3 bg-red-500 rounded-full animate-pulse"
+                  style={{ animationDelay: "300ms" }}
+                />
+              </div>
+              <span>Listening...</span>
+            </div>
+          )}
         </div>
       </div>
     );
