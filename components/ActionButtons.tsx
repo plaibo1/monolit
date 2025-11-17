@@ -122,7 +122,7 @@ export function ActionButtons({
                   "absolute inset-0 transition-all bg-amber-100 dark:bg-blue-500"
                 }
                 style={{
-                  width: `${progress}%`,
+                  width: `${isHolding && progress > 5 ? progress : 0}%`,
                   transition: "none",
                 }}
               />
