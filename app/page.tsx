@@ -1,10 +1,64 @@
-import { ChatInterface } from "@/components/ChatInterface";
+"use client";
+
+import { ChatLayout } from "@/components/ChatLayout";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { sendFirstMessage } from "@/lib/api";
+import { InputArea } from "@/components/InputArea";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
-  // Replace with your actual WebSocket URL
-  const websocketUrl =
-    process.env.NEXT_PUBLIC_WS_URL ||
-    "wss://5.39.222.41:8080/api/v1/ws/chat/39e56155-ac3b-4e2a-aa60-bb85d519d163";
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  return <ChatInterface websocketUrl={websocketUrl} />;
+  const handleSendMessage = async (message: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await sendFirstMessage(message);
+      if (response.success && response.chatId) {
+        router.push(`/${response.chatId}`);
+      } else {
+        setError("Failed to create chat");
+      }
+    } catch (err) {
+      console.error("Failed to send message:", err);
+      setError("Failed to send message. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <ChatLayout>
+      <div className="flex flex-col items-center justify-center h-full p-4">
+        <div className="max-w-3xl w-full space-y-6">
+          <div className="text-center space-y-3">
+            <h1 className="text-4xl font-bold">Monolit</h1>
+            <p className="text-muted-foreground text-lg">
+              Ask me anything about your data
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Creating chat...
+            </div>
+          )}
+
+          <div className="w-full">
+            <InputArea onSendMessage={handleSendMessage} disabled={isLoading} />
+          </div>
+        </div>
+      </div>
+    </ChatLayout>
+  );
 }

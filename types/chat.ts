@@ -117,3 +117,10 @@ export type ConnectionStatus =
   | "connected"
   | "disconnected"
   | "error";
+
+export type ChatHistoryItem = {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};

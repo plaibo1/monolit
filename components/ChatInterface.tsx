@@ -10,12 +10,13 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ThemeToggle } from "./ThemeToggle";
+import { getWebSocketUrl } from "@/lib/api";
 
 type ChatInterfaceProps = {
-  websocketUrl: string;
+  chatId: string;
 };
 
-export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
+export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [currentAssistantMessageId, setCurrentAssistantMessageId] = useState<
@@ -87,6 +88,8 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
     ]
   );
 
+  const websocketUrl = getWebSocketUrl(chatId);
+
   const { status, sendMessage } = useWebSocket({
     url: websocketUrl,
     onMessage: handleWebSocketMessage,
@@ -108,6 +111,7 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
   const handleActionClick = useCallback((query: string) => {
     inputRef.current?.setValue(query);
   }, []);
+
   const handleActionHold = useCallback(
     (query: string) => {
       console.log("🚀 ~ ChatInterface ~ query:", query);
@@ -120,11 +124,10 @@ export function ChatInterface({ websocketUrl }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* Header */}
-      <header className="border-b px-4 py-3 flex items-center justify-between">
+      <header className="border-b px-4 h-[73px] flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold">DataLayer AI Assistant</h1>
-          <p className="text-xs text-muted-foreground">Powered by Chainlit</p>
+          <p className="text-xs text-muted-foreground">Chat ID: {chatId}</p>
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
