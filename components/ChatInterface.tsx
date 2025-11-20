@@ -126,8 +126,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     <div className="flex flex-col h-screen bg-background">
       <header className="border-b px-4 h-[73px] flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold">DataLayer AI Assistant</h1>
-          <p className="text-xs text-muted-foreground">Chat ID: {chatId}</p>
+          {/* <h1 className="text-xl font-semibold">DataLayer AI Assistant</h1>
+          <p className="text-xs text-muted-foreground">Chat ID: {chatId}</p> */}
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />

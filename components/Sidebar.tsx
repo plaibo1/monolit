@@ -18,7 +18,6 @@ import {
 import { ChatHistoryItem } from "@/types/chat";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 type SidebarProps = {
   history: ChatHistoryItem[];
@@ -35,7 +34,6 @@ export function Sidebar({
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const [hoveredChat, setHoveredChat] = useState<string | null>(null);
 
   const handleNewChat = () => {
     router.push("/");
@@ -60,7 +58,7 @@ export function Sidebar({
           "fixed inset-y-0 left-0 z-40 bg-muted/40 border-r transition-all duration-300",
           isCollapsed
             ? "w-0 -translate-x-full md:translate-x-0"
-            : "w-64 translate-x-0"
+            : "w-72 translate-x-0"
         )}
       >
         <div
@@ -91,12 +89,7 @@ export function Sidebar({
                 </div>
               ) : (
                 history.map((chat) => (
-                  <div
-                    key={chat.id}
-                    className="relative group"
-                    onMouseEnter={() => setHoveredChat(chat.id)}
-                    onMouseLeave={() => setHoveredChat(null)}
-                  >
+                  <div key={chat.id} className="relative group">
                     <button
                       onClick={() => handleChatClick(chat.id)}
                       className={cn(
@@ -110,29 +103,27 @@ export function Sidebar({
                       </div>
                     </button>
 
-                    {hoveredChat === chat.id && (
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            className="text-destructive focus:text-destructive"
-                            onClick={(e) => handleDeleteClick(e, chat.id)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    )}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-2 top-2 h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
+                          onClick={(e) => handleDeleteClick(e, chat.id)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 ))
               )}
@@ -146,7 +137,7 @@ export function Sidebar({
         size="icon"
         className={cn(
           "fixed top-4 z-50 transition-all duration-300 shadow-md bg-background border",
-          isCollapsed ? "left-4" : "left-[272px]"
+          isCollapsed ? "left-4" : "left-[304px] "
         )}
         onClick={onToggleCollapse}
       >
