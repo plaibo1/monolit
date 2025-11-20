@@ -29,5 +29,5 @@ export async function sendFirstMessage(
 }
 
 export function getWebSocketUrl(chatId: string): string {
-  return `${WS_URL}?chatId=${chatId}`;
+  return `${WS_URL}/chats/ws/${chatId}`;
 }

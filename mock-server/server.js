@@ -40,9 +40,10 @@ const chatConnections = new Map();
 wss.on("connection", (ws, req) => {
   console.log("Новый клиент подключился");
 
-  // Извлекаем chatId из URL (например: ws://localhost:3000?chatId=chat1)
+  // Извлекаем chatId из URL (например: ws://localhost:3000/chats/ws/chat1)
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const chatId = url.searchParams.get("chatId");
+  const match = url.pathname.match(/^\/chats\/ws\/([^/]+)$/);
+  const chatId = match && match[1];
 
   if (!chatId) {
     ws.close(1008, "chatId не указан");
