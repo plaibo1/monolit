@@ -5,7 +5,7 @@ import {
   type ChatHistoryItemResponse,
   type ChatHistoryItem,
 } from "@/types/chat";
-import { API_BASE_URL } from "@/lib/consts";
+import { API_BASE_URL, TMP_AUTH } from "@/lib/consts";
 
 export function useChatHistory() {
   const [history, setHistory] = useState<ChatHistoryItem[]>([]);
@@ -15,11 +15,18 @@ export function useChatHistory() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/chats/list`);
+        const response = await fetch(`${API_BASE_URL}/chats/list`, {
+          headers: {
+            ...TMP_AUTH,
+          },
+        });
         if (!response.ok) throw new Error("Failed to fetch chat history");
         const data = await response.json();
+
+        if (data.status !== 200)
+          throw new Error("Failed to fetch chat history");
         // Map API response to our format
-        const mappedHistory = data.chats.map(
+        const mappedHistory = data.data.chats.map(
           (chat: ChatHistoryItemResponse) => ({
             id: chat.chat_id,
             name: chat.short_name,
@@ -42,12 +49,16 @@ export function useChatHistory() {
       const response = await fetch(`${API_BASE_URL}/chats/list`);
       if (!response.ok) throw new Error("Failed to fetch chat history");
       const data = await response.json();
-      const mappedHistory = data.chats.map((chat: ChatHistoryItemResponse) => ({
-        id: chat.chat_id,
-        name: chat.short_name,
-        createdAt: chat.created_at,
-        updatedAt: chat.updated_at,
-      }));
+
+      if (data.status !== 200) throw new Error("Failed to fetch chat history");
+      const mappedHistory = data.data.chats.map(
+        (chat: ChatHistoryItemResponse) => ({
+          id: chat.chat_id,
+          name: chat.short_name,
+          createdAt: chat.created_at,
+          updatedAt: chat.updated_at,
+        })
+      );
       setHistory(mappedHistory);
     } catch (error) {
       console.error("Failed to refresh chat history:", error);
