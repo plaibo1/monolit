@@ -93,6 +93,11 @@ wss.on("connection", (ws, req) => {
     }
   }
 
+  ws.on("message", (message) => {
+    const data = JSON.parse(message);
+    console.log("Получено сообщение:", data);
+  });
+
   ws.on("close", () => {
     console.log(`Клиент отключился от чата: ${ws.chatId}`);
 
@@ -195,18 +200,32 @@ app.post("/send-message", (req, res) => {
 });
 
 // GET /chats - получить все чаты
-app.get("/chats", (req, res) => {
+app.get("/chats/list", (req, res) => {
   const chatList = Array.from(chats.values()).map((chat) => ({
-    id: chat.id,
-    createDate: chat.createDate,
-    name: chat.name,
+    chat_id: chat.id,
+    short_name: chat.name,
+    created_at: chat.createDate,
+    updated_at: chat.createDate,
+
     messageCount: chat.messages.length,
     activeConnections: chatConnections.has(chat.id)
       ? chatConnections.get(chat.id).size
       : 0,
   }));
 
-  res.json(chatList);
+  const result = {
+    success: true,
+    chats: chatList,
+    pagination: {
+      page: 1,
+      page_size: 20,
+      total: 5,
+      total_pages: 1,
+      has_more: false,
+    },
+  };
+
+  res.json(result);
 });
 
 // GET /chats/:id - получить чат по id

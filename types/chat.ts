@@ -124,3 +124,22 @@ export type ChatHistoryItem = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type ChatHistoryItemResponse = {
+  chat_id: string;
+  short_name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ChatsHistory = {
+  success: boolean;
+  chats: ChatHistoryItemResponse[];
+  pagination: {
+    page: number;
+    page_size: number;
+    total: number;
+    total_pages: number;
+    has_more: boolean;
+  };
+};

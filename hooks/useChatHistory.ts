@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ChatHistoryItem } from "@/types/chat";
+import {
+  type ChatHistoryItemResponse,
+  type ChatHistoryItem,
+} from "@/types/chat";
 import { API_BASE_URL } from "@/lib/consts";
 
 export function useChatHistory() {
@@ -12,16 +15,16 @@ export function useChatHistory() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/chats`);
+        const response = await fetch(`${API_BASE_URL}/chats/list`);
         if (!response.ok) throw new Error("Failed to fetch chat history");
         const data = await response.json();
         // Map API response to our format
-        const mappedHistory = data.map(
-          (chat: { id: string; createDate: string; name: string }) => ({
-            id: chat.id,
-            name: chat.name,
-            createdAt: chat.createDate,
-            updatedAt: chat.createDate,
+        const mappedHistory = data.chats.map(
+          (chat: ChatHistoryItemResponse) => ({
+            id: chat.chat_id,
+            name: chat.short_name,
+            createdAt: chat.created_at,
+            updatedAt: chat.updated_at,
           })
         );
         setHistory(mappedHistory);
@@ -36,17 +39,15 @@ export function useChatHistory() {
 
   const refreshHistory = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/chats`);
+      const response = await fetch(`${API_BASE_URL}/chats/list`);
       if (!response.ok) throw new Error("Failed to fetch chat history");
       const data = await response.json();
-      const mappedHistory = data.map(
-        (chat: { id: string; createDate: string; name: string }) => ({
-          id: chat.id,
-          name: chat.name,
-          createdAt: chat.createDate,
-          updatedAt: chat.createDate,
-        })
-      );
+      const mappedHistory = data.chats.map((chat: ChatHistoryItemResponse) => ({
+        id: chat.chat_id,
+        name: chat.short_name,
+        createdAt: chat.created_at,
+        updatedAt: chat.updated_at,
+      }));
       setHistory(mappedHistory);
     } catch (error) {
       console.error("Failed to refresh chat history:", error);
