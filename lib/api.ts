@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:8000";
+import { API_BASE_URL, WS_URL } from "./consts";
 
 export type SendMessageResponse = {
   success: boolean;
@@ -29,5 +29,5 @@ export async function sendFirstMessage(
 }
 
 export function getWebSocketUrl(chatId: string): string {
-  return `ws://localhost:8000?chatId=${chatId}`;
+  return `${WS_URL}?chatId=${chatId}`;
 }

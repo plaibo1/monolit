@@ -28,7 +28,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
       <main
         className={cn(
           "flex-1 transition-all duration-300",
-          isSidebarCollapsed ? "md:ml-0" : "md:ml-64"
+          isSidebarCollapsed ? "md:ml-0" : "md:ml-72"
         )}
       >
         {children}

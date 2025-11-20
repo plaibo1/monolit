@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ChatHistoryItem } from "@/types/chat";
-
-const API_BASE_URL = "http://localhost:8000";
+import { API_BASE_URL } from "@/lib/consts";
 
 export function useChatHistory() {
   const [history, setHistory] = useState<ChatHistoryItem[]>([]);
