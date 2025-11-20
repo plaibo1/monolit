@@ -8,7 +8,6 @@ export function useChatMessages() {
   const [messageOrder, setMessageOrder] = useState<string[]>([]);
 
   const addMessage = useCallback((message: ChatMessage) => {
-    console.log("🚀 ~ useChatMessages ~ message:", message);
     setMessages((prev) => {
       const newMap = new Map(prev);
       newMap.set(message.id, message);
@@ -53,6 +52,8 @@ export function useChatMessages() {
       setMessages((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(messageId);
+        // console.log("🚀🚀🚀🚀🚀 ~ existing:", existing);
+
         if (existing) {
           newMap.set(messageId, {
             ...existing,
@@ -70,6 +71,7 @@ export function useChatMessages() {
       setMessages((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(messageId);
+        // console.log("🚀🚀🚀🚀🚀 ~ ALREADY existing:", existing);
         if (existing && existing.steps) {
           const updatedSteps = existing.steps.map((step) =>
             step.id === stepId ? { ...step, ...updates } : step

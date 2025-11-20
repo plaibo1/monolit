@@ -26,6 +26,13 @@ chats.set("chat1", {
   messages: [],
 });
 
+chats.set("chat2", {
+  id: "chat2",
+  createDate: new Date().toISOString(),
+  name: "Моковый чат (с историей)",
+  messages: mockMessages.map((item) => item[0]),
+});
+
 // Хранение подключений по chatId
 // chatId -> Set<WebSocket>
 const chatConnections = new Map();
@@ -76,6 +83,14 @@ wss.on("connection", (ws, req) => {
     }, 1000);
 
     ws.interval = interval;
+  }
+
+  // Если это chat2, отправляем историю сообщений
+  if (chatId === "chat2") {
+    const historyMessages = chats.get("chat2").messages;
+    if (ws.readyState === 1) {
+      ws.send(JSON.stringify(historyMessages));
+    }
   }
 
   ws.on("close", () => {

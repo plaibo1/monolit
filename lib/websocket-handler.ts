@@ -48,26 +48,26 @@ export class WebSocketMessageHandler {
         return;
       }
 
-      const message = data[0];
+      data.forEach((message) => {
+        // Check if message has required type field
+        if (!message || typeof message !== "object" || !message.type) {
+          this.handleUnknownMessage(data, "Missing or invalid message type");
+          return;
+        }
 
-      // Check if message has required type field
-      if (!message || typeof message !== "object" || !message.type) {
-        this.handleUnknownMessage(data, "Missing or invalid message type");
-        return;
-      }
-
-      // Process known message types
-      if (message.type === "user") {
-        this.handleUserMessage(message as UserMessage);
-      } else if (message.type === "agent") {
-        this.handleAgentMessage(message as AgentMessage);
-      } else {
-        // Unknown message type
-        this.handleUnknownMessage(
-          data,
-          `Unknown message type: ${message.type}`
-        );
-      }
+        // Process known message types
+        if (message.type === "user") {
+          this.handleUserMessage(message as UserMessage);
+        } else if (message.type === "agent") {
+          this.handleAgentMessage(message as AgentMessage);
+        } else {
+          // Unknown message type
+          this.handleUnknownMessage(
+            data,
+            `Unknown message type: ${message.type}`
+          );
+        }
+      });
     } catch (error) {
       if (typeof error === "object" && error !== null && "message" in error) {
         this.handleUnknownMessage(

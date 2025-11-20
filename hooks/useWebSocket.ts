@@ -171,16 +171,19 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
 
   // Подключение при монтировании
   useEffect(() => {
+    console.log("CONNECTED URL: ", url);
     connect();
 
     return () => {
+      console.log("TRY TO DISCONNECT: ", url);
       isManuallyClosed.current = true;
 
       if (reconnectTimeout.current) {
         clearTimeout(reconnectTimeout.current);
       }
 
-      if (ws.current) {
+      if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+        console.log("DISCONNECTED: ", url);
         ws.current.close(1000, "Component unmounting");
       }
     };
