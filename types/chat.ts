@@ -133,13 +133,15 @@ export type ChatHistoryItemResponse = {
 };
 
 export type ChatsHistory = {
-  success: boolean;
-  chats: ChatHistoryItemResponse[];
-  pagination: {
-    page: number;
-    page_size: number;
-    total: number;
-    total_pages: number;
-    has_more: boolean;
+  status: number;
+  data: {
+    chats: ChatHistoryItemResponse[];
+    pagination: {
+      page: number;
+      page_size: number;
+      total: number;
+      total_pages: number;
+      has_more: boolean;
+    };
   };
 };
