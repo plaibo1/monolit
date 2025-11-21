@@ -215,14 +215,16 @@ app.get("/chats/list", (req, res) => {
   }));
 
   const result = {
-    success: true,
-    chats: chatList,
-    pagination: {
-      page: 1,
-      page_size: 20,
-      total: 5,
-      total_pages: 1,
-      has_more: false,
+    status: 200,
+    data: {
+      chats: chatList,
+      pagination: {
+        page: 1,
+        page_size: 20,
+        total: 5,
+        total_pages: 1,
+        has_more: false,
+      },
     },
   };
 
