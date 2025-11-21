@@ -18,8 +18,8 @@ export default function Home() {
     try {
       const response = await sendFirstMessage(message);
 
-      if (response.status === 200 && response.data.chatId) {
-        router.push(`/${response.data.chatId}`);
+      if (response.status === 200 && response.data.chat_id) {
+        router.push(`/${response.data.chat_id}`);
       } else {
         setError("Failed to create chat");
       }

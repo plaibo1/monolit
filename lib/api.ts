@@ -3,7 +3,7 @@ import { API_BASE_URL, WS_URL } from "./consts";
 export type SendMessageResponse = {
   status: number;
   data: {
-    chatId: string;
+    chat_id: string;
   };
 };
 
