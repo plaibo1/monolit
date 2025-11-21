@@ -16,6 +16,7 @@ import { cn } from "@/lib/utils";
 type InputAreaProps = {
   onSendMessage: (message: string) => void;
   disabled: boolean;
+  isMainPage?: boolean;
 };
 
 export type InputAreaRef = {
@@ -24,7 +25,7 @@ export type InputAreaRef = {
 };
 
 export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
-  ({ onSendMessage, disabled }, ref) => {
+  ({ onSendMessage, disabled, isMainPage }, ref) => {
     const [input, setInput] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -87,7 +88,12 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
     };
 
     return (
-      <div className="border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+      <div
+        className={cn(
+          "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
+          isMainPage ? "" : "border-b"
+        )}
+      >
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div
             className={cn(

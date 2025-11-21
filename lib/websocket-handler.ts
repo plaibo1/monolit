@@ -66,7 +66,7 @@ export class WebSocketMessageHandler {
           }
 
           // System messages like "start_processing" can be logged or ignored
-          console.log("[v0] System message:", message.message?.text);
+          console.log("System message:", message);
           return;
         }
 
@@ -96,7 +96,7 @@ export class WebSocketMessageHandler {
   }
 
   private handleUnknownMessage(rawData: any, reason: string) {
-    console.warn("[v0] Unknown message received:", reason, rawData);
+    console.warn("Unknown message received:", reason, rawData);
 
     const unknownMessage: ChatMessage = {
       id: generateId(),

@@ -56,7 +56,11 @@ export default function Home() {
           )}
 
           <div className="w-full">
-            <InputArea onSendMessage={handleSendMessage} disabled={isLoading} />
+            <InputArea
+              onSendMessage={handleSendMessage}
+              disabled={isLoading}
+              isMainPage
+            />
           </div>
         </div>
       </div>
