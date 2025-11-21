@@ -1,23 +1,22 @@
 import { API_BASE_URL, WS_URL } from "./consts";
 
 export type SendMessageResponse = {
-  success: boolean;
-  chatId: string;
+  status: number;
+  data: {
+    chatId: string;
+  };
 };
 
 export async function sendFirstMessage(
   text: string
 ): Promise<SendMessageResponse> {
-  const response = await fetch(`${API_BASE_URL}/send-message`, {
+  const response = await fetch(`${API_BASE_URL}/chats/send-message`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      type: "user",
-      message: {
-        text,
-      },
+      text,
     }),
   });
 
