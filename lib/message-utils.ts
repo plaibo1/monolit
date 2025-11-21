@@ -17,16 +17,13 @@ export function categorizeMessage(
     return "chat";
   }
 
-  if (
-    payload.name === "Intention Detection" ||
-    payload.name === "Planning" ||
-    payload.name?.startsWith("Tool:")
-  ) {
+  // All "run" types are steps
+  if (payload.type === "run") {
     return "step";
   }
 
-  // Run and undefined types can be steps
-  if (payload.type === "undefined" || payload.type === "run") {
+  // Backward compatibility for undefined type
+  if (payload.type === "undefined") {
     return "step";
   }
 
@@ -49,26 +46,38 @@ export function messagePayloadToChatMessage(
 
 export function messagePayloadToStep(payload: MessagePayload): ExecutionStep {
   let type: ExecutionStep["type"] = "other";
+  const name = payload.name || "Unknown Step";
 
-  if (payload.name === "Intention Detection") {
+  // Categorize by name patterns
+  if (name.includes("Intention Detection") || name.includes("Intention")) {
     type = "intention";
-  } else if (payload.name === "Planning") {
+  } else if (name.includes("Planning")) {
     type = "planning";
-  } else if (payload.name?.startsWith("Tool:")) {
+  } else if (
+    name.startsWith("Tool:") ||
+    name.includes("query") ||
+    name.includes("Query")
+  ) {
     type = "tool";
+  } else if (
+    name.includes("Reasoning") ||
+    name.includes("Thinking") ||
+    name.includes("Synthesis")
+  ) {
+    type = "other"; // These are thinking/reasoning steps
   }
 
   return {
     id: payload.id,
-    name: payload.name,
+    name: name,
     type,
-    input: payload.input,
-    output: payload.output,
-    timestamp: payload.createdAt,
+    input: payload.input || "",
+    output: payload.output || "",
+    timestamp: payload.createdAt || new Date().toISOString(),
     isComplete: payload.end !== null,
-    isError: payload.isError,
+    isError: payload.isError || false,
     showInput: Boolean(payload.showInput),
-    language: payload.language,
+    language: payload.language || null,
   };
 }
 

@@ -11,9 +11,9 @@ app.use(express.json());
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const { fakeSocketMessages } = require("./fakeSocketMessages");
+const { newFakeMessages } = require("./fakeSocketMessages");
 // Массив сообщений
-const mockMessages = fakeSocketMessages;
+const mockMessages = newFakeMessages;
 
 // In-memory база данных чатов
 const chats = new Map();

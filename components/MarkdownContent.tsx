@@ -2,6 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import { CodeBlock } from "./CodeBlock";
+import remarkGfm from "remark-gfm";
 
 type MarkdownContentProps = {
   content: string;
@@ -11,6 +12,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
     <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:leading-relaxed prose-pre:p-0 prose-code:before:content-[''] prose-code:after:content-[''] wrap-break-word">
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
           code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");
@@ -29,7 +31,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             );
           },
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold mt-6 mb-4 pb-2 border-b border-border">
+            <h1 className="text-2xl font-bold mt-4 mb-4 pb-2 border-b border-border">
               {children}
             </h1>
           ),

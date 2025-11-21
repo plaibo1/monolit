@@ -43,7 +43,6 @@ export class WebSocketMessageHandler {
     try {
       // Validate basic structure
       if (!data || !Array.isArray(data) || data?.length === 0) {
-        console.log("JAMAL!!!");
         this.handleUnknownMessage(data, "Invalid message structure");
         return;
       }
@@ -51,7 +50,23 @@ export class WebSocketMessageHandler {
       data.forEach((message) => {
         // Check if message has required type field
         if (!message || typeof message !== "object" || !message.type) {
-          this.handleUnknownMessage(data, "Missing or invalid message type");
+          this.handleUnknownMessage(message, "Missing or invalid message type");
+          return;
+        }
+
+        if (message.type === "system") {
+          if (message.message?.text === "start_processing") {
+            this.callbacks.onTaskStart();
+            return;
+          }
+
+          if (message.message?.text === "finish_processing_success") {
+            this.callbacks.onTaskEnd();
+            return;
+          }
+
+          // System messages like "start_processing" can be logged or ignored
+          console.log("[v0] System message:", message.message?.text);
           return;
         }
 
@@ -63,7 +78,7 @@ export class WebSocketMessageHandler {
         } else {
           // Unknown message type
           this.handleUnknownMessage(
-            data,
+            message,
             `Unknown message type: ${message.type}`
           );
         }
@@ -71,11 +86,11 @@ export class WebSocketMessageHandler {
     } catch (error) {
       if (typeof error === "object" && error !== null && "message" in error) {
         this.handleUnknownMessage(
-          data,
+          error,
           `Error processing message: ${error.message}`
         );
       } else {
-        this.handleUnknownMessage(data, `Error processing message: ${error}`);
+        this.handleUnknownMessage(error, `Error processing message: ${error}`);
       }
     }
   }
