@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ThemeToggle } from "./ThemeToggle";
-import { getWebSocketUrl } from "@/lib/api";
+import { getWebSocketUrl, sendMessage } from "@/lib/api";
 
 type ChatInterfaceProps = {
   chatId: string;
@@ -90,22 +90,16 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   const websocketUrl = getWebSocketUrl(chatId);
 
-  const { status, sendMessage } = useWebSocket({
+  const { status } = useWebSocket({
     url: websocketUrl,
     onMessage: handleWebSocketMessage,
   });
 
   const handleSendMessage = useCallback(
-    (message: string) => {
-      sendMessage(
-        JSON.stringify({
-          type: "user_message",
-          content: message,
-          threadId: threadId,
-        })
-      );
+    (message: string, cbChatId?: string) => {
+      sendMessage(message, cbChatId || chatId);
     },
-    [sendMessage, threadId]
+    [sendMessage, chatId]
   );
 
   const handleActionClick = useCallback((query: string) => {
@@ -115,9 +109,9 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const handleActionHold = useCallback(
     (query: string) => {
       console.log("🚀 ~ ChatInterface ~ query:", query);
-      handleSendMessage(query);
+      handleSendMessage(query, chatId);
     },
-    [handleSendMessage]
+    [handleSendMessage, chatId]
   );
 
   const messages = getOrderedMessages();
@@ -155,15 +149,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             </AlertDescription>
           </Alert>
         )}
-
-        <div className="flex-1 overflow-y-auto">
-          <MessageList
-            messages={messages}
-            isProcessing={isProcessing}
-            onActionClick={handleActionClick}
-            onActionHold={handleActionHold}
-          />
-        </div>
+        <MessageList
+          messages={messages}
+          isProcessing={isProcessing}
+          onActionClick={handleActionClick}
+          onActionHold={handleActionHold}
+        />
 
         <InputArea
           ref={inputRef}

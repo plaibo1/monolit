@@ -3,7 +3,7 @@
 import { ChatLayout } from "@/components/ChatLayout";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { sendFirstMessage } from "@/lib/api";
+import { sendMessage } from "@/lib/api";
 import { InputArea } from "@/components/InputArea";
 import { Loader2 } from "lucide-react";
 
@@ -16,7 +16,7 @@ export default function Home() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await sendFirstMessage(message);
+      const response = await sendMessage(message);
 
       if (response.status === 200 && response.data.chat_id) {
         router.push(`/${response.data.chat_id}`);

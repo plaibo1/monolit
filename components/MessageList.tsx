@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type MessageListProps = {
   messages: ChatMessage[];
@@ -45,7 +44,7 @@ export function MessageList({
   }
 
   return (
-    <ScrollArea className="flex-1 px-4 py-6" ref={scrollRef}>
+    <div className="flex-1 overflow-y-auto" ref={scrollRef}>
       <div className="space-y-4 max-w-4xl mx-auto">
         {messages.map((message) => (
           <MessageBubble
@@ -57,6 +56,6 @@ export function MessageList({
         ))}
         {isProcessing && <TypingIndicator />}
       </div>
-    </ScrollArea>
+    </div>
   );
 }

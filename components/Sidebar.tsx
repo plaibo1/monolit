@@ -79,8 +79,8 @@ export function Sidebar({
           </div>
 
           {/* Chat History */}
-          <ScrollArea className="flex-1 px-2 py-2">
-            <div className="space-y-1">
+          <ScrollArea className="flex-1 px-2 py-2 h-[calc(100vh-73px)]">
+            <div className="space-y-1 mb-16">
               {history.length === 0 ? (
                 <div className="px-3 py-8 text-center text-sm text-muted-foreground">
                   No chat history yet.

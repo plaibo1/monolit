@@ -1,3 +1,4 @@
+"use client";
 import { thirdwebClient } from "@/app/client";
 import { ConnectButton as ThirdWebConnectButton } from "thirdweb/react";
 

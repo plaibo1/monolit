@@ -1,3 +1,5 @@
+"use client";
+
 import { thirdwebClient } from "@/app/client";
 import { ConnectEmbed } from "thirdweb/react";
 

@@ -698,3 +698,351 @@ export const fakeSocketMessages = [
     },
   ],
 ].reverse();
+
+export const testHtmlBlock = `
+<div class="dl-dashboard-container">
+  <style>
+    /* Scoped CSS to mimic Tailwind classes for independent injection */
+    .dl-dashboard-container {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      color: #111;
+      background-color: #fff;
+      padding: 20px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    .dl-dashboard-container * {
+      box-sizing: border-box;
+    }
+    /* Layout & Spacing */
+    .dl-flex { display: flex; }
+    .dl-flex-col { flex-direction: column; }
+    .dl-justify-between { justify-content: space-between; }
+    .dl-items-center { align-items: center; }
+    .dl-items-start { align-items: flex-start; }
+    .dl-grid { display: grid; }
+    .dl-grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .dl-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dl-gap-4 { gap: 1rem; }
+    .dl-gap-6 { gap: 1.5rem; }
+    .dl-mb-2 { margin-bottom: 0.5rem; }
+    .dl-mb-4 { margin-bottom: 1rem; }
+    .dl-mb-6 { margin-bottom: 1.5rem; }
+    .dl-mt-2 { margin-top: 0.5rem; }
+    .dl-mt-4 { margin-top: 1rem; }
+    .dl-p-4 { padding: 1rem; }
+    .dl-p-6 { padding: 1.5rem; }
+    .dl-px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+    .dl-py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+    .dl-py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+    /* Typography */
+    .dl-text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .dl-text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .dl-text-base { font-size: 1rem; line-height: 1.5rem; }
+    .dl-text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .dl-text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .dl-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .dl-font-bold { font-weight: 700; }
+    .dl-font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .dl-uppercase { text-transform: uppercase; }
+    .dl-tracking-tight { letter-spacing: -0.025em; }
+    .dl-tracking-wide { letter-spacing: 0.025em; }
+    .dl-text-gray-500 { color: #6b7280; }
+    .dl-text-gray-700 { color: #374151; }
+    .dl-text-white { color: #ffffff; }
+    /* Borders & Backgrounds */
+    .dl-border { border: 1px solid #e5e7eb; }
+    .dl-border-black { border-color: #000000; }
+    .dl-border-b { border-bottom-width: 1px; }
+    .dl-border-t { border-top-width: 1px; }
+    .dl-bg-black { background-color: #000000; }
+    .dl-bg-white { background-color: #ffffff; }
+    .dl-bg-gray-50 { background-color: #f9fafb; }
+    .dl-bg-gray-100 { background-color: #f3f4f6; }
+    /* Components */
+    .dl-table { width: 100%; text-align: left; border-collapse: collapse; }
+    .dl-th { padding: 0.75rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid #000; background-color: #f9fafb; }
+    .dl-td { padding: 0.75rem; font-size: 0.875rem; border-bottom: 1px solid #e5e7eb; font-family: ui-monospace, monospace; word-break: break-all; }
+    .dl-badge { display: inline-flex; align-items: center; padding: 0.125rem 0.5rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border: 1px solid #000; }
+    .dl-badge-success { background-color: #000; color: #fff; }
+    .dl-badge-neutral { background-color: #fff; color: #000; }
+    .dl-code-block { background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; overflow-x: auto; font-family: monospace; font-size: 0.875rem; }
+    
+    @media (min-width: 768px) {
+      .dl-md-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dl-md-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+  </style>
+
+  <!-- Header / Meta -->
+  <div class="dl-border dl-border-black dl-p-6 dl-mb-6">
+    <div class="dl-flex dl-justify-between dl-items-start dl-mb-4">
+      <div>
+        <div class="dl-text-xs dl-font-bold dl-uppercase dl-tracking-wide dl-text-gray-500 dl-mb-1">System Report</div>
+        <h1 class="dl-text-3xl dl-font-bold dl-tracking-tight dl-uppercase">DataLayer AI Assistant</h1>
+      </div>
+      <div class="dl-text-right dl-text-xs dl-font-mono dl-text-gray-500">
+        <div>BRANCH: local_dev_chainlit_gosha</div>
+        <div>COMMIT: Merge branch...Data_Layer_test</div>
+        <div>DATE: 2025-11-21 17:59:09 +0300</div>
+      </div>
+    </div>
+    
+    <div class="dl-bg-gray-50 dl-border dl-border-black dl-p-4">
+      <div class="dl-text-xs dl-font-bold dl-uppercase dl-mb-2">User Query Context</div>
+      <div class="dl-font-mono dl-text-xs dl-text-gray-700 dl-mb-2" style="word-break: break-all;">
+        8GUPJqnGtzzAhrJzfyFgaA1ATPc1dUer4yBtVwgSqZ62 Gxu1dpJS33kmZV6MRY6h4JkYTQQR1jmnH7q4Pw7ktFUj 6mWssiR2aSXS19Eq1ratdbWTBFqaCKJGNj5gPm5AKJuK GBGAVbMqovf2MNzFBYUoqQqetKrqmfhSaF1AaXTw4nmf CDHH1nAmXSzy7cHp2innLt8Hqm4VAKL1EYKHVakLt9bP AcfqxXYHkoYTYGJcX73rYkbJtZQU7JXM5EdNUQ5SqVS1
+      </div>
+      <p class="dl-text-sm dl-font-bold">"связаны ли эти кошельки через одно рукопожатие" (Are these wallets connected via one handshake?)</p>
+    </div>
+  </div>
+
+  <!-- Top Level Answer -->
+  <div class="dl-bg-black dl-text-white dl-p-6 dl-mb-6">
+    <div class="dl-flex dl-justify-between dl-items-center">
+      <div>
+        <h2 class="dl-text-xl dl-font-bold dl-uppercase dl-mb-1">Connection Status: YES</h2>
+        <p class="dl-text-sm dl-opacity-90">These wallets ARE partially connected through one-degree separation.</p>
+      </div>
+      <div class="dl-text-right">
+        <div class="dl-text-3xl dl-font-bold">5 / 6</div>
+        <div class="dl-text-xs dl-uppercase dl-tracking-wide">Wallets Connected</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Network Topology Visual -->
+  <div class="dl-grid dl-grid-cols-1 dl-md-grid-cols-2 dl-gap-6 dl-mb-6">
+    <!-- Hub Diagram -->
+    <div class="dl-border dl-border-black dl-p-6">
+      <h3 class="dl-text-sm dl-font-bold dl-uppercase dl-mb-4 dl-border-b dl-border-black dl-pb-2">Network Topology (Hub-and-Spoke)</h3>
+      <div class="dl-flex dl-flex-col dl-items-center dl-justify-center dl-py-4">
+        <!-- Hub -->
+        <div class="dl-border dl-border-black dl-bg-black dl-text-white dl-p-3 dl-text-center dl-mb-4 dl-w-full">
+          <div class="dl-text-xs dl-uppercase dl-font-bold">Central Hub</div>
+          <div class="dl-font-mono dl-text-xs">AcfqxXY...qVS1</div>
+        </div>
+        <!-- Connector Line -->
+        <div class="dl-h-4 dl-w-px dl-bg-black dl-mb-4"></div>
+        <!-- Spokes -->
+        <div class="dl-grid dl-grid-cols-2 dl-gap-2 dl-w-full">
+            <div class="dl-border dl-border-black dl-p-2 dl-text-center dl-bg-gray-50">
+                <div class="dl-font-mono dl-text-xs">8GUP...qZ62</div>
+                <span class="dl-text-xs dl-font-bold">SOL</span>
+            </div>
+            <div class="dl-border dl-border-black dl-p-2 dl-text-center dl-bg-gray-50">
+                <div class="dl-font-mono dl-text-xs">CDHH...t9bP</div>
+                <span class="dl-text-xs dl-font-bold">SOL/USDC</span>
+            </div>
+            <div class="dl-border dl-border-black dl-p-2 dl-text-center dl-bg-gray-50">
+                <div class="dl-font-mono dl-text-xs">GBGA...4nmf</div>
+                <span class="dl-text-xs dl-font-bold">SOL/USDT</span>
+            </div>
+            <div class="dl-border dl-border-black dl-p-2 dl-text-center dl-bg-gray-50">
+                <div class="dl-font-mono dl-text-xs">6mWs...JuK</div>
+                <span class="dl-text-xs dl-font-bold">USDT</span>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Isolated -->
+    <div class="dl-border dl-border-black dl-p-6 dl-flex dl-flex-col dl-justify-center">
+      <h3 class="dl-text-sm dl-font-bold dl-uppercase dl-mb-4 dl-border-b dl-border-black dl-pb-2">Isolated Elements</h3>
+      <div class="dl-bg-gray-100 dl-p-4 dl-border dl-border-dashed dl-border-black dl-text-center">
+        <div class="dl-mb-2 dl-badge dl-badge-neutral">No Direct Connection</div>
+        <div class="dl-font-mono dl-text-sm dl-mb-2 dl-break-all">Gxu1dpJS33kmZV6MRY6h4JkYTQQR1jmnH7q4Pw7ktFUj</div>
+        <p class="dl-text-xs dl-text-gray-700">Receives dust transfers (<0.000005 SOL) from external addresses. No interaction with the core group.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="dl-mb-6 dl-border dl-border-black">
+    <div class="dl-bg-black dl-text-white dl-p-3 dl-text-sm dl-font-bold dl-uppercase">Detailed Connectivity Report</div>
+    <div style="overflow-x: auto;">
+        <table class="dl-table">
+        <thead>
+            <tr>
+            <th class="dl-th">Wallet Address</th>
+            <th class="dl-th">Status</th>
+            <th class="dl-th">Details</th>
+            <th class="dl-th">Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <td class="dl-td">8GUPJqnGtzzAhrJzfyFgaA1ATPc1dUer4yBtVwgSqZ62</td>
+            <td class="dl-td"><span class="dl-badge dl-badge-success">Connected</span></td>
+            <td class="dl-td">Transferred 0.454 SOL to hub (Nov 21, 2025)</td>
+            <td class="dl-td">Helius</td>
+            </tr>
+            <tr>
+            <td class="dl-td">CDHH1nAmXSzy7cHp2innLt8Hqm4VAKL1EYKHVakLt9bP</td>
+            <td class="dl-td"><span class="dl-badge dl-badge-success">Connected</span></td>
+            <td class="dl-td">10+ transfers (SOL, USDC, USDT); latest Oct 29</td>
+            <td class="dl-td">Solana Query</td>
+            </tr>
+            <tr>
+            <td class="dl-td">GBGAVbMqovf2MNzFBYUoqQqetKrqmfhSaF1AaXTw4nmf</td>
+            <td class="dl-td"><span class="dl-badge dl-badge-success">Connected</span></td>
+            <td class="dl-td">8+ transfers (SOL, USDC); latest Oct 29</td>
+            <td class="dl-td">Solana Query</td>
+            </tr>
+            <tr>
+            <td class="dl-td">6mWssiR2aSXS19Eq1ratdbWTBFqaCKJGNj5gPm5AKJuK</td>
+            <td class="dl-td"><span class="dl-badge dl-badge-success">Connected</span></td>
+            <td class="dl-td">Transferred 239.16 USDT to hub (Oct 29, 2025)</td>
+            <td class="dl-td">Helius</td>
+            </tr>
+            <tr class="dl-bg-gray-50">
+            <td class="dl-td dl-text-gray-500">Gxu1dpJS33kmZV6MRY6h4JkYTQQR1jmnH7q4Pw7ktFUj</td>
+            <td class="dl-td"><span class="dl-badge dl-badge-neutral">Isolated</span></td>
+            <td class="dl-td">Only dust/airdrop transfers from external bulk distributors.</td>
+            <td class="dl-td">Helius</td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+  </div>
+
+  <!-- Detailed Transactions Grid -->
+  <div class="dl-grid dl-grid-cols-1 dl-md-grid-cols-2 dl-gap-6 dl-mb-6">
+    <!-- Card 1 -->
+    <div class="dl-border dl-border-black">
+        <div class="dl-bg-gray-100 dl-p-3 dl-border-b dl-border-black dl-font-bold dl-text-xs dl-uppercase">
+            Hub ↔ CDHH1nAm... (5+ Confirmed)
+        </div>
+        <div class="dl-p-4 dl-text-xs">
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 20:20:09</span>
+                <span class="dl-font-mono">0.02 SOL (Hub → Other)</span>
+            </div>
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 20:19:08</span>
+                <span class="dl-font-mono">20k USDC (Hub → Other)</span>
+            </div>
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 18:01:30</span>
+                <span class="dl-font-mono">20.6k USDT (Hub → Other)</span>
+            </div>
+            <div class="dl-mt-2 dl-text-right dl-font-bold">Confidence: 1.0</div>
+        </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="dl-border dl-border-black">
+        <div class="dl-bg-gray-100 dl-p-3 dl-border-b dl-border-black dl-font-bold dl-text-xs dl-uppercase">
+            Hub ↔ GBGAVbMq... (4+ Confirmed)
+        </div>
+        <div class="dl-p-4 dl-text-xs">
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 16:59:38</span>
+                <span class="dl-font-mono">1B USDT (Inbound)</span>
+            </div>
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 15:37:09</span>
+                <span class="dl-font-mono">2B USDT (Inbound)</span>
+            </div>
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-28 14:05:44</span>
+                <span class="dl-font-mono">180M USDC (Hub → Other)</span>
+            </div>
+            <div class="dl-mt-2 dl-text-right dl-font-bold">Confidence: 1.0</div>
+        </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="dl-border dl-border-black">
+        <div class="dl-bg-gray-100 dl-p-3 dl-border-b dl-border-black dl-font-bold dl-text-xs dl-uppercase">
+            Hub ↔ 8GUPJqnG... (Recent)
+        </div>
+        <div class="dl-p-4 dl-text-xs">
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-11-21 (Most Recent)</span>
+                <span class="dl-font-mono">0.454 SOL</span>
+            </div>
+            <div class="dl-py-1 dl-text-gray-500">Direction: 8GUP... → Hub</div>
+            <div class="dl-mt-2 dl-text-right dl-font-bold">Confidence: 1.0</div>
+        </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="dl-border dl-border-black">
+        <div class="dl-bg-gray-100 dl-p-3 dl-border-b dl-border-black dl-font-bold dl-text-xs dl-uppercase">
+            Hub ↔ 6mWssiR2...
+        </div>
+        <div class="dl-p-4 dl-text-xs">
+            <div class="dl-flex dl-justify-between dl-border-b dl-py-1 dl-border-gray-200">
+                <span>2025-10-29 18:01:30</span>
+                <span class="dl-font-mono">239.16 USDT</span>
+            </div>
+            <div class="dl-py-1 dl-text-gray-500">Direction: 6mWs... → Hub</div>
+            <div class="dl-mt-2 dl-text-right dl-font-bold">Confidence: 1.0</div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Raw Architecture Code Block -->
+  <div class="dl-mb-6">
+      <div class="dl-text-xs dl-font-bold dl-uppercase dl-mb-2">Network Architecture Summary</div>
+      <pre class="dl-code-block">
+┌─────────────────────────────┐
+│  AcfqxXYHkoYTYGJcX73... (HUB)│
+│   [Central Connector]       │
+└──────────────┬──────────────┘
+               │
+    ┌──────────┼──────────────┐
+    │          │              │
+✅ Connected ✅ Connected   ✅ Connected
+    │          │              │
+8GUPJqnGt... CDHH1nAm...  GBGAVbMqov...
+  (SOL)    (SOL,USDC,USDT) (SOL,USDT)
+
+6mWssiR2...
+(USDT)
+✅ Connected
+─────────────────────────────────────
+❌ Isolated: Gxu1dpJS33kmZV6MRY6h4JkYT...
+</pre>
+  </div>
+
+  <!-- Insights & Limitations -->
+  <div class="dl-grid dl-grid-cols-1 dl-md-grid-cols-2 dl-gap-6 dl-mb-6">
+    <div class="dl-border dl-border-black dl-p-6">
+      <h4 class="dl-text-sm dl-font-bold dl-uppercase dl-mb-4">Key Insights</h4>
+      <ul class="dl-list-disc dl-pl-4 dl-space-y-2 dl-text-sm">
+        <li class="dl-mb-2"><strong>Topology:</strong> Hub-and-spoke. Central connector: AcfqxXY...SqVS1.</li>
+        <li class="dl-mb-2"><strong>Tokens:</strong> SOL, USDC, USDT flows identified.</li>
+        <li class="dl-mb-2"><strong>Timing:</strong> Peak activity Oct 8 - Oct 29, 2025. Recent hit Nov 21.</li>
+        <li class="dl-mb-2"><strong>Anomaly:</strong> Isolated wallet (Gxu1...) appears to be a dust recipient only.</li>
+      </ul>
+    </div>
+
+    <div class="dl-border dl-border-black dl-p-6 dl-bg-gray-50">
+      <h4 class="dl-text-sm dl-font-bold dl-uppercase dl-mb-4">Limitations & Notes</h4>
+      <ul class="dl-text-xs dl-space-y-2">
+        <li class="dl-mb-2">⚠️ <strong>Data Truncation:</strong> Helius queries limited by size; history may extend beyond shown 20 txs.</li>
+        <li class="dl-mb-2">⚠️ <strong>Scope:</strong> Analysis limited to direct transfers (no Swaps/DEX routers included).</li>
+        <li class="dl-mb-2">✅ <strong>Confidence:</strong> 1.0 (Perfect) - Backed by on-chain data.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer / Follow-up -->
+  <div class="dl-border-t dl-border-black dl-pt-6 dl-mt-6">
+    <div class="dl-text-xs dl-font-bold dl-uppercase dl-mb-2">Suggested Follow-up</div>
+    <div class="dl-grid dl-grid-cols-1 dl-gap-2">
+        <div class="dl-p-2 dl-bg-gray-100 dl-border dl-border-gray-300 dl-text-xs">💡 What is the total transaction volume and activity pattern of the hub wallet over time?</div>
+        <div class="dl-p-2 dl-bg-gray-100 dl-border dl-border-gray-300 dl-text-xs">💡 Can you map 2-degree connections (indirect paths) between the isolated wallet and others?</div>
+        <div class="dl-p-2 dl-bg-gray-100 dl-border dl-border-gray-300 dl-text-xs">💡 Are these USDC/USDT transfers consistent with trading, mixing, or fund management activity?</div>
+    </div>
+    
+    <div class="dl-mt-6 dl-text-xs dl-text-gray-500 dl-font-mono">
+      <div>Tool Usage: solana_query, helius_solana_wallet_query (x6)</div>
+      <div>Generated by DataLayer AI Assistant</div>
+    </div>
+  </div>
+</div>
+`;

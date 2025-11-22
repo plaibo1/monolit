@@ -7,8 +7,9 @@ export type SendMessageResponse = {
   };
 };
 
-export async function sendFirstMessage(
-  text: string
+export async function sendMessage(
+  text: string,
+  chatId?: string
 ): Promise<SendMessageResponse> {
   const response = await fetch(`${API_BASE_URL}/chats/send-message`, {
     method: "POST",
@@ -17,6 +18,7 @@ export async function sendFirstMessage(
     },
     body: JSON.stringify({
       text,
+      chat_id: chatId,
     }),
   });
 
