@@ -47,6 +47,7 @@ export function useChatMessages() {
     []
   );
 
+  /** @deprecated */
   const addStepToMessage = useCallback(
     (messageId: string, step: ExecutionStep) => {
       setMessages((prev) => {

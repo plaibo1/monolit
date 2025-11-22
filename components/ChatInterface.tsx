@@ -18,10 +18,7 @@ type ChatInterfaceProps = {
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [threadId, setThreadId] = useState<string | null>(null);
-  const [currentAssistantMessageId, setCurrentAssistantMessageId] = useState<
-    string | null
-  >(null);
+  const currentAssistantMessageId = useRef<string | null>(null);
 
   const inputRef = useRef<InputAreaRef>(null);
 
@@ -40,18 +37,18 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       const handler = new WebSocketMessageHandler({
         onUserMessage: addMessage,
         onAssistantMessage: (message) => {
-          setCurrentAssistantMessageId(message.id);
+          currentAssistantMessageId.current = message.id;
           addMessage(message);
         },
         onUpdateAssistantMessage: updateMessage,
         onStep: (step) => {
-          if (currentAssistantMessageId) {
-            addStepToMessage(currentAssistantMessageId, step);
+          if (currentAssistantMessageId.current) {
+            addStepToMessage(currentAssistantMessageId.current, step);
           }
         },
         onUpdateStep: (id, updates) => {
-          if (currentAssistantMessageId) {
-            updateStepInMessage(currentAssistantMessageId, id, updates);
+          if (currentAssistantMessageId.current) {
+            updateStepInMessage(currentAssistantMessageId.current, id, updates);
           }
         },
         onAction: addActionToMessage,
@@ -60,10 +57,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         },
         onTaskEnd: () => {
           setIsProcessing(false);
-          setCurrentAssistantMessageId(null);
+          currentAssistantMessageId.current = null;
         },
         onFirstInteraction: (data) => {
-          setThreadId(data.thread_id);
+          // setThreadId(data.thread_id);
         },
         onClearAsk: () => {
           // Handle clear ask if needed
