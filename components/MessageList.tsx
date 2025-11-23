@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import type { ChatMessage } from "@/types/chat";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
+import { ChatLoader } from "./ChatLoader";
 
 type MessageListProps = {
   messages: ChatMessage[];
@@ -28,19 +29,7 @@ export function MessageList({
   }, [messages, isProcessing]);
 
   if (messages.length === 0 && !isProcessing) {
-    return (
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="text-center max-w-md">
-          <h3 className="text-lg font-semibold mb-2">
-            Welcome to DataLayer AI Assistant
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Start a conversation by typing your question below. I can help you
-            with data queries, analysis, and more.
-          </p>
-        </div>
-      </div>
-    );
+    return <ChatLoader />;
   }
 
   return (
