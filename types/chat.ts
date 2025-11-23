@@ -42,11 +42,18 @@ export type FirstInteractionPayload = {
   thread_id: string;
 };
 
+export type MessageTypes =
+  | "run"
+  | "assistant_message"
+  | "tool_message"
+  | "undefined"
+  | "final_html";
+
 export type MessagePayload = {
   id: string;
   name: string;
   output: string;
-  type: "run" | "assistant_message" | "tool_message" | "undefined";
+  type: MessageTypes;
   parentId: string | null;
   threadId: string;
   createdAt: string;
@@ -94,7 +101,7 @@ export type ChatMessage = {
 export type ExecutionStep = {
   id: string;
   name: string;
-  type: "intention" | "planning" | "tool" | "other";
+  type: "intention" | "planning" | "tool" | "html" | "other";
   input?: string;
   output: string;
   timestamp: string;

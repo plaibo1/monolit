@@ -60,6 +60,12 @@ export function messagePayloadToStep(payload: MessagePayload): ExecutionStep {
   ) {
     type = "tool";
   } else if (
+    name.startsWith("HTML") ||
+    name.includes("html") ||
+    name.includes("HTML")
+  ) {
+    type = "html";
+  } else if (
     name.includes("Reasoning") ||
     name.includes("Thinking") ||
     name.includes("Synthesis")
