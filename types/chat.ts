@@ -96,6 +96,7 @@ export type ChatMessage = {
   actions?: ActionButton[];
   steps?: ExecutionStep[];
   rawData?: any; // Store raw message data for unknown messages
+  type?: MessageTypes;
 };
 
 export type ExecutionStep = {

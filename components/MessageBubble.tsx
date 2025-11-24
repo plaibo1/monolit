@@ -7,11 +7,36 @@ import { MessageSkeleton } from "./MessageSkeleton";
 import { MarkdownContent } from "./MarkdownContent";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { HtmlMessage } from "./HtmlMessage";
 
 type MessageBubbleProps = {
   message: ChatMessage;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
+};
+
+const getBubbleClasses = (message: ChatMessage) => {
+  if (message.type === "final_html") {
+    return "";
+  }
+
+  const baseClasses = "rounded-lg px-4 py-3";
+  const isUser = message.role === "user";
+  const isUnknown = message.role === "unknown";
+
+  if (isUser) {
+    return `${baseClasses} bg-primary text-primary-foreground`;
+  }
+
+  if (isUnknown) {
+    return `${baseClasses} bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900`;
+  }
+
+  if (message.isError) {
+    return `${baseClasses} bg-destructive/10 text-destructive border border-destructive/20`;
+  }
+
+  return `${baseClasses} bg-muted text-foreground`;
 };
 
 export function MessageBubble({
@@ -21,6 +46,7 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
+  const isHtml = message.type === "final_html";
   const isEmpty = !message.content || message.content.trim() === "";
   const [copied, setCopied] = useState(false);
 
@@ -46,30 +72,22 @@ export function MessageBubble({
         } flex flex-col gap-1`}
       >
         <div className="relative group w-full">
-          <div
-            className={`rounded-lg px-4 py-3 ${
-              isUser
-                ? "bg-primary text-primary-foreground"
-                : isUnknown
-                ? "bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900"
-                : message.isError
-                ? "bg-destructive/10 text-destructive border border-destructive/20"
-                : "bg-muted text-foreground"
-            }`}
-          >
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={handleCopy}
-              title="Copy message"
-            >
-              {copied ? (
-                <Check className="h-4 w-4 text-green-500" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
-            </Button>
+          <div className={getBubbleClasses(message)}>
+            {!isHtml && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handleCopy}
+                title="Copy message"
+              >
+                {copied ? (
+                  <Check className="h-4 w-4 text-green-500" />
+                ) : (
+                  <Copy className="h-4 w-4" />
+                )}
+              </Button>
+            )}
 
             {isUnknown && (
               <div className="flex items-center gap-2 mb-3 text-amber-600 dark:text-amber-500">
@@ -105,6 +123,8 @@ export function MessageBubble({
               </div>
             ) : isUser ? (
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            ) : isHtml ? (
+              <HtmlMessage html={message.content} isLoading={isEmpty} />
             ) : (
               <MarkdownContent content={message.content} />
             )}
