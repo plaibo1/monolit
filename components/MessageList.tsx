@@ -11,6 +11,7 @@ type MessageListProps = {
   isProcessing: boolean;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
+  onHtmlClick?: (html: string) => void;
 };
 
 export function MessageList({
@@ -18,6 +19,7 @@ export function MessageList({
   isProcessing,
   onActionClick,
   onActionHold,
+  onHtmlClick,
 }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +43,7 @@ export function MessageList({
             message={message}
             onActionClick={onActionClick}
             onActionHold={onActionHold}
+            onHtmlClick={onHtmlClick}
           />
         ))}
         {isProcessing && <TypingIndicator />}
