@@ -41,6 +41,7 @@ export function messagePayloadToChatMessage(
     isError: payload.isError,
     streaming: payload.streaming,
     actions: [],
+    type: payload.type,
   };
 }
 
