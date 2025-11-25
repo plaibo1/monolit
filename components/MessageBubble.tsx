@@ -13,6 +13,7 @@ type MessageBubbleProps = {
   message: ChatMessage;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
+  onHtmlClick?: (html: string) => void;
 };
 
 const getBubbleClasses = (message: ChatMessage) => {
@@ -43,6 +44,7 @@ export function MessageBubble({
   message,
   onActionClick,
   onActionHold,
+  onHtmlClick,
 }: MessageBubbleProps) {
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
@@ -103,7 +105,7 @@ export function MessageBubble({
               </div>
             )}
 
-            {isEmpty && !isUser && !isUnknown ? (
+            {isEmpty && !isHtml && !isUser && !isUnknown ? (
               <MessageSkeleton />
             ) : isUnknown ? (
               <div className="space-y-2">
@@ -124,7 +126,11 @@ export function MessageBubble({
             ) : isUser ? (
               <p className="text-sm whitespace-pre-wrap">{message.content}</p>
             ) : isHtml ? (
-              <HtmlMessage html={message.content} isLoading={isEmpty} />
+              <HtmlMessage
+                html={message.content}
+                isLoading={isEmpty}
+                onHtmlClick={onHtmlClick}
+              />
             ) : (
               <MarkdownContent content={message.content} />
             )}

@@ -6,6 +6,7 @@ import { useChatMessages } from "@/hooks/useChatMessages";
 import { WebSocketMessageHandler } from "@/lib/websocket-handler";
 import { MessageList } from "./MessageList";
 import { InputArea, type InputAreaRef } from "./InputArea";
+import { HtmlPanel } from "./HtmlPanel";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -18,6 +19,7 @@ type ChatInterfaceProps = {
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
   const currentAssistantMessageId = useRef<string | null>(null);
 
   const inputRef = useRef<InputAreaRef>(null);
@@ -111,6 +113,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     [handleSendMessage, chatId]
   );
 
+  const handleHtmlClick = useCallback((html: string) => {
+    setSelectedHtml(html);
+  }, []);
+
   const messages = getOrderedMessages();
 
   return (
@@ -137,27 +143,39 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       </header>
 
       <div className="flex flex-1 flex-col overflow-hidden">
-        {status === "error" && (
-          <Alert variant="destructive" className="m-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Failed to connect to the chat server. Please check your connection
-              and try again.
-            </AlertDescription>
-          </Alert>
-        )}
-        <MessageList
-          messages={messages}
-          isProcessing={isProcessing}
-          onActionClick={handleActionClick}
-          onActionHold={handleActionHold}
-        />
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden">
+            {status === "error" && (
+              <Alert variant="destructive" className="m-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Failed to connect to the chat server. Please check your
+                  connection and try again.
+                </AlertDescription>
+              </Alert>
+            )}
 
-        <InputArea
-          ref={inputRef}
-          onSendMessage={handleSendMessage}
-          disabled={status !== "connected" || isProcessing}
-        />
+            <MessageList
+              messages={messages}
+              isProcessing={isProcessing}
+              onActionClick={handleActionClick}
+              onActionHold={handleActionHold}
+              onHtmlClick={handleHtmlClick}
+            />
+
+            <InputArea
+              ref={inputRef}
+              onSendMessage={handleSendMessage}
+              disabled={status !== "connected" || isProcessing}
+            />
+          </div>
+          {selectedHtml && (
+            <HtmlPanel
+              html={selectedHtml}
+              onClose={() => setSelectedHtml(null)}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
