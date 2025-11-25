@@ -42,7 +42,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center h-full p-4">
         <div className="max-w-3xl w-full space-y-6">
           <div className="text-center space-y-3">
-            <h1 className="text-4xl font-bold">Monolit</h1>
+            <h1 className="text-4xl font-bold">Monolit v0.1</h1>
             <p className="text-muted-foreground text-lg">
               Ask me anything about your data
             </p>
