@@ -36,7 +36,7 @@ export function MessageList({
 
   return (
     <div className="flex-1 overflow-y-auto" ref={scrollRef}>
-      <div className="space-y-4 max-w-4xl mx-auto">
+      <div className="space-y-4 max-w-4xl mx-auto py-6">
         {messages.map((message) => (
           <MessageBubble
             key={message.id}

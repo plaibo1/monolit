@@ -6,9 +6,11 @@ import {
   ChevronRight,
   MoreVertical,
   Trash2,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,9 +20,12 @@ import {
 import { ChatHistoryItem } from "@/types/chat";
 import { useRouter, usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useActiveAccount } from "thirdweb/react";
+import { useAuth } from "@/lib/auth-client";
 
 type SidebarProps = {
   history: ChatHistoryItem[];
+  isLoading: boolean;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onDeleteChat: (id: string) => void;
@@ -28,12 +33,15 @@ type SidebarProps = {
 
 export function Sidebar({
   history,
+  isLoading,
   isCollapsed,
   onToggleCollapse,
   onDeleteChat,
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const account = useActiveAccount();
+  const { logout } = useAuth();
 
   const handleNewChat = () => {
     router.push("/");
@@ -79,9 +87,16 @@ export function Sidebar({
           </div>
 
           {/* Chat History */}
-          <ScrollArea className="flex-1 px-2 py-2 h-[calc(100vh-73px)]">
-            <div className="space-y-1 mb-16">
-              {history.length === 0 ? (
+          <ScrollArea className="flex-1 px-2 py-2 h-[calc(100vh-146px)]">
+            <div className="space-y-1 mb-2">
+              {isLoading ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="px-3 py-2.5">
+                    <Skeleton className="h-5 w-3/4 mb-1" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                ))
+              ) : history.length === 0 ? (
                 <div className="px-3 py-8 text-center text-sm text-muted-foreground">
                   No chat history yet.
                   <br />
@@ -129,6 +144,37 @@ export function Sidebar({
               )}
             </div>
           </ScrollArea>
+
+          {/* Account Footer */}
+          <div className="p-4 border-t mt-auto">
+            <div className="flex items-center gap-3">
+              {account ? (
+                <>
+                  <div className="h-9 w-9 rounded-full bg-linear-to-br from-blue-300 to-blue-700 flex items-center justify-center text-white font-medium shrink-0 overflow-hidden">
+                    {/* TODO: Check if thirdweb provides avatar, for now using gradient */}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">
+                      {account.address.slice(0, 6)}...
+                      {account.address.slice(-4)}
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    onClick={() => logout()}
+                  >
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </>
+              ) : (
+                <div className="text-sm text-muted-foreground text-center w-full">
+                  Not connected
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </aside>
 

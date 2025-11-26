@@ -10,7 +10,7 @@ type ChatLayoutProps = {
 };
 
 export function ChatLayout({ children }: ChatLayoutProps) {
-  const { history, deleteChat } = useChatHistory();
+  const { history, isLoading, deleteChat } = useChatHistory();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleToggleSidebar = useCallback(() => {
@@ -21,6 +21,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
     <div className="flex h-screen overflow-hidden">
       <Sidebar
         history={history}
+        isLoading={isLoading}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={handleToggleSidebar}
         onDeleteChat={deleteChat}
