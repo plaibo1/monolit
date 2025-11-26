@@ -19,7 +19,10 @@ type ChatInterfaceProps = {
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedHtml, setSelectedHtml] = useState<string | null>(null);
+  const [selectedHtml, setSelectedHtml] = useState<{
+    html: string;
+    messageId: string;
+  } | null>(null);
   const currentAssistantMessageId = useRef<string | null>(null);
 
   const inputRef = useRef<InputAreaRef>(null);
@@ -113,9 +116,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     [handleSendMessage, chatId]
   );
 
-  const handleHtmlClick = useCallback((html: string) => {
-    setSelectedHtml(html);
-  }, []);
+  const handleHtmlClick = useCallback(
+    ({ html, messageId }: { html: string; messageId: string }) => {
+      setSelectedHtml({ html, messageId });
+    },
+    []
+  );
 
   const messages = getOrderedMessages();
 
@@ -171,7 +177,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
           </div>
           {selectedHtml && (
             <HtmlPanel
-              html={selectedHtml}
+              messageId={selectedHtml.messageId}
+              chatId={chatId}
               onClose={() => setSelectedHtml(null)}
             />
           )}

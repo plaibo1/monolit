@@ -1,13 +1,15 @@
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
+import { getHtmlReportUrl } from "@/lib/api";
 
 interface HtmlPanelProps {
-  html: string;
+  messageId: string;
+  chatId: string;
   onClose: () => void;
 }
 
-export function HtmlPanel({ html, onClose }: HtmlPanelProps) {
+export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
   return (
     <div className="w-[900px] border-l bg-background flex flex-col h-full animate-in slide-in-from-right duration-300">
       <div className="flex items-center justify-between p-4 border-b">
@@ -17,10 +19,18 @@ export function HtmlPanel({ html, onClose }: HtmlPanelProps) {
         </Button>
       </div>
       <ScrollArea className="flex-1 p-4 h-[500px]">
-        <div
+        <div className="relative rounded-lg overflow-hidden">
+          <iframe
+            src={getHtmlReportUrl({ chatId, messageId })}
+            width="100%"
+            height="600px"
+            title="HTML Preview"
+          />
+        </div>
+        {/* <div
           // className="prose dark:prose-invert max-w-none"
           dangerouslySetInnerHTML={{ __html: html }}
-        />
+        /> */}
       </ScrollArea>
     </div>
   );

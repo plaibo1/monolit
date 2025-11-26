@@ -13,7 +13,11 @@ export function generateId(): string {
 export function categorizeMessage(
   payload: MessagePayload
 ): "chat" | "step" | "ignore" {
-  if (payload.type === "assistant_message" || payload.type === "final_html") {
+  if (
+    payload.type === "assistant_message" ||
+    payload.type === "final_html" ||
+    payload.type === "assistant_message_follow_up"
+  ) {
     return "chat";
   }
 

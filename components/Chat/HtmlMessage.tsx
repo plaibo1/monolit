@@ -6,10 +6,18 @@ export const HtmlMessage = ({
   html,
   isLoading,
   onHtmlClick,
+  messageId,
 }: {
   html: string;
+  messageId: string;
   isLoading: boolean;
-  onHtmlClick?: (html: string) => void;
+  onHtmlClick?: ({
+    html,
+    messageId,
+  }: {
+    html: string;
+    messageId: string;
+  }) => void;
 }) => {
   if (isLoading) {
     return <CodeLoader />;
@@ -18,7 +26,7 @@ export const HtmlMessage = ({
   return (
     <Card
       className="p-3 cursor-pointer hover:bg-background transition-colors"
-      onClick={() => onHtmlClick?.(html)}
+      onClick={() => onHtmlClick?.({ html, messageId })}
     >
       <div className="flex items-start gap-3 text-left">
         <div

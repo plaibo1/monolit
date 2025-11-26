@@ -13,7 +13,13 @@ type MessageBubbleProps = {
   message: ChatMessage;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
-  onHtmlClick?: (html: string) => void;
+  onHtmlClick?: ({
+    html,
+    messageId,
+  }: {
+    html: string;
+    messageId: string;
+  }) => void;
 };
 
 const getBubbleClasses = (message: ChatMessage) => {
@@ -130,6 +136,7 @@ export function MessageBubble({
                 html={message.content}
                 isLoading={isEmpty}
                 onHtmlClick={onHtmlClick}
+                messageId={message.id}
               />
             ) : (
               <MarkdownContent content={message.content} />

@@ -11,7 +11,13 @@ type MessageListProps = {
   isProcessing: boolean;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
-  onHtmlClick?: (html: string) => void;
+  onHtmlClick?: ({
+    html,
+    messageId,
+  }: {
+    html: string;
+    messageId: string;
+  }) => void;
 };
 
 export function MessageList({

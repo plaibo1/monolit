@@ -32,3 +32,13 @@ export async function sendMessage(
 export function getWebSocketUrl(chatId: string): string {
   return `${WS_URL}/chats/ws/${chatId}`;
 }
+
+export const getHtmlReportUrl = ({
+  chatId,
+  messageId,
+}: {
+  chatId: string;
+  messageId: string;
+}): string => {
+  return `${API_BASE_URL}/api/v1/chats/reports/${chatId}/${messageId}`;
+};
