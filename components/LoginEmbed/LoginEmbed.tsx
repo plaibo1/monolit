@@ -1,6 +1,6 @@
 "use client";
 
-import { thirdwebClient } from "@/app/client";
+import { thirdwebClient } from "@/lib/thirdweb-options";
 import { useTheme } from "@/hooks/useTheme";
 import { ConnectEmbed } from "thirdweb/react";
 
@@ -9,17 +9,12 @@ import {
   useActiveWallet,
   useDisconnect,
 } from "thirdweb/react";
-import { createWallet, inAppWallet } from "thirdweb/wallets";
+import { wallets } from "@/lib/thirdweb-options";
 
-const wallets = [
-  inAppWallet({
-    auth: {
-      options: ["email", "google", "apple", "facebook", "phone"],
-    },
-  }),
-  createWallet("io.metamask"),
-  createWallet("com.coinbase.wallet"),
-];
+const welcomeScreen = {
+  title: "Welcome to Monolit",
+  description: "Connect your wallet to get started",
+};
 
 export const LoginEmbed = () => {
   const { theme } = useTheme();
@@ -45,6 +40,7 @@ export const LoginEmbed = () => {
         theme={theme}
         client={thirdwebClient}
         wallets={wallets}
+        welcomeScreen={welcomeScreen}
         auth={{
           // 1. Backend generates a payload for the user to sign
           getLoginPayload: async ({ address, chainId }) => {

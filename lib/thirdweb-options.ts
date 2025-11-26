@@ -1,3 +1,4 @@
+import { createWallet, inAppWallet } from "thirdweb/wallets";
 import { createThirdwebClient } from "thirdweb";
 
 // Replace this with your client ID string
@@ -11,3 +12,13 @@ if (!clientId) {
 export const thirdwebClient = createThirdwebClient({
   clientId: clientId,
 });
+
+export const wallets = [
+  inAppWallet({
+    auth: {
+      options: ["email", "google", "apple", "facebook", "phone"],
+    },
+  }),
+  createWallet("io.metamask"),
+  createWallet("com.coinbase.wallet"),
+];
