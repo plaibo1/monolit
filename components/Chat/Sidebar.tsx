@@ -8,6 +8,7 @@ import {
   Trash2,
   LogOut,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChatHistoryItem } from "@/types/chat";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useActiveAccount } from "thirdweb/react";
 import { useAuth } from "@/lib/auth-client";
@@ -38,18 +39,9 @@ export function Sidebar({
   onToggleCollapse,
   onDeleteChat,
 }: SidebarProps) {
-  const router = useRouter();
   const pathname = usePathname();
   const account = useActiveAccount();
   const { logout } = useAuth();
-
-  const handleNewChat = () => {
-    router.push("/");
-  };
-
-  const handleChatClick = (chatId: string) => {
-    router.push(`/${chatId}`);
-  };
 
   const handleDeleteClick = (e: React.MouseEvent, chatId: string) => {
     e.stopPropagation();
@@ -76,14 +68,12 @@ export function Sidebar({
           )}
         >
           <div className="p-4 border-b h-[73px] flex items-center">
-            <Button
-              onClick={handleNewChat}
-              className="w-full justify-start gap-2"
-              variant="outline"
-            >
-              <MessageSquarePlus className="h-4 w-4" />
-              New Chat
-            </Button>
+            <Link href="/" className="w-full">
+              <Button className="w-full justify-start gap-2" variant="outline">
+                <MessageSquarePlus className="h-4 w-4" />
+                New Chat
+              </Button>
+            </Link>
           </div>
 
           {/* Chat History */}
@@ -105,10 +95,10 @@ export function Sidebar({
               ) : (
                 history.map((chat) => (
                   <div key={chat.id} className="relative group">
-                    <button
-                      onClick={() => handleChatClick(chat.id)}
+                    <Link
+                      href={`/${chat.id}`}
                       className={cn(
-                        "w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-muted",
+                        "block w-full text-left px-3 py-2.5 rounded-lg text-sm transition-colors hover:bg-muted",
                         isActive(chat.id) && "bg-muted font-medium"
                       )}
                     >
@@ -116,7 +106,7 @@ export function Sidebar({
                       <div className="text-xs text-muted-foreground mt-0.5">
                         {new Date(chat.updatedAt).toLocaleDateString()}
                       </div>
-                    </button>
+                    </Link>
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
