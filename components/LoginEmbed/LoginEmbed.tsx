@@ -10,6 +10,7 @@ import {
   useDisconnect,
 } from "thirdweb/react";
 import { wallets } from "@/lib/thirdweb-options";
+import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "@/lib/auth-api";
 
 const welcomeScreen = {
   title: "Welcome to Monolit",
@@ -43,44 +44,13 @@ export const LoginEmbed = () => {
         welcomeScreen={welcomeScreen}
         auth={{
           // 1. Backend generates a payload for the user to sign
-          getLoginPayload: async ({ address, chainId }) => {
-            // Note: your Go handler expects /api/v1/auth/login with GET for payload
-            const res = await fetch(
-              `${
-                process.env.NEXT_PUBLIC_API_BASE_URL
-              }/auth/login?address=${address}&chainId=${chainId || ""}`
-            );
-            return await res.json();
-          },
+          getLoginPayload,
           // 2. Verify the signature on the backend and set a session/cookie
-          doLogin: async (params) => {
-            // Note: your Go handler expects /api/v1/auth/login with POST for verification
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(params),
-              }
-            );
-            if (!res.ok) throw new Error("Login failed");
-          },
+          doLogin,
           // 3. Check if the user is already logged in
-          isLoggedIn: async () => {
-            // Note: your Go handler path is /api/v1/auth/isLoggedIn
-            const res = await fetch(
-              `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/isLoggedIn`
-            );
-            // Your handler returns a boolean directly (true/false)
-            return await res.json();
-          },
+          isLoggedIn,
           // 4. Logout the user
-          doLogout: async () => {
-            // Note: your Go handler path is /api/v1/auth/logout
-            await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/logout`, {
-              method: "POST",
-            });
-          },
+          doLogout,
         }}
       />
       {wallet && <button onClick={() => disconnect(wallet)}>Disconnect</button>}
