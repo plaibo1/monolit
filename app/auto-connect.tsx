@@ -3,6 +3,7 @@
 import { AutoConnect, ThirdwebProvider } from "thirdweb/react";
 import { thirdwebClient } from "@/lib/thirdweb-options";
 import { wallets } from "@/lib/thirdweb-options";
+import { AuthProvider } from "@/lib/auth-client";
 
 export default function AutoConnectLayout({
   children,
@@ -11,8 +12,10 @@ export default function AutoConnectLayout({
 }) {
   return (
     <ThirdwebProvider>
-      <AutoConnect client={thirdwebClient} wallets={wallets} />
-      {children}
+      <AuthProvider>
+        <AutoConnect client={thirdwebClient} wallets={wallets} />
+        {children}
+      </AuthProvider>
     </ThirdwebProvider>
   );
 }

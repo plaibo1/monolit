@@ -23,8 +23,14 @@ export const doLogin = async (params: any) => {
 };
 
 export const isLoggedIn = async () => {
-  const res = await fetch(`${API_BASE_URL}/auth/isLoggedIn`);
-  return await res.json();
+  try {
+    const res = await fetch(`${API_BASE_URL}/auth/isLoggedIn`);
+    if (!res.ok) return { isLoggedIn: false };
+    const loggedInStatus = await res.json();
+    return { isLoggedIn: loggedInStatus };
+  } catch (error) {
+    return { isLoggedIn: false };
+  }
 };
 
 export const doLogout = async () => {

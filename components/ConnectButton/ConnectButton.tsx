@@ -1,5 +1,5 @@
 "use client";
-import { thirdwebClient } from "@/app/client";
+import { thirdwebClient } from "@/lib/thirdweb-options";
 import { ConnectButton as ThirdWebConnectButton } from "thirdweb/react";
 
 export const ConnectButton = () => {
