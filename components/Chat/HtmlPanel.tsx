@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
-import { Button } from "./ui/button";
-import { ScrollArea } from "./ui/scroll-area";
+import { Button } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface HtmlPanelProps {
   html: string;

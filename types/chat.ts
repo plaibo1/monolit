@@ -45,6 +45,7 @@ export type FirstInteractionPayload = {
 export type MessageTypes =
   | "run"
   | "assistant_message"
+  | "assistant_message_follow_up"
   | "tool_message"
   | "undefined"
   | "final_html";

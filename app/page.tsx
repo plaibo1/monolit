@@ -1,22 +1,16 @@
 "use client";
 
-import { ChatLayout } from "@/components/ChatLayout";
+import { ChatLayout } from "@/components/Chat/ChatLayout";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendMessage } from "@/lib/api";
-import { InputArea } from "@/components/InputArea";
+import { InputArea } from "@/components/Chat/InputArea";
 import { Loader2 } from "lucide-react";
-
-import { useActiveAccount } from "thirdweb/react";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const account = useActiveAccount();
-
-  console.log("account", account);
 
   const handleSendMessage = async (message: string) => {
     setIsLoading(true);

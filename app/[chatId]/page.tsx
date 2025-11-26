@@ -1,5 +1,5 @@
-import { ChatInterface } from "@/components/ChatInterface";
-import { ChatLayout } from "@/components/ChatLayout";
+import { ChatInterface } from "@/components/Chat/ChatInterface";
+import { ChatLayout } from "@/components/Chat/ChatLayout";
 
 type PageProps = {
   params: Promise<{ chatId: string }>;

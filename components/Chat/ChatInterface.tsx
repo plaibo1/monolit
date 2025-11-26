@@ -10,8 +10,8 @@ import { HtmlPanel } from "./HtmlPanel";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ThemeToggle } from "./ThemeToggle";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
+import { ThemeToggle } from "../ThemeToggle";
 
 type ChatInterfaceProps = {
   chatId: string;
