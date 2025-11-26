@@ -1,11 +1,12 @@
 "use client";
 
 import { thirdwebClient } from "@/lib/thirdweb-options";
-import { useTheme } from "@/hooks/useTheme";
+
 import { ConnectEmbed } from "thirdweb/react";
 import { wallets } from "@/lib/thirdweb-options";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "@/lib/auth-api";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 
 const welcomeScreen = {
   title: "Welcome to Monolit",
@@ -28,7 +29,7 @@ export const LoginEmbed = () => {
       }}
     >
       <ConnectEmbed
-        theme={theme}
+        theme={theme as "dark" | "light"}
         client={thirdwebClient}
         wallets={wallets}
         welcomeScreen={welcomeScreen}
