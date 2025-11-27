@@ -93,7 +93,10 @@ export const getDashboardPublishStatus = async ({
 }: {
   chatId: string;
   messageId: string;
-}) => {
+}): Promise<{
+  status: number;
+  data: { shared: boolean; can_read: boolean; can_modify: boolean };
+}> => {
   const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/share`);
 
   if (!data.ok) {

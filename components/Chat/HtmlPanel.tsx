@@ -25,10 +25,16 @@ interface HtmlPanelProps {
 }
 
 export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
-  const url = getHtmlReportUrl({ chatId, messageId });
-  const [publishStatus, setPublishStatus] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("Dashboard");
+
+  const [publishState, setPublishState] = useState({
+    shared: false,
+    can_read: false,
+    can_modify: false,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const url = getHtmlReportUrl({ chatId, messageId });
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -37,7 +43,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
     getDashboardPublishStatus({ chatId, messageId })
       .then((data) => {
         if (data?.status === 200) {
-          setPublishStatus(data.data.shared);
+          setPublishState(data.data);
           return;
         }
       })
@@ -51,11 +57,11 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
     publishDashboard({
       chatId,
       messageId,
-      shareStatus: !publishStatus,
+      shareStatus: !publishState.shared,
     })
       .then((response) => {
         if (response?.status === 200) {
-          setPublishStatus(response.data.shared);
+          setPublishState(response.data);
         }
       })
       .finally(() => {
@@ -93,15 +99,17 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
         <h3 className="font-semibold">{title}</h3>
 
         <div className="flex items-center gap-2">
-          {publishStatus && (
+          {publishState.shared && (
             <Button variant="ghost" disabled={loading} onClick={handleShare}>
               Link <Share2 />
             </Button>
           )}
 
-          <Button variant="ghost" disabled={loading} onClick={handlePublish}>
-            {publishStatus ? "Unpublish" : "Publish"} <Upload />
-          </Button>
+          {publishState.can_modify && (
+            <Button variant="ghost" disabled={loading} onClick={handlePublish}>
+              {publishState.shared ? "Unpublish" : "Publish"} <Upload />
+            </Button>
+          )}
 
           <Link href={`/${chatId}/${messageId}`}>
             <Button variant="ghost" disabled={loading} size="icon">
