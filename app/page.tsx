@@ -4,8 +4,9 @@ import { ChatLayout } from "@/components/Chat/ChatLayout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { sendMessage } from "@/lib/api";
-import { InputArea } from "@/components/Chat/InputArea";
+import { CommandCenter } from "@/components/Chat/CommandCenter";
 import { Loader2 } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Home() {
   const router = useRouter();
@@ -40,35 +41,29 @@ export default function Home() {
 
   return (
     <ChatLayout>
-      <div className="flex flex-col items-center justify-center h-full p-4">
-        <div className="max-w-3xl w-full space-y-6">
-          <div className="text-center space-y-3">
-            <h1 className="text-4xl font-bold">Monolit v0.1</h1>
-            <p className="text-muted-foreground text-lg">
-              Ask me anything about your data
-            </p>
-          </div>
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background transition-colors duration-300">
+        <div className="absolute top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
 
+        <div className="w-full max-w-2xl px-4 flex flex-col items-center">
           {error && (
-            <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
+            <div className="absolute top-4 bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
               {error}
             </div>
           )}
 
           {isLoading && (
-            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <div className="absolute top-8 flex items-center justify-center gap-2 text-muted-foreground z-50">
               <Loader2 className="h-4 w-4 animate-spin" />
               Creating chat...
             </div>
           )}
 
-          <div className="w-full">
-            <InputArea
-              onSendMessage={handleSendMessage}
-              disabled={isLoading}
-              isMainPage
-            />
-          </div>
+          <CommandCenter
+            onSendMessage={handleSendMessage}
+            disabled={isLoading}
+          />
         </div>
       </div>
     </ChatLayout>

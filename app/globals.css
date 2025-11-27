@@ -76,6 +76,13 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Monolith Colors - Light Mode (Dark Monolith) */
+  --monolith-bg-start: #1a1a1a;
+  --monolith-bg-end: #0a0a0a;
+  --monolith-border: rgba(0, 0, 0, 0.1);
+  --monolith-shadow: rgba(0, 0, 0, 0.2);
+  --monolith-glow: none;
 }
 
 .dark {
@@ -110,6 +117,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Monolith Colors - Dark Mode (Dark Monolith with Glow) */
+  --monolith-bg-start: #27272a;
+  /* Zinc 800 */
+  --monolith-bg-end: #09090b;
+  /* Zinc 950 */
+  --monolith-border: rgba(255, 255, 255, 0.1);
+  --monolith-shadow: rgba(0, 0, 0, 0.5);
+  /* --monolith-glow: 0 0 40px rgba(255, 255, 255, 0.017); */
 }
 
 @layer base {
