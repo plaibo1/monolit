@@ -11,7 +11,7 @@ export default async function ChatPage({ params }: PageProps) {
   const url = getHtmlReportUrl({ chatId, messageId });
 
   return (
-    <div className="relative w-full h-screen px-16 py-8">
+    <div className="relative w-full h-screen md:max-w-6xl md:mx-auto md:pt-12 md:pb-16">
       <LiquidGlassIframe>
         <iframe src={url} style={{ width: "100%", height: "100%" }} />
       </LiquidGlassIframe>

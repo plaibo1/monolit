@@ -115,7 +115,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
         </div>
       </div>
       <ScrollArea className="flex-1 p-4 h-[900px]">
-        <div className="relative rounded-lg overflow-hidden h-[700px]">
+        <div className="relative rounded-lg overflow-hidden h-[calc(100vh-200px)]">
           <LiquidGlassIframe>
             <iframe
               ref={iframeRef}
