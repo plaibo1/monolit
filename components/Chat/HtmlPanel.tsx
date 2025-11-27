@@ -61,7 +61,10 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
     })
       .then((response) => {
         if (response?.status === 200) {
-          setPublishState(response.data);
+          setPublishState((prev) => ({
+            ...prev,
+            shared: response.data.shared,
+          }));
         }
       })
       .finally(() => {
@@ -96,7 +99,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
   return (
     <div className="w-full md:w-1/2 border-l bg-background flex flex-col h-full animate-in slide-in-from-right duration-300">
       <div className="flex items-center justify-between px-4 py-2">
-        <h3 className="font-semibold">{title}</h3>
+        <h3 className="font-semibold truncate w-[50%]">{title}</h3>
 
         <div className="flex items-center gap-2">
           {publishState.shared && (
