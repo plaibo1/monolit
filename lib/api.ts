@@ -40,5 +40,65 @@ export const getHtmlReportUrl = ({
   chatId: string;
   messageId: string;
 }): string => {
-  return `${API_BASE_URL}/api/v1/chats/reports/${chatId}/${messageId}`;
+  return `${API_BASE_URL}/chats/reports/${chatId}/${messageId}`;
+};
+
+// POST /api/v1/chats/reports/{chat_id}/{message_id}/share
+
+// request:
+// JSON
+// {
+// "shared":  true/false
+// }
+// response:
+
+// JSON
+// {
+//     "status": 200,
+//     "data": {
+//         "shared": true/false
+//     }
+// }
+
+export const publishDashboard = async ({
+  chatId,
+  messageId,
+  shareStatus,
+}: {
+  chatId: string;
+  messageId: string;
+  shareStatus: boolean;
+}) => {
+  const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/share`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      shared: shareStatus,
+    }),
+  });
+
+  if (!data.ok) {
+    throw new Error("Failed to publish dashboard");
+  }
+
+  return data.json();
+};
+
+export const getDashboardPublishStatus = async ({
+  chatId,
+  messageId,
+}: {
+  chatId: string;
+  messageId: string;
+}) => {
+  const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/share`);
+
+  if (!data.ok) {
+    throw new Error("Failed to get dashboard publish status");
+  }
+
+  return data.json();
 };
