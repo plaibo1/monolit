@@ -128,7 +128,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div className="absolute top-4 right-8 z-50">
+      <div
+        className={`absolute top-4 right-8 z-50 transition-all duration-300 ease-in-out ${
+          selectedHtml
+            ? "-translate-y-16 opacity-0"
+            : "translate-y-0 opacity-100"
+        }`}
+      >
         <ThemeToggle />
       </div>
 
