@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-client";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type ChatLayoutProps = {
   children: React.ReactNode;
@@ -16,6 +17,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
   // Default to collapsed (mobile-first) to prevent flash of overlay
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const { isAuthenticated } = useAuth();
+  const pathname = usePathname();
 
   // Expand on desktop by default
   useEffect(() => {
@@ -46,7 +48,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
         />
       )}
 
-      {!isAuthenticated && (
+      {!isAuthenticated && pathname !== "/login" && (
         <div className="absolute top-4 right-18 z-50">
           <Link href="/login">
             <Button className="">Login/Sign up</Button>

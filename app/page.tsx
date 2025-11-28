@@ -1,6 +1,5 @@
 "use client";
 
-import { ChatLayout } from "@/components/Chat/ChatLayout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { sendMessage } from "@/lib/api";
@@ -40,32 +39,27 @@ export default function Home() {
   };
 
   return (
-    <ChatLayout>
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background transition-colors duration-300">
-        <div className="absolute top-4 right-4 z-50">
-          <ThemeToggle />
-        </div>
-
-        <div className="w-full max-w-2xl px-4 flex flex-col items-center">
-          {error && (
-            <div className="absolute top-4 bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="absolute top-8 flex items-center justify-center gap-2 text-muted-foreground z-50">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              Creating chat...
-            </div>
-          )}
-
-          <CommandCenter
-            onSendMessage={handleSendMessage}
-            disabled={isLoading}
-          />
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background transition-colors duration-300">
+      <div className="absolute top-4 right-4 z-50">
+        <ThemeToggle />
       </div>
-    </ChatLayout>
+
+      <div className="w-full max-w-2xl px-4 flex flex-col items-center">
+        {error && (
+          <div className="absolute top-4 bg-destructive/10 text-destructive px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="absolute top-8 flex items-center justify-center gap-2 text-muted-foreground z-50">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Creating chat...
+          </div>
+        )}
+
+        <CommandCenter onSendMessage={handleSendMessage} disabled={isLoading} />
+      </div>
+    </div>
   );
 }

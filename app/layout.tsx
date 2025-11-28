@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: "Monolit - new way to find ...",
 };
 
+import { ChatLayout } from "@/components/Chat/ChatLayout";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,7 +28,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AutoConnectLayout>{children}</AutoConnectLayout>
+          <AutoConnectLayout>
+            <ChatLayout>{children}</ChatLayout>
+          </AutoConnectLayout>
         </ThemeProvider>
 
         <Toaster />
