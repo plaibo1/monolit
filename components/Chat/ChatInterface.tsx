@@ -128,11 +128,11 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <header className="border-b px-4 h-[73px] flex items-center justify-between">
-        <div>
-          {/* <h1 className="text-xl font-semibold">DataLayer AI Assistant</h1>
-          <p className="text-xs text-muted-foreground">Chat ID: {chatId}</p> */}
-        </div>
+      <div className="absolute top-4 right-8 z-50">
+        <ThemeToggle />
+      </div>
+
+      {/* <header className="border-b px-4 h-[73px] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Badge
@@ -147,7 +147,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             {status}
           </Badge>
         </div>
-      </header>
+      </header> */}
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden">

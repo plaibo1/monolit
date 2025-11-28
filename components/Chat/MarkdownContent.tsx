@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown";
 import { CodeBlock } from "./CodeBlock";
 import remarkGfm from "remark-gfm";
+import { cn } from "@/lib/utils";
 
 type MarkdownContentProps = {
   content: string;
@@ -10,7 +11,12 @@ type MarkdownContentProps = {
 
 export function MarkdownContent({ content }: MarkdownContentProps) {
   return (
-    <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-p:leading-relaxed prose-pre:p-0 prose-code:before:content-[''] prose-code:after:content-[''] wrap-break-word">
+    <div
+      className={cn(
+        "prose prose-sm dark:prose-invert max-w-none prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl",
+        "prose-h3:text-lg prose-p:leading-relaxed prose-pre:p-0 prose-code:before:content-[''] prose-code:after:content-[''] wrap-break-word"
+      )}
+    >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
@@ -23,7 +29,7 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
               <CodeBlock language={match?.[1]} value={value} />
             ) : (
               <code
-                className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono border border-border"
+                className="bg-muted px-1.5 py-0.5 rounded text-sm font-mono"
                 {...props}
               >
                 {children}
@@ -31,14 +37,10 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
             );
           },
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold mt-4 mb-4 pb-2 border-b border-border">
-              {children}
-            </h1>
+            <h1 className="text-2xl font-bold mt-4 mb-4 pb-2">{children}</h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-xl font-semibold mt-5 mb-3 pb-1 border-b border-border/50">
-              {children}
-            </h2>
+            <h2 className="text-xl font-semibold mt-5 mb-3 pb-1">{children}</h2>
           ),
           h3: ({ children }) => (
             <h3 className="text-lg font-semibold mt-4 mb-2">{children}</h3>
@@ -67,19 +69,17 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
           ),
           table: ({ children }) => (
             <div className="overflow-x-auto my-4">
-              <table className="border-collapse border border-border rounded-lg overflow-hidden w-full">
+              <table className="border-collapse rounded-lg overflow-hidden w-full">
                 {children}
               </table>
             </div>
           ),
           th: ({ children }) => (
-            <th className="border border-border bg-muted px-4 py-2 text-left font-semibold">
+            <th className="bg-muted px-4 py-2 text-left font-semibold">
               {children}
             </th>
           ),
-          td: ({ children }) => (
-            <td className="border border-border px-4 py-2">{children}</td>
-          ),
+          td: ({ children }) => <td className="px-4 py-2">{children}</td>,
           hr: () => <hr className="my-6 border-border" />,
         }}
       >

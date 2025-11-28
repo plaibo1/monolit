@@ -27,7 +27,9 @@ const getBubbleClasses = (message: ChatMessage) => {
     return "";
   }
 
-  const baseClasses = "rounded-lg px-4 py-3";
+  // const baseClasses = "rounded-lg px-4 py-3";
+
+  const baseClasses = "px-4 py-3 rounded-2xl";
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
 
@@ -43,7 +45,7 @@ const getBubbleClasses = (message: ChatMessage) => {
     return `${baseClasses} bg-destructive/10 text-destructive border border-destructive/20`;
   }
 
-  return `${baseClasses} bg-muted text-foreground`;
+  return `text-foreground`;
 };
 
 export function MessageBubble({

@@ -39,6 +39,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
+    // fetch publish status
     setLoading(true);
     getDashboardPublishStatus({ chatId, messageId })
       .then((data) => {
@@ -50,6 +51,17 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
       .finally(() => {
         setLoading(false);
       });
+
+    // handle ESC key to close panel
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   const handlePublish = () => {
