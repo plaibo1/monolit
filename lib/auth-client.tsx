@@ -38,14 +38,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const isLogged = await isLoggedIn();
       setIsAuthenticated(isLogged);
-      if (!isLogged) {
-        router.push("/login");
-      }
       return isLogged;
     } catch (error) {
       console.error("Auth check failed", error);
       setIsAuthenticated(false);
-      router.push("/login");
       return false;
     } finally {
       setIsLoading(false);
