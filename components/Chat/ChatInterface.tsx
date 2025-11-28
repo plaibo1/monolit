@@ -12,6 +12,7 @@ import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
 import { ThemeToggle } from "../ThemeToggle";
+import { cn } from "@/lib/utils";
 
 type ChatInterfaceProps = {
   chatId: string;
@@ -169,11 +170,20 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               onHtmlClick={handleHtmlClick}
             />
 
-            <InputArea
-              ref={inputRef}
-              onSendMessage={handleSendMessage}
-              disabled={status !== "connected" || isProcessing}
-            />
+            <div
+              className={cn(
+                "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
+                "border-b"
+              )}
+            >
+              <div className="max-w-4xl mx-auto px-4 py-4">
+                <InputArea
+                  ref={inputRef}
+                  onSendMessage={handleSendMessage}
+                  disabled={status !== "connected" || isProcessing}
+                />
+              </div>
+            </div>
           </div>
           {selectedHtml && (
             <HtmlPanel

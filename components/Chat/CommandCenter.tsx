@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Search, Mic, ArrowRight, RefreshCw, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Monolith3D } from "../Monolith3D";
+import { InputArea, InputAreaRef } from "./InputArea";
 
 const SAMPLE_QUERIES = [
   "Analyze Q3 revenue growth for Tech Sector",
@@ -33,12 +34,10 @@ type CommandCenterProps = {
 };
 
 export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
-  const [input, setInput] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
   const [queryIndex, setQueryIndex] = useState(0);
   const [isShuffling, setIsShuffling] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<InputAreaRef>(null);
 
   // Hold interaction state
   const [holdingQuery, setHoldingQuery] = useState<string | null>(null);
@@ -87,7 +86,7 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
       clearTimers();
       // If progress < 20% (quick click), just copy text
       if (progress < 20) {
-        setInput(query);
+        inputRef.current?.setValue(query);
         inputRef.current?.focus();
       }
       setHoldingQuery(null);
@@ -109,22 +108,15 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
     }, 300); // Match fade out duration
   };
 
-  const handleSend = (text: string = input) => {
+  const handleSend = (text: string) => {
     if (text.trim() && !disabled) {
       setIsSubmitted(true);
       // Wait for animation to start before actually sending
       setTimeout(() => {
         onSendMessage(text.trim());
-        setInput("");
+        // setInput("");
         setIsSubmitted(false); // Reset for next time if we come back
       }, 800); // Allow time for animation
-    }
-  };
-
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
     }
   };
 
@@ -151,52 +143,11 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
       </div>
 
       {/* Input Bar */}
-      <div
-        className={cn(
-          "w-full relative flex items-center gap-2 p-2 transition-all duration-300",
-          "bg-background/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/50",
-          isFocused ? "ring-1 ring-ring border-ring" : "hover:border-ring/50"
-        )}
-      >
-        <Search className="w-5 h-5 text-muted-foreground ml-4 shrink-0" />
-
-        <input
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder="Search tokens, wallets, or trends..."
-          disabled={disabled}
-          className="flex-1 bg-transparent px-2 py-3 text-base md:text-lg text-foreground placeholder:text-muted-foreground focus:outline-none w-full"
-        />
-
-        <div className="flex items-center gap-2 pr-2">
-          {/* TODO: Handle mic */}
-          <Button
-            size="icon"
-            variant="ghost"
-            className="h-10 w-10 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-          >
-            <Mic className="w-5 h-5" />
-          </Button>
-
-          <Button
-            onClick={() => handleSend()}
-            disabled={disabled || !input.trim()}
-            size="icon"
-            className={cn(
-              "h-10 w-10 rounded-lg transition-all",
-              input.trim()
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                : "bg-muted text-muted-foreground"
-            )}
-          >
-            <ArrowRight className="w-5 h-5" />
-          </Button>
-        </div>
-      </div>
+      <InputArea
+        ref={inputRef}
+        onSendMessage={handleSend}
+        disabled={disabled}
+      />
 
       {/* Suggestion Engine */}
       <div
