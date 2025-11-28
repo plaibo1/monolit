@@ -128,7 +128,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <div
+      {/* <div
         className={`absolute top-4 right-8 z-50 transition-all duration-300 ease-in-out ${
           selectedHtml
             ? "-translate-y-16 opacity-0"
@@ -136,11 +136,13 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         }`}
       >
         <ThemeToggle />
-      </div>
+      </div> */}
 
-      {/* <header className="border-b px-4 h-[73px] flex items-center justify-between">
+      {/* <header className="sticky top-0 z-50 px-4 h-[73px] flex items-center justify-between">
+        <div></div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
+
           <Badge
             variant={status === "connected" ? "default" : "destructive"}
             className="gap-1"
@@ -169,6 +171,24 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             )}
 
             <MessageList
+              header={
+                <div className="sticky top-0 z-50 px-4 h-[73px] flex items-center justify-end gap-2 ml-20">
+                  {/* TODO: replace to sidebar */}
+                  {/* <ThemeToggle /> */}
+
+                  <Badge
+                    variant={status === "connected" ? "default" : "destructive"}
+                    className="gap-1"
+                  >
+                    {status === "connected" ? (
+                      <Wifi className="w-3 h-3" />
+                    ) : (
+                      <WifiOff className="w-3 h-3" />
+                    )}
+                    {status}
+                  </Badge>
+                </div>
+              }
               messages={messages}
               isProcessing={isProcessing}
               onActionClick={handleActionClick}

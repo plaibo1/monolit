@@ -18,6 +18,7 @@ type MessageListProps = {
     html: string;
     messageId: string;
   }) => void;
+  header?: React.ReactNode;
 };
 
 export function MessageList({
@@ -26,6 +27,7 @@ export function MessageList({
   onActionClick,
   onActionHold,
   onHtmlClick,
+  header,
 }: MessageListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -42,7 +44,8 @@ export function MessageList({
 
   return (
     <div className="flex-1 overflow-y-auto" ref={scrollRef}>
-      <div className="space-y-4 max-w-4xl mx-auto py-6">
+      {header}
+      <div className="space-y-4 max-w-4xl mx-auto py-6 md:py-20 lg:py-36">
         {messages.map((message) => (
           <MessageBubble
             key={message.id}
