@@ -2,7 +2,7 @@
 
 import { Sidebar } from "./Sidebar";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-client";
 import { Button } from "../ui/button";
@@ -13,10 +13,25 @@ type ChatLayoutProps = {
 };
 
 export function ChatLayout({ children }: ChatLayoutProps) {
-  const { history, isLoading, deleteChat } = useChatHistory();
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
+  // Default to collapsed (mobile-first) to prevent flash of overlay
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const { isAuthenticated } = useAuth();
+
+  // Expand on desktop by default
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsSidebarCollapsed(false);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    // Optional: Listen for resize if we want dynamic behavior,
+    // but usually we just want initial state.
+    // Leaving it as just initial check for now to allow user toggle.
+  }, []);
 
   const handleToggleSidebar = useCallback(() => {
     setIsSidebarCollapsed((prev) => !prev);
@@ -26,11 +41,8 @@ export function ChatLayout({ children }: ChatLayoutProps) {
     <div className="flex h-screen overflow-hidden">
       {isAuthenticated && (
         <Sidebar
-          history={history}
-          isLoading={isLoading}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={handleToggleSidebar}
-          onDeleteChat={deleteChat}
         />
       )}
 
@@ -44,9 +56,15 @@ export function ChatLayout({ children }: ChatLayoutProps) {
 
       <main
         className={cn(
-          "flex-1 transition-all duration-300",
-          isSidebarCollapsed ? "md:ml-0" : "md:ml-72",
-          !isAuthenticated && "md:ml-0"
+          "flex-1 transition-all duration-300 ease-in-out",
+          // Mobile: ml-0 always (Sidebar is overlay)
+          "ml-0",
+          // Desktop: Margin based on sidebar width
+          isAuthenticated
+            ? isSidebarCollapsed
+              ? "md:ml-[60px]"
+              : "md:ml-[285px]"
+            : "md:ml-0"
         )}
       >
         {children}

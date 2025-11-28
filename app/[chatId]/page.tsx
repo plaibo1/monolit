@@ -11,9 +11,5 @@ type PageProps = {
 export default function ChatPage({ params }: PageProps) {
   const chatId = use(params);
 
-  return (
-    <ChatLayout>
-      <ChatInterface chatId={chatId.chatId} />
-    </ChatLayout>
-  );
+  return <ChatInterface chatId={chatId.chatId} />;
 }
