@@ -77,8 +77,8 @@ export function MessageBubble({
       } animate-in fade-in slide-in-from-bottom-2 duration-300`}
     >
       <div
-        className={`max-w-[80%] ${
-          isUser ? "items-end" : "items-start"
+        className={`max-w-full ${
+          isUser ? "items-end max-w-[80%]" : "items-start"
         } flex flex-col gap-1`}
       >
         <div className="relative group w-full">
@@ -157,9 +157,9 @@ export function MessageBubble({
           </div>
         )}
 
-        <span className="text-xs text-muted-foreground px-2">
-          {formatTimestamp(message.timestamp)}
-        </span>
+        {message.type === "assistant_message" && (
+          <>{/* HERE ACTIONS TO MESSAGE */}</>
+        )}
 
         {!isUser && message.actions && message.actions.length > 0 && (
           <ActionButtons

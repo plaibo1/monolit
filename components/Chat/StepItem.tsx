@@ -46,7 +46,11 @@ export function StepItem({ step }: StepItemProps) {
   const Icon = stepIcons[step.type];
 
   return (
-    <Card className={`p-3 ${step.isError ? "border-destructive" : ""}`}>
+    <Card
+      className={`p-3 w-full md:w-[80%] ${
+        step.isError ? "border-destructive" : ""
+      }`}
+    >
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger className="w-full">
           <div className="flex items-start gap-3 text-left">
