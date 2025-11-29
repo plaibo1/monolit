@@ -320,7 +320,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
-                  className="rounded-xl cursor-pointer text-destructive focus:text-destructive p-2"
+                  className="rounded-lg cursor-pointer text-destructive focus:text-destructive p-2"
                   onClick={() => logout()}
                 >
                   <LogOut className="h-4 w-4 mr-2" />

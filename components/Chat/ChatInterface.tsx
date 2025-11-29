@@ -11,7 +11,6 @@ import { Badge } from "@/components/ui/badge";
 import { AlertCircle, Wifi, WifiOff } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
-import { ThemeToggle } from "../ThemeToggle";
 import { cn } from "@/lib/utils";
 
 type ChatInterfaceProps = {
@@ -170,47 +169,53 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
               </Alert>
             )}
 
-            <MessageList
-              header={
-                <div className="sticky top-0 z-50 px-4 h-[73px] flex items-center justify-end gap-2 ml-20">
-                  {/* TODO: replace to sidebar */}
-                  {/* <ThemeToggle /> */}
+            <div className="relative flex-1">
+              <MessageList
+                header={
+                  <div className="sticky top-0 z-50 p-4 flex items-center justify-end gap-2">
+                    {/* TODO: replace to sidebar */}
+                    {/* <ThemeToggle /> */}
 
-                  <Badge
-                    variant={status === "connected" ? "default" : "destructive"}
-                    className="gap-1"
-                  >
-                    {status === "connected" ? (
-                      <Wifi className="w-3 h-3" />
-                    ) : (
-                      <WifiOff className="w-3 h-3" />
-                    )}
-                    {status}
-                  </Badge>
+                    <Badge
+                      variant={
+                        status === "connected" ? "default" : "destructive"
+                      }
+                      className="gap-1"
+                    >
+                      {status === "connected" ? (
+                        <Wifi className="w-3 h-3" />
+                      ) : (
+                        <WifiOff className="w-3 h-3" />
+                      )}
+                      {status}
+                    </Badge>
+                  </div>
+                }
+                messages={messages}
+                isProcessing={isProcessing}
+                onActionClick={handleActionClick}
+                onActionHold={handleActionHold}
+                onHtmlClick={handleHtmlClick}
+              />
+
+              <div
+                className={cn(
+                  "w-full absolute bottom-0 left-0",
+                  "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
+                  "border-b py-4"
+                )}
+              >
+                <div className="max-w-4xl mx-auto">
+                  <InputArea
+                    ref={inputRef}
+                    onSendMessage={handleSendMessage}
+                    disabled={status !== "connected" || isProcessing}
+                  />
                 </div>
-              }
-              messages={messages}
-              isProcessing={isProcessing}
-              onActionClick={handleActionClick}
-              onActionHold={handleActionHold}
-              onHtmlClick={handleHtmlClick}
-            />
-
-            <div
-              className={cn(
-                "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
-                "border-b"
-              )}
-            >
-              <div className="max-w-4xl mx-auto px-4 py-4">
-                <InputArea
-                  ref={inputRef}
-                  onSendMessage={handleSendMessage}
-                  disabled={status !== "connected" || isProcessing}
-                />
               </div>
             </div>
           </div>
+
           {selectedHtml && (
             <HtmlPanel
               messageId={selectedHtml.messageId}

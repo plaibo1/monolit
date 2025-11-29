@@ -5,6 +5,7 @@ import type { ChatMessage } from "@/types/chat";
 import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { ChatLoader } from "./ChatLoader";
+import { ScrollArea } from "../ui/scroll-area";
 
 type MessageListProps = {
   messages: ChatMessage[];
@@ -43,7 +44,7 @@ export function MessageList({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto" ref={scrollRef}>
+    <ScrollArea className="h-screen overflow-y-auto" ref={scrollRef}>
       {header}
       <div className="space-y-4 max-w-4xl mx-auto py-6 md:py-20 lg:py-36">
         {messages.map((message) => (
@@ -57,6 +58,6 @@ export function MessageList({
         ))}
         {isProcessing && <TypingIndicator />}
       </div>
-    </div>
+    </ScrollArea>
   );
 }
