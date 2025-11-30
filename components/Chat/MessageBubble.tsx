@@ -1,5 +1,4 @@
 import type { ChatMessage } from "@/types/chat";
-import { formatTimestamp } from "@/lib/message-utils";
 import { ActionButtons } from "./ActionButtons";
 import { AlertCircle, HelpCircle, Copy, Check } from "lucide-react";
 import { StepItem } from "./StepItem";
@@ -8,6 +7,7 @@ import { MarkdownContent } from "./MarkdownContent";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { HtmlMessage } from "./HtmlMessage";
+import { ActionHeader } from "./ActionHeader";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -58,6 +58,7 @@ export function MessageBubble({
   const isUnknown = message.role === "unknown";
   const isHtml = message.type === "final_html";
   const isEmpty = !message.content || message.content.trim() === "";
+  const isFollowUp = message.type === "assistant_message_follow_up";
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -83,7 +84,7 @@ export function MessageBubble({
       >
         <div className="relative group w-full">
           <div className={getBubbleClasses(message)}>
-            {!isHtml && (
+            {!isHtml && !isFollowUp && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -140,6 +141,8 @@ export function MessageBubble({
                 onHtmlClick={onHtmlClick}
                 messageId={message.id}
               />
+            ) : isFollowUp ? (
+              <ActionHeader />
             ) : (
               <MarkdownContent content={message.content} />
             )}

@@ -104,7 +104,7 @@ export function ActionButtons({
             onPointerDown={() => handlePointerDown(action)}
             onPointerUp={() => handlePointerUp(action)}
             onPointerLeave={handlePointerLeave}
-            className={`text-xs h-auto py-2 px-3 gap-2 active:scale-95 relative overflow-hidden touch-none select-none transition-all duration-200 ${
+            className={`text-xs h-auto py-2 px-3 gap-2 relative overflow-hidden touch-none select-none transition-all duration-200 ${
               isHolding && progress > 5 ? "pr-4" : ""
             }`}
             title={action.tooltip}
@@ -119,7 +119,7 @@ export function ActionButtons({
             {isHolding && (
               <div
                 className={
-                  "absolute inset-0 transition-all bg-amber-100 dark:bg-blue-500"
+                  "absolute inset-0 dark:bg-zinc-800 bg-zinc-200/50 transition-all ease-linear"
                 }
                 style={{
                   width: `${isHolding && progress > 5 ? progress : 0}%`,
@@ -130,39 +130,12 @@ export function ActionButtons({
 
             {/* Контент кнопки */}
             <Sparkles className="w-3 h-3 relative z-10" />
-            <span className="relative z-10">{action.label}</span>
 
-            {/* Круговой индикатор холда - справа от текста */}
-            <div
-              className={`relative z-10 ml-1 shrink-0 transition-all duration-200 ease-in-out ${
-                isHolding && progress > 5 ? "opacity-100 w-4" : "opacity-0 w-0"
-              }`}
-              style={{
-                minWidth: isHolding && progress > 5 ? "1rem" : "0",
-                transition:
-                  "opacity 200ms ease-in-out, width 200ms ease-in-out, min-width 200ms ease-in-out",
-              }}
-            >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                style={{ display: "block" }}
-              >
-                {/* Обводка прогресса - зеленеющая, толстая */}
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="8"
-                  fill="none"
-                  stroke={`hsl(${120 * (progress / 100)}, 70%, 45%)`}
-                  strokeWidth="8"
-                  strokeDasharray={`${(progress / 100) * 50.27} 50.27`}
-                  strokeLinecap="round"
-                  transform="rotate(-90 12 12)"
-                  style={{ transition: "none" }}
-                />
-              </svg>
-            </div>
+            <span className="relative z-10">
+              {action.label.startsWith("💡")
+                ? action.label.replace("💡", "")
+                : action.label}
+            </span>
           </Button>
         );
       })}
