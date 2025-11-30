@@ -13,10 +13,11 @@ import {
   getHtmlReportUrl,
   publishDashboard,
 } from "@/lib/api";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { LiquidGlassIframe } from "../LiquidGlassIframe";
+import { cn } from "@/lib/utils";
 
 interface HtmlPanelProps {
   messageId: string;
@@ -33,10 +34,19 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
     can_modify: false,
   });
   const [loading, setLoading] = useState(false);
+  const [isClossing, setIsClossing] = useState(false);
 
   const url = getHtmlReportUrl({ chatId, messageId });
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  const handleClose = useCallback(() => {
+    setIsClossing(true);
+
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  }, []);
 
   useEffect(() => {
     // fetch publish status
@@ -55,7 +65,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
     // handle ESC key to close panel
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        handleClose();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -109,7 +119,14 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
   };
 
   return (
-    <div className="w-full md:w-1/2 border-l bg-background flex flex-col h-full animate-in slide-in-from-right duration-300">
+    <div
+      className={cn(
+        "w-full md:w-1/2 border-l bg-background flex flex-col h-full ",
+        "duration-300",
+        !isClossing && "animate-in slide-in-from-right ",
+        isClossing && "slide-out-to-right animate-out"
+      )}
+    >
       <div className="flex items-center justify-between px-4 py-2">
         <h3 className="font-semibold truncate w-[50%]">{title}</h3>
 
@@ -132,7 +149,7 @@ export function HtmlPanel({ messageId, chatId, onClose }: HtmlPanelProps) {
             </Button>
           </Link>
 
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={handleClose}>
             <X className="h-4 w-4" />
           </Button>
         </div>

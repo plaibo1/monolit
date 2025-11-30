@@ -127,35 +127,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      {/* <div
-        className={`absolute top-4 right-8 z-50 transition-all duration-300 ease-in-out ${
-          selectedHtml
-            ? "-translate-y-16 opacity-0"
-            : "translate-y-0 opacity-100"
-        }`}
-      >
-        <ThemeToggle />
-      </div> */}
-
-      {/* <header className="sticky top-0 z-50 px-4 h-[73px] flex items-center justify-between">
-        <div></div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-
-          <Badge
-            variant={status === "connected" ? "default" : "destructive"}
-            className="gap-1"
-          >
-            {status === "connected" ? (
-              <Wifi className="w-3 h-3" />
-            ) : (
-              <WifiOff className="w-3 h-3" />
-            )}
-            {status}
-          </Badge>
-        </div>
-      </header> */}
-
       <div className="flex flex-1 flex-col overflow-hidden">
         <div className="flex-1 flex overflow-hidden">
           <div className="flex-1 flex flex-col overflow-hidden">
