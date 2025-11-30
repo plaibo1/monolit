@@ -97,6 +97,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
           isCollapsed
             ? "-translate-x-full"
             : "translate-x-0 w-[85%] max-w-[300px] shadow-2xl",
+
           // Desktop: Always visible, width changes
           "md:translate-x-0",
           isCollapsed ? "md:w-[60px]" : "md:w-[285px]"
@@ -176,7 +177,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
                           isActive(chat.id) && "bg-muted font-medium"
                         )}
                       >
-                        <div className="truncate pr-6">{chat.name}</div>
+                        <div className="truncate">{chat.name}</div>
                       </Link>
 
                       <DropdownMenu>
