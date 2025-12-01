@@ -141,7 +141,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         <div className="relative flex-1">
           <MessageList
             header={
-              <div className="sticky top-0 z-50 p-4 flex items-center justify-end gap-2">
+              <div className="sticky top-0 z-30 p-4 flex items-center justify-end gap-2">
                 {/* TODO: replace to sidebar */}
                 {/* <ThemeToggle /> */}
 

@@ -71,7 +71,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
   const MobileTrigger = (
     <div
       className={cn(
-        "fixed top-3 left-4 z-100 md:hidden transition-opacity duration-300",
+        "fixed top-3 left-4 z-50 md:hidden transition-opacity duration-300",
         isCollapsed ? "opacity-100" : "opacity-0 pointer-events-none"
       )}
     >
@@ -92,7 +92,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-100 bg-background border-r transition-all duration-300 ease-in-out",
+          "fixed inset-y-0 left-0 z-40 bg-background border-r transition-all duration-300 ease-in-out",
           // Mobile: Hidden (off-screen) when collapsed, Overlay when open
           isCollapsed
             ? "-translate-x-full"
