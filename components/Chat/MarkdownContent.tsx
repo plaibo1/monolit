@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { CopyButton } from "./MessageBubble/components/CopyButton";
+import { FeedbackButtons } from "./MessageBubble/components/FeedbackButtons";
 
 type MarkdownContentProps = {
   content: string;
@@ -16,8 +17,9 @@ const MarkdownMessageActions = ({ content }: MarkdownContentProps) => {
   const { copied, copyToClipboard } = useCopyToClipboard();
 
   return (
-    <div className="my-2">
+    <div className="my-2 flex items-center gap-1">
       <CopyButton copied={copied} onCopy={() => copyToClipboard(content)} />
+      <FeedbackButtons />
     </div>
   );
 };
