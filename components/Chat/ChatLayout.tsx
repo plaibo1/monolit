@@ -40,7 +40,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="h-screen overflow-hidden">
       {isAuthenticated && (
         <Sidebar
           isCollapsed={isSidebarCollapsed}
@@ -58,7 +58,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
 
       <main
         className={cn(
-          "flex-1 transition-all duration-300 ease-in-out",
+          "transition-all duration-300 ease-in-out",
           // Mobile: ml-0 always (Sidebar is overlay)
           "ml-0",
           // Desktop: Margin based on sidebar width

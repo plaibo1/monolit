@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { ActionButton } from "@/types/chat";
 import { Sparkles } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
@@ -104,9 +105,9 @@ export function ActionButtons({
             onPointerDown={() => handlePointerDown(action)}
             onPointerUp={() => handlePointerUp(action)}
             onPointerLeave={handlePointerLeave}
-            className={`text-xs h-auto py-2 px-3 gap-2 relative overflow-hidden touch-none select-none transition-all duration-200 ${
-              isHolding && progress > 5 ? "pr-4" : ""
-            }`}
+            className={cn(
+              `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200`
+            )}
             title={action.tooltip}
             style={{
               // Предотвращаем выделение текста при длительном нажатии
@@ -131,7 +132,7 @@ export function ActionButtons({
             {/* Контент кнопки */}
             <Sparkles className="w-3 h-3 relative z-10" />
 
-            <span className="relative z-10">
+            <span className="z-10">
               {action.label.startsWith("💡")
                 ? action.label.replace("💡", "")
                 : action.label}

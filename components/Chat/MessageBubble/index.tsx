@@ -7,6 +7,7 @@ import { ErrorHeader } from "./components/ErrorHeader";
 import { AgentMessageContent } from "./components/AgentMessageContent";
 import { ExecutionSteps } from "./components/ExecutionSteps";
 import { MessageActions } from "./components/MessageActions";
+import { cn } from "@/lib/utils";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -50,21 +51,21 @@ export function MessageBubble({
 
   return (
     <div
-      className={`flex ${
-        isUser ? "justify-end" : "justify-start"
-      } ${ANIMATION_CLASSES}`}
+      className={cn(`flex ${ANIMATION_CLASSES}`, {
+        "justify-end": isUser,
+        "justify-start": !isUser,
+      })}
     >
       <div
-        className={`max-w-full ${
-          isUser ? "items-end max-w-[80%]" : "items-start"
-        } flex flex-col gap-1`}
+        className={cn(`flex flex-col gap-1`, {
+          "max-w-[80%]": isUser,
+          "max-w-full": !isUser,
+        })}
       >
-        <div className="relative group w-full">
-          <div className={getBubbleClasses(message)}>
-            <ErrorHeader show={message.isError === true && !isUnknown} />
+        <div className={getBubbleClasses(message)}>
+          <ErrorHeader show={message.isError === true && !isUnknown} />
 
-            {renderMessageContent()}
-          </div>
+          {renderMessageContent()}
         </div>
 
         {!isUser && message.steps && <ExecutionSteps steps={message.steps} />}

@@ -126,74 +126,68 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const messages = getOrderedMessages();
 
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <div className="flex-1 flex overflow-hidden">
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {status === "error" && (
-              <Alert variant="destructive" className="m-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Failed to connect to the chat server. Please check your
-                  connection and try again.
-                </AlertDescription>
-              </Alert>
-            )}
+    <div className="flex h-screen bg-background">
+      <div className="flex-1 flex flex-col relative w-full max-w-full ">
+        {status === "error" && (
+          <Alert variant="destructive" className="m-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Failed to connect to the chat server. Please check your connection
+              and try again.
+            </AlertDescription>
+          </Alert>
+        )}
 
-            <div className="relative flex-1">
-              <MessageList
-                header={
-                  <div className="sticky top-0 z-50 p-4 flex items-center justify-end gap-2">
-                    {/* TODO: replace to sidebar */}
-                    {/* <ThemeToggle /> */}
+        <div className="relative flex-1">
+          <MessageList
+            header={
+              <div className="sticky top-0 z-50 p-4 flex items-center justify-end gap-2">
+                {/* TODO: replace to sidebar */}
+                {/* <ThemeToggle /> */}
 
-                    <Badge
-                      variant={
-                        status === "connected" ? "default" : "destructive"
-                      }
-                      className="gap-1"
-                    >
-                      {status === "connected" ? (
-                        <Wifi className="w-3 h-3" />
-                      ) : (
-                        <WifiOff className="w-3 h-3" />
-                      )}
-                      {status}
-                    </Badge>
-                  </div>
-                }
-                messages={messages}
-                isProcessing={isProcessing}
-                onActionClick={handleActionClick}
-                onActionHold={handleActionHold}
-                onHtmlClick={handleHtmlClick}
-              />
-
-              <div
-                className={cn(
-                  "w-full absolute bottom-0 left-0 pt-16 pb-4 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_30%,transparent_100%)]"
-                )}
-              >
-                <div className="max-w-4xl mx-auto">
-                  <InputArea
-                    ref={inputRef}
-                    onSendMessage={handleSendMessage}
-                    disabled={status !== "connected" || isProcessing}
-                  />
-                </div>
+                <Badge
+                  variant={status === "connected" ? "default" : "destructive"}
+                  className="gap-1"
+                >
+                  {status === "connected" ? (
+                    <Wifi className="w-3 h-3" />
+                  ) : (
+                    <WifiOff className="w-3 h-3" />
+                  )}
+                  {status}
+                </Badge>
               </div>
+            }
+            messages={messages}
+            isProcessing={isProcessing}
+            onActionClick={handleActionClick}
+            onActionHold={handleActionHold}
+            onHtmlClick={handleHtmlClick}
+          />
+
+          <div
+            className={cn(
+              "w-full absolute bottom-0 left-0 pt-16 pb-4 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_30%,transparent_100%)] flex-1"
+            )}
+          >
+            <div className="max-w-4xl mx-auto">
+              <InputArea
+                ref={inputRef}
+                onSendMessage={handleSendMessage}
+                disabled={status !== "connected" || isProcessing}
+              />
             </div>
           </div>
-
-          {selectedHtml && (
-            <HtmlPanel
-              messageId={selectedHtml.messageId}
-              chatId={chatId}
-              onClose={() => setSelectedHtml(null)}
-            />
-          )}
         </div>
       </div>
+
+      {selectedHtml && (
+        <HtmlPanel
+          messageId={selectedHtml.messageId}
+          chatId={chatId}
+          onClose={() => setSelectedHtml(null)}
+        />
+      )}
     </div>
   );
 }

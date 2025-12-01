@@ -6,6 +6,7 @@ import { TypingIndicator } from "./TypingIndicator";
 import { ChatLoader } from "./ChatLoader";
 import { ScrollArea } from "../ui/scroll-area";
 import { MessageBubble } from "./MessageBubble";
+import { cn } from "@/lib/utils";
 
 type MessageListProps = {
   messages: ChatMessage[];
@@ -44,9 +45,14 @@ export function MessageList({
   }
 
   return (
-    <ScrollArea className="h-screen overflow-y-auto" ref={scrollRef}>
+    <ScrollArea className="h-screen" ref={scrollRef}>
       {header}
-      <div className="space-y-4 max-w-4xl mx-auto py-6 md:py-20 lg:py-36">
+      <div
+        className={cn(
+          "relative w-full max-h-full space-y-4 px-4 pt-6 pb-28 mx-auto",
+          "max-w-[100vw] md:max-w-2xl lg:max-w-3xl xl:max-w-4xl md:py-20 lg:py-36"
+        )}
+      >
         {messages.map((message) => (
           <MessageBubble
             key={message.id}
