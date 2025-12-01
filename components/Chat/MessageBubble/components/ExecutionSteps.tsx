@@ -9,7 +9,7 @@ export function ExecutionSteps({ steps }: ExecutionStepsProps) {
   if (steps.length === 0) return null;
 
   return (
-    <div className="w-full space-y-2 mt-2">
+    <div className="w-full space-y-2 mb-6">
       <div className="text-xs font-medium text-muted-foreground px-2">
         Execution Steps
       </div>

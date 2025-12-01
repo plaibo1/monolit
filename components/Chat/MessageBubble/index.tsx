@@ -8,6 +8,7 @@ import { AgentMessageContent } from "./components/AgentMessageContent";
 import { ExecutionSteps } from "./components/ExecutionSteps";
 import { MessageActions } from "./components/MessageActions";
 import { cn } from "@/lib/utils";
+import { HtmlMessage } from "../HtmlMessage";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -26,6 +27,7 @@ export function MessageBubble({
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
   const isEmpty = !message.content || message.content.trim() === "";
+  const isHtml = message.type === "final_html";
 
   const renderMessageContent = () => {
     if (isUnknown) {
@@ -43,8 +45,6 @@ export function MessageBubble({
         content={message.content}
         isEmpty={isEmpty}
         messageType={message.type}
-        messageId={message.id}
-        onHtmlClick={onHtmlClick}
       />
     );
   };
@@ -75,6 +75,15 @@ export function MessageBubble({
             actions={message.actions}
             onActionClick={onActionClick}
             onActionHold={onActionHold}
+          />
+        )}
+
+        {isHtml && (
+          <HtmlMessage
+            html={message.content}
+            isLoading={isEmpty}
+            onHtmlClick={onHtmlClick}
+            messageId={message.id}
           />
         )}
       </div>
