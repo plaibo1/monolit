@@ -92,9 +92,18 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
         <div
           className={cn(
             "w-full relative flex items-end gap-2 p-2 transition-all duration-300",
-            "bg-background/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/50",
-            isFocused ? "ring-1 ring-ring border-ring" : "hover:border-ring/50"
+            "bg-white/5 dark:bg-black/20 backdrop-blur-3xl border border-white/10 dark:border-white/5 rounded-2xl",
+            "shadow-[0_8px_32px_0_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]",
+            isFocused
+              ? "ring-1 ring-white/20 shadow-lg"
+              : "hover:border-white/20 hover:shadow-md"
           )}
+          style={{
+            background:
+              "radial-gradient(at top left, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+          }}
         >
           <textarea
             ref={textareaRef}
@@ -106,7 +115,7 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
             rows={1}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            className="flex-1 bg-transparent px-2 py-3 text-base md:text-lg text-foreground placeholder:text-muted-foreground focus:outline-none w-full"
+            className="flex-1 bg-transparent px-2 py-3 text-base md:text-lg text-foreground/90 placeholder:text-muted-foreground/70 focus:outline-none w-full"
             style={{ minHeight: "24px" }}
           />
 
@@ -118,9 +127,10 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
                 size="icon"
                 variant="ghost"
                 className={cn(
-                  "h-10 w-10 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors",
+                  "h-10 w-10 rounded-full text-muted-foreground/80 hover:text-foreground hover:bg-white/5 transition-all",
+                  "backdrop-blur-sm border border-white/5 hover:border-white/10",
                   isListening &&
-                    "bg-red-500 hover:bg-red-600 text-white animate-pulse"
+                    "bg-red-500/90 hover:bg-red-600 text-white animate-pulse border-red-400/30"
                 )}
                 title={isListening ? "Stop recording" : "Start voice input"}
               >
@@ -137,10 +147,11 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
               disabled={disabled || !input.trim()}
               size="icon"
               className={cn(
-                "h-10 w-10 rounded-lg transition-all",
+                "h-10 w-10 rounded-lg transition-all backdrop-blur-sm",
+                "border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]",
                 input.trim()
-                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                  : "bg-white/5 text-muted-foreground/60 hover:bg-white/10"
               )}
             >
               <ArrowRight className="w-5 h-5" />

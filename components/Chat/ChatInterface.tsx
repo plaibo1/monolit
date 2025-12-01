@@ -171,9 +171,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
               <div
                 className={cn(
-                  "w-full absolute bottom-0 left-0",
-                  "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60",
-                  "border-b py-4"
+                  "w-full absolute bottom-0 left-0 pt-16 pb-4 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_30%,transparent_100%)]"
                 )}
               >
                 <div className="max-w-4xl mx-auto">
