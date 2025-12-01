@@ -1,5 +1,4 @@
 import { MarkdownContent } from "../../MarkdownContent";
-import { MessageSkeleton } from "../../MessageSkeleton";
 import { HtmlMessage } from "../../HtmlMessage";
 import { ActionHeader } from "../../ActionHeader";
 import type { MessageTypes } from "@/types/chat";
@@ -23,7 +22,7 @@ export function AgentMessageContent({
   const isFollowUp = messageType === "assistant_message_follow_up";
 
   if (isEmpty && !isHtml) {
-    return <MessageSkeleton />;
+    return null;
   }
 
   if (isHtml) {
@@ -41,5 +40,5 @@ export function AgentMessageContent({
     return <ActionHeader />;
   }
 
-  return <MarkdownContent content={content} />;
+  return <MarkdownContent content={content} isAgentMessage />;
 }

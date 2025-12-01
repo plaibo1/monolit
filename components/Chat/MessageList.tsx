@@ -2,10 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import type { ChatMessage } from "@/types/chat";
-import { MessageBubble } from "./MessageBubble";
 import { TypingIndicator } from "./TypingIndicator";
 import { ChatLoader } from "./ChatLoader";
 import { ScrollArea } from "../ui/scroll-area";
+import { MessageBubble } from "./MessageBubble";
 
 type MessageListProps = {
   messages: ChatMessage[];

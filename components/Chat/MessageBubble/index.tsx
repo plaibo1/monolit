@@ -1,8 +1,6 @@
 import type { ChatMessage } from "@/types/chat";
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { getBubbleClasses } from "./utils/styles";
 import { ANIMATION_CLASSES } from "./constants";
-import { CopyButton } from "./components/CopyButton";
 import { UserMessage } from "./components/UserMessage";
 import { UnknownMessage } from "./components/UnknownMessage";
 import { ErrorHeader } from "./components/ErrorHeader";
@@ -23,21 +21,10 @@ export function MessageBubble({
   onActionHold,
   onHtmlClick,
 }: MessageBubbleProps) {
-  const { copied, copyToClipboard } = useCopyToClipboard();
-
   // Message type checks
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
-  const isHtml = message.type === "final_html";
-  const isFollowUp = message.type === "assistant_message_follow_up";
   const isEmpty = !message.content || message.content.trim() === "";
-
-  // Show copy button for non-HTML, non-follow-up messages
-  const showCopyButton = !isHtml && !isFollowUp;
-
-  const handleCopy = () => {
-    copyToClipboard(message.content);
-  };
 
   const renderMessageContent = () => {
     if (isUnknown) {
@@ -74,10 +61,6 @@ export function MessageBubble({
       >
         <div className="relative group w-full">
           <div className={getBubbleClasses(message)}>
-            {showCopyButton && (
-              <CopyButton copied={copied} onCopy={handleCopy} />
-            )}
-
             <ErrorHeader show={message.isError === true && !isUnknown} />
 
             {renderMessageContent()}
