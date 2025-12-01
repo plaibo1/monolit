@@ -57,7 +57,7 @@ export function MessageBubble({
       })}
     >
       <div
-        className={cn(`flex flex-col gap-1`, {
+        className={cn(`flex flex-col gap-2`, {
           "max-w-[80%]": isUser,
           "max-w-full": !isUser,
         })}

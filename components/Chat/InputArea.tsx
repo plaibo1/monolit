@@ -127,7 +127,7 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
                 size="icon"
                 variant="ghost"
                 className={cn(
-                  "h-10 w-10 rounded-full text-muted-foreground/80 hover:text-foreground hover:bg-white/5 transition-all",
+                  "h-10 w-10 mr-1 rounded-full text-muted-foreground/80 hover:text-foreground hover:bg-white/5 transition-all",
                   "backdrop-blur-sm border border-white/5 hover:border-white/10",
                   isListening &&
                     "bg-red-500/90 hover:bg-red-600 text-white animate-pulse border-red-400/30"

@@ -93,7 +93,7 @@ export function ActionButtons({
   if (actions.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-3">
+    <div className="flex flex-wrap gap-2 mt-3 mb-12">
       {actions.map((action) => {
         const isHolding = holdingButton === action.id;
 
@@ -106,7 +106,7 @@ export function ActionButtons({
             onPointerUp={() => handlePointerUp(action)}
             onPointerLeave={handlePointerLeave}
             className={cn(
-              `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200`
+              `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200 overflow-hidden`
             )}
             title={action.tooltip}
             style={{
