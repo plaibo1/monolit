@@ -167,10 +167,10 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
           <div
             className={cn(
-              "w-full absolute bottom-0 left-0 pt-16 pb-4 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_30%,transparent_100%)] flex-1"
+              "w-full absolute bottom-0 left-0 pt-16 pb-4 px-4 sm:px-0 bg-[linear-gradient(to_top,var(--background)_0%,var(--background)_30%,transparent_100%)] flex-1"
             )}
           >
-            <div className="max-w-4xl mx-auto">
+            <div className="mx-auto md:max-w-2xl lg:max-w-3xl xl:max-w-4xl ">
               <InputArea
                 ref={inputRef}
                 onSendMessage={handleSendMessage}
