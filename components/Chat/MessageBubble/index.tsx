@@ -1,5 +1,5 @@
 import type { ChatMessage } from "@/types/chat";
-import { useCopyToClipboard } from "./hooks/useCopyToClipboard";
+import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { getBubbleClasses } from "./utils/styles";
 import { ANIMATION_CLASSES } from "./constants";
 import { CopyButton } from "./components/CopyButton";
@@ -85,10 +85,6 @@ export function MessageBubble({
         </div>
 
         {!isUser && message.steps && <ExecutionSteps steps={message.steps} />}
-
-        {message.type === "assistant_message" && (
-          <>{/* HERE ACTIONS TO MESSAGE */}</>
-        )}
 
         {!isUser && (
           <MessageActions
