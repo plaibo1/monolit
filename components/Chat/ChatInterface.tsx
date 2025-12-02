@@ -23,6 +23,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     html: string;
     messageId: string;
   } | null>(null);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const currentAssistantMessageId = useRef<string | null>(null);
 
   const inputRef = useRef<InputAreaRef>(null);
@@ -119,6 +120,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const handleHtmlClick = useCallback(
     ({ html, messageId }: { html: string; messageId: string }) => {
       setSelectedHtml({ html, messageId });
+      setIsPanelOpen(true);
     },
     []
   );
@@ -181,13 +183,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         </div>
       </div>
 
-      {selectedHtml && (
-        <HtmlPanel
-          messageId={selectedHtml.messageId}
-          chatId={chatId}
-          onClose={() => setSelectedHtml(null)}
-        />
-      )}
+      <HtmlPanel
+        messageId={selectedHtml?.messageId ?? ""}
+        chatId={chatId}
+        open={isPanelOpen}
+        onOpenChange={setIsPanelOpen}
+      />
     </div>
   );
 }

@@ -9,7 +9,6 @@ export const HtmlMessageContent = ({
   message: ChatMessage;
   onHtmlClick?: (params: { html: string; messageId: string }) => void;
 }) => {
-  console.log("message.timestamp: ", message);
   return (
     <Card
       className="w-full h-auto min-h-[100px] p-[1px] border-0 bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer flex flex-col justify-center relative group overflow-hidden rounded-xl"
