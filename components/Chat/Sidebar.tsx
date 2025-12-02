@@ -153,7 +153,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
           </div>
 
           {/* Chat History */}
-          <ScrollArea className="flex-1 px-3 py-2 h-[calc(100vh-120px)]">
+          <ScrollArea className="flex-1 px-3 py-2 h-[calc(100vh-185px)] max-h-[calc(100vh-185px)]">
             {!isCollapsed ? (
               <div className="space-y-1">
                 {isLoading ? (
