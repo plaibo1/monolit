@@ -8,7 +8,7 @@ import { AgentMessageContent } from "./components/AgentMessageContent";
 import { ExecutionSteps } from "./components/ExecutionSteps";
 import { MessageActions } from "./components/MessageActions";
 import { cn } from "@/lib/utils";
-import { HtmlMessage } from "../HtmlMessage";
+import { HtmlMessage } from "./components/HtmlMessage";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -59,7 +59,7 @@ export function MessageBubble({
       <div
         className={cn(`flex flex-col gap-2`, {
           "max-w-[80%]": isUser,
-          "max-w-full": !isUser,
+          "w-full max-w-full": !isUser,
         })}
       >
         <div className={getBubbleClasses(message)}>
@@ -80,10 +80,9 @@ export function MessageBubble({
 
         {isHtml && (
           <HtmlMessage
-            html={message.content}
+            message={message}
             isLoading={isEmpty}
             onHtmlClick={onHtmlClick}
-            messageId={message.id}
           />
         )}
       </div>
