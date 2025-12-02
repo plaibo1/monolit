@@ -156,7 +156,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
                   ) : (
                     <WifiOff className="w-3 h-3" />
                   )}
-                  {status}
+                  <span className="hidden sm:inline">{status}</span>
                 </Badge>
               </div>
             }
