@@ -8,7 +8,7 @@ import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "@/lib/auth-api";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-client";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 const welcomeScreen = {
   title: "Welcome to Monolit",
@@ -18,14 +18,13 @@ const welcomeScreen = {
 export const LoginEmbed = () => {
   const { theme } = useTheme();
   const { isAuthenticated } = useAuth();
-  const router = useRouter();
 
   // Redirect to home page after successful authentication
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/");
+      redirect("/");
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated]);
 
   return (
     <div
@@ -52,7 +51,14 @@ export const LoginEmbed = () => {
           isLoggedIn: async () => {
             const status = await isLoggedIn();
             if (status) {
-              router.push("/");
+              if (
+                typeof window !== "undefined" &&
+                typeof window.location?.reload === "function"
+              ) {
+                window.location.reload();
+              } else {
+                redirect("/");
+              }
             }
             return status;
           },

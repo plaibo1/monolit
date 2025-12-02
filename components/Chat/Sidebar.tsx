@@ -107,7 +107,7 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
           {/* Header */}
           <div
             className={cn(
-              "flex items-center h-[60px] px-3",
+              "flex items-center min-h-[60px] px-3",
               isCollapsed ? "justify-center" : "justify-between"
             )}
           >

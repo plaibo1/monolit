@@ -16,7 +16,7 @@ type ChatLayoutProps = {
 export function ChatLayout({ children }: ChatLayoutProps) {
   // Default to collapsed (mobile-first) to prevent flash of overlay
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const pathname = usePathname();
 
   // Expand on desktop by default
@@ -48,7 +48,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
         />
       )}
 
-      {!isAuthenticated && pathname !== "/login" && (
+      {!isAuthenticated && pathname !== "/login" && !isLoading && (
         <div className="absolute top-4 right-18 z-50">
           <Link href="/login">
             <Button className="">Login/Sign up</Button>
