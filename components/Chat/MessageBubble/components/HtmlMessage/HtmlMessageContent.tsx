@@ -37,7 +37,7 @@ export const HtmlMessageContent = ({
         </div>
 
         {/* Header (Title) */}
-        <h2 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase text-white mb-2 relative z-10">
+        <h2 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase mb-2 relative z-10">
           DASHBOARD
           <br />
           REPORT
