@@ -108,7 +108,7 @@ export function HtmlPanel({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        className="w-full sm:max-w-full md:w-[70%] md:max-w-[70%] p-0 gap-0"
+        className="w-full sm:max-w-full md:w-[60%] md:max-w-[60%] p-0 gap-0"
         side="right"
         customClose
       >
