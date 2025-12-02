@@ -128,18 +128,21 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const messages = getOrderedMessages();
 
   return (
-    <div className="flex h-screen bg-background">
-      <div className="flex-1 flex flex-col relative w-full max-w-full ">
-        {status === "error" && (
-          <Alert variant="destructive" className="m-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Failed to connect to the chat server. Please check your connection
-              and try again.
-            </AlertDescription>
-          </Alert>
-        )}
+    <div className="flex h-screen bg-background max-h-screen">
+      {status === "error" && (
+        <Alert
+          variant="destructive"
+          className="absolute top-12 left-0 right-0 m-4 z-50 max-w-[90%] sm:max-w-fit mx-auto"
+        >
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Failed to connect to the chat server. Please check your connection
+            and try again.
+          </AlertDescription>
+        </Alert>
+      )}
 
+      <div className="flex-1 flex flex-col relative w-full max-w-full max-h-screen">
         <div className="relative flex-1">
           <MessageList
             header={

@@ -93,7 +93,7 @@ export function ActionButtons({
   if (actions.length === 0) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-3 mb-12">
+    <div className="flex flex-wrap gap-2 mt-3 mb-12 w-full">
       {actions.map((action) => {
         const isHolding = holdingButton === action.id;
 
@@ -106,7 +106,9 @@ export function ActionButtons({
             onPointerUp={() => handlePointerUp(action)}
             onPointerLeave={handlePointerLeave}
             className={cn(
-              `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200 overflow-hidden`
+              `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200 overflow-hidden`,
+              `max-w-full sm:max-w-[calc(50%-0.25rem)] md:max-w-fit`,
+              `shrink grow-0 basis-auto`
             )}
             title={action.tooltip}
             style={{
@@ -130,9 +132,9 @@ export function ActionButtons({
             )}
 
             {/* Контент кнопки */}
-            <Sparkles className="w-3 h-3 relative z-10" />
+            <Sparkles className="w-3 h-3 relative z-10 shrink-0" />
 
-            <span className="z-10">
+            <span className="z-10 truncate">
               {action.label.startsWith("💡")
                 ? action.label.replace("💡", "")
                 : action.label}

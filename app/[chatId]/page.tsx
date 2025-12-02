@@ -12,13 +12,13 @@ type PageProps = {
 export default function ChatPage({ params }: PageProps) {
   const chatId = use(params);
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLoading) {
       redirect("/");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   return <ChatInterface chatId={chatId.chatId} />;
 }
