@@ -129,7 +129,7 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
             onBlur={() => setIsFocused(false)}
             className={cn(
               "w-full bg-transparent px-2 sm:px-2.5 py-2.5 sm:py-3",
-              "text-sm sm:text-base md:text-lg leading-normal",
+              "text-base md:text-lg leading-normal",
               "text-foreground/90 placeholder:text-muted-foreground/70",
               "focus:outline-none resize-none"
             )}
