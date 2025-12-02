@@ -51,14 +51,15 @@ export const LoginEmbed = () => {
           isLoggedIn: async () => {
             const status = await isLoggedIn();
             if (status) {
-              if (
-                typeof window !== "undefined" &&
-                typeof window.location?.reload === "function"
-              ) {
-                window.location.reload();
-              } else {
-                redirect("/");
-              }
+              redirect("/");
+              // if (
+              //   typeof window !== "undefined" &&
+              //   typeof window.location?.reload === "function"
+              // ) {
+              //   window.location.reload();
+              // } else {
+              //   redirect("/");
+              // }
             }
             return status;
           },
