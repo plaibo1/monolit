@@ -7,7 +7,7 @@ import { wallets } from "@/lib/thirdweb-options";
 import { doLogin, doLogout, getLoginPayload, isLoggedIn } from "@/lib/auth-api";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 
 const welcomeScreen = {
@@ -18,13 +18,26 @@ const welcomeScreen = {
 export const LoginEmbed = () => {
   const { theme } = useTheme();
   const { isAuthenticated } = useAuth();
+  const [wasAuthenticated, setWasAuthenticated] = useState(false);
 
   // Redirect to home page after successful authentication
   useEffect(() => {
     if (isAuthenticated) {
       redirect("/");
+      return;
     }
-  }, [isAuthenticated]);
+
+    if (wasAuthenticated) {
+      if (
+        typeof window !== "undefined" &&
+        typeof window.location?.reload === "function"
+      ) {
+        window.location.reload();
+      } else {
+        redirect("/");
+      }
+    }
+  }, [isAuthenticated, wasAuthenticated]);
 
   return (
     <div
@@ -51,16 +64,9 @@ export const LoginEmbed = () => {
           isLoggedIn: async () => {
             const status = await isLoggedIn();
             if (status) {
-              redirect("/");
-              // if (
-              //   typeof window !== "undefined" &&
-              //   typeof window.location?.reload === "function"
-              // ) {
-              //   window.location.reload();
-              // } else {
-              //   redirect("/");
-              // }
+              setWasAuthenticated(true);
             }
+
             return status;
           },
           // 4. Logout the user
