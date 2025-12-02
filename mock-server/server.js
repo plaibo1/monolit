@@ -11,9 +11,14 @@ app.use(express.json());
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
-const { newFakeMessages } = require("./fakeSocketMessages");
+const {
+  newFakeMessages,
+  exampleHtmlSocketMessages,
+} = require("./fakeSocketMessages");
 // Массив сообщений
 const mockMessages = newFakeMessages;
+
+const htmlSocketMessages = exampleHtmlSocketMessages;
 
 // In-memory база данных чатов
 const chats = new Map();
@@ -31,6 +36,13 @@ chats.set("chat2", {
   createDate: new Date().toISOString(),
   name: "Моковый чат (с историей)",
   messages: mockMessages.map((item) => item[0]),
+});
+
+chats.set("chat3", {
+  id: "chat3",
+  createDate: new Date().toISOString(),
+  name: "Моковый чат (с историей)",
+  messages: htmlSocketMessages.map((item) => item[0]),
 });
 
 // Хранение подключений по chatId
@@ -92,6 +104,28 @@ wss.on("connection", (ws, req) => {
     if (ws.readyState === 1) {
       ws.send(JSON.stringify(historyMessages));
     }
+  }
+
+  if (chatId === "chat3") {
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < htmlSocketMessages.length) {
+        ws.send(JSON.stringify(htmlSocketMessages[index]));
+        index++;
+      } else {
+        clearInterval(interval);
+        ws.send(
+          JSON.stringify({
+            message: {
+              text: "Все сообщения отправлены",
+            },
+            completed: true,
+          })
+        );
+      }
+    }, 1000);
+
+    ws.interval = interval;
   }
 
   ws.on("message", (message) => {

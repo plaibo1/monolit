@@ -20,7 +20,7 @@ export const HtmlMessage = ({
   }) => void;
 }) => {
   if (isLoading) {
-    return <CodeLoader />;
+    return null;
   }
 
   return (

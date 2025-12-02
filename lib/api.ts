@@ -30,6 +30,10 @@ export async function sendMessage(
 }
 
 export function getWebSocketUrl(chatId: string): string {
+  // return `ws://localhost:8000/chats/ws/chat1`; // default mocks
+  // return `ws://localhost:8000/chats/ws/chat2`; // history mocks
+  // return `ws://localhost:8000/chats/ws/chat3`; // html mocks // e82d0daa-378d-443b-ae1e-aaa580b9571b (my chat)
+
   return `${WS_URL}/chats/ws/${chatId}`;
 }
 
