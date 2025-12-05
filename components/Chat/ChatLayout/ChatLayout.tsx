@@ -1,11 +1,10 @@
 "use client";
 
 import { Sidebar } from "./Sidebar";
-import { useChatHistory } from "@/hooks/useChatHistory";
 import { useCallback, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-client";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
