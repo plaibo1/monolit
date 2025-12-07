@@ -6,12 +6,15 @@ import { sendMessage } from "@/lib/api";
 import { CommandCenter } from "@/components/Chat/CommandCenter";
 import { Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useAuth } from "@/lib/auth-client";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chatId, setChatId] = useState<string | null>(null);
+
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (chatId) {
@@ -20,6 +23,11 @@ export default function Home() {
   }, [chatId]);
 
   const handleSendMessage = async (message: string) => {
+    if (!isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {
