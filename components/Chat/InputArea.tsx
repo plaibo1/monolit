@@ -140,7 +140,7 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
           />
 
           <div className="flex items-center gap-0.5 sm:gap-2 shrink-0 mb-1.5 ml-2">
-            {isSupported && (
+            {isSupported && !input.trim() && (
               <Button
                 onClick={handleVoiceToggle}
                 disabled={disabled}
