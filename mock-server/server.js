@@ -282,6 +282,46 @@ app.get("/chats/:id", (req, res) => {
   });
 });
 
+// POST /api/v1/chats/:chat_id/delete - удалить чат по id
+app.post("/api/v1/chats/:chat_id/delete", (req, res) => {
+  const { chat_id } = req.params;
+  const chat = chats.get(chat_id);
+
+  if (!chat) {
+    return res.status(404).json({
+      status: 404,
+      error: "Чат не найден",
+    });
+  }
+
+  // Закрываем все активные WebSocket подключения для этого чата
+  if (chatConnections.has(chat_id)) {
+    const connections = chatConnections.get(chat_id);
+    console.log(`Закрытие ${connections.size} подключений для чата ${chat_id}`);
+
+    connections.forEach((client) => {
+      if (client.readyState === 1) {
+        // 1 = OPEN
+        client.close(1000, "Чат удален");
+      }
+    });
+
+    chatConnections.delete(chat_id);
+  }
+
+  // Удаляем чат из базы данных
+  chats.delete(chat_id);
+  console.log(`Чат ${chat_id} удален`);
+
+  res.json({
+    status: 200,
+    data: {
+      message: "Чат успешно удален",
+      chat_id: chat_id,
+    },
+  });
+});
+
 const PORT = process.env.PORT || 8000;
 
 server.listen(PORT, () => {

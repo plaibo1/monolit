@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useChatHistory } from "@/hooks/useChatHistory";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type ChatHistoryProps = {
   isCollapsed: boolean;
@@ -22,10 +23,43 @@ type ChatHistoryProps = {
 export function ChatHistory({ isCollapsed }: ChatHistoryProps) {
   const { history, isLoading, deleteChat } = useChatHistory();
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleDeleteClick = (e: React.MouseEvent, chatId: string) => {
     e.stopPropagation();
-    deleteChat(chatId);
+
+    const chatToDelete = history.find((chat) => chat.id === chatId);
+    if (!chatToDelete) return;
+
+    // Check if we're deleting the currently active chat
+    const isDeletingActiveChat = pathname === `/${chatId}`;
+
+    // Redirect to home if deleting active chat
+    if (isDeletingActiveChat) {
+      router.push("/");
+    }
+
+    // Call deleteChat and get the cancel function
+    const cancelDelete = deleteChat(chatId);
+
+    toast.success("Chat deleted", {
+      description: `"${chatToDelete.name}" will be permanently deleted in 10 seconds`,
+      action: {
+        label: "Undo",
+        onClick: () => {
+          cancelDelete();
+          toast.success("Deletion cancelled", {
+            description: `"${chatToDelete.name}" has been restored`,
+          });
+
+          // If we redirected, go back to the chat
+          if (isDeletingActiveChat) {
+            router.push(`/${chatId}`);
+          }
+        },
+      },
+      duration: 10000, // 10 seconds to match deletion delay
+    });
   };
 
   const isActive = (chatId: string) => pathname === `/${chatId}`;
