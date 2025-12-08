@@ -24,6 +24,7 @@ export function ActionButtons({
   const holdTimerRef = useRef<NodeJS.Timeout | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const startPositionRef = useRef<{ x: number; y: number } | null>(null);
 
   const clearTimers = useCallback(() => {
     if (holdTimerRef.current) {
@@ -37,10 +38,11 @@ export function ActionButtons({
   }, []);
 
   const handlePointerDown = useCallback(
-    (action: ActionButton) => {
+    (action: ActionButton, e: React.PointerEvent) => {
       setHoldingButton(action.id);
       setProgress(0);
       startTimeRef.current = Date.now();
+      startPositionRef.current = { x: e.clientX, y: e.clientY };
 
       // Обновляем прогресс каждые 16ms (~60fps)
       progressIntervalRef.current = setInterval(() => {
@@ -67,18 +69,30 @@ export function ActionButtons({
   );
 
   const handlePointerUp = useCallback(
-    (action: ActionButton) => {
+    (action: ActionButton, e: React.PointerEvent) => {
       if (holdingButton === action.id) {
         clearTimers();
 
-        // Если прогресс меньше 10% - считаем быстрым кликом и вставляем текст
+        // Проверяем, было ли движение (свайп)
+        const SWIPE_THRESHOLD = 10; // пикселей
+        let isSwipe = false;
+
+        if (startPositionRef.current) {
+          const deltaX = Math.abs(e.clientX - startPositionRef.current.x);
+          const deltaY = Math.abs(e.clientY - startPositionRef.current.y);
+          isSwipe = deltaX > SWIPE_THRESHOLD || deltaY > SWIPE_THRESHOLD;
+        }
+
+        // Если прогресс меньше 10% И не было свайпа - считаем быстрым кликом и вставляем текст
         // Если больше 10% - пользователь начал холд и передумал, ничего не делаем
-        if (progress < 10) {
+        // Если был свайп - тоже ничего не делаем
+        if (progress < 10 && !isSwipe) {
           onActionClick(action.query);
         }
 
         setHoldingButton(null);
         setProgress(0);
+        startPositionRef.current = null;
       }
     },
     [holdingButton, progress, onActionClick, clearTimers]
@@ -88,6 +102,7 @@ export function ActionButtons({
     clearTimers();
     setHoldingButton(null);
     setProgress(0);
+    startPositionRef.current = null;
   }, [clearTimers]);
 
   if (actions.length === 0) return null;
@@ -102,8 +117,8 @@ export function ActionButtons({
             key={action.id}
             variant="outline"
             size="sm"
-            onPointerDown={() => handlePointerDown(action)}
-            onPointerUp={() => handlePointerUp(action)}
+            onPointerDown={(e) => handlePointerDown(action, e)}
+            onPointerUp={(e) => handlePointerUp(action, e)}
             onPointerLeave={handlePointerLeave}
             className={cn(
               `text-xs h-auto py-2 px-3 gap-2 relative touch-none select-none transition-all duration-200 overflow-hidden`,

@@ -45,6 +45,7 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
   const holdTimerRef = useRef<NodeJS.Timeout | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const startPositionRef = useRef<{ x: number; y: number } | null>(null);
   const HOLD_DURATION = 1500;
 
   const currentQueries = SAMPLE_QUERIES.slice(queryIndex, queryIndex + 5);
@@ -60,10 +61,11 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
     }
   };
 
-  const handlePointerDown = (query: string) => {
+  const handlePointerDown = (query: string, e: React.PointerEvent) => {
     setHoldingQuery(query);
     setProgress(0);
     startTimeRef.current = Date.now();
+    startPositionRef.current = { x: e.clientX, y: e.clientY };
 
     // Update progress every 16ms (~60fps)
     progressIntervalRef.current = setInterval(() => {
@@ -81,16 +83,30 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
     }, HOLD_DURATION);
   };
 
-  const handlePointerUp = (query: string) => {
+  const handlePointerUp = (query: string, e: React.PointerEvent) => {
     if (holdingQuery === query) {
       clearTimers();
-      // If progress < 20% (quick click), just copy text
-      if (progress < 20) {
+
+      // Проверяем, было ли движение (свайп)
+      const SWIPE_THRESHOLD = 10; // пикселей
+      let isSwipe = false;
+
+      if (startPositionRef.current) {
+        const deltaX = Math.abs(e.clientX - startPositionRef.current.x);
+        const deltaY = Math.abs(e.clientY - startPositionRef.current.y);
+        isSwipe = deltaX > SWIPE_THRESHOLD || deltaY > SWIPE_THRESHOLD;
+      }
+
+      // If progress < 20% (quick click) AND no swipe, just copy text
+      // Если был свайп - ничего не делаем
+      if (progress < 20 && !isSwipe) {
         inputRef.current?.setValue(query);
         inputRef.current?.focus();
       }
+
       setHoldingQuery(null);
       setProgress(0);
+      startPositionRef.current = null;
     }
   };
 
@@ -98,6 +114,7 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
     clearTimers();
     setHoldingQuery(null);
     setProgress(0);
+    startPositionRef.current = null;
   };
 
   const handleShuffle = () => {
@@ -179,8 +196,8 @@ export function CommandCenter({ onSendMessage, disabled }: CommandCenterProps) {
             return (
               <button
                 key={`${queryIndex}-${i}`}
-                onPointerDown={() => handlePointerDown(query)}
-                onPointerUp={() => handlePointerUp(query)}
+                onPointerDown={(e) => handlePointerDown(query, e)}
+                onPointerUp={(e) => handlePointerUp(query, e)}
                 onPointerLeave={handlePointerLeave}
                 className={cn(
                   "w-full relative overflow-hidden flex items-center gap-3 px-2 py-2 text-left group rounded-lg transition-all duration-300",
