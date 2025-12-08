@@ -115,3 +115,9 @@ export function useChatHistory() {
     getChatById,
   };
 }
+
+export const useRevalidateChatHistory = () => {
+  const { mutate } = useSWR(`${API_BASE_URL}/chats/list`, fetcher);
+
+  return mutate;
+};

@@ -7,12 +7,15 @@ import { CommandCenter } from "@/components/Chat/CommandCenter";
 import { Loader2 } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/lib/auth-client";
+import { useRevalidateChatHistory } from "@/hooks/useChatHistory";
 
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [chatId, setChatId] = useState<string | null>(null);
+
+  const revalidateChatHistory = useRevalidateChatHistory();
 
   const { isAuthenticated } = useAuth();
 
@@ -35,6 +38,10 @@ export default function Home() {
 
       if (response.status === 200 && response.data.chat_id) {
         setChatId(response.data.chat_id);
+
+        setTimeout(() => {
+          revalidateChatHistory();
+        }, 3000);
       } else {
         setError("Failed to create chat");
       }
