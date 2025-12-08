@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useChatMessages } from "@/hooks/useChatMessages";
 import { WebSocketMessageHandler } from "@/lib/websocket-handler";
@@ -35,6 +35,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     addStepToMessage,
     updateStepInMessage,
     getOrderedMessages,
+    clearMessages,
   } = useChatMessages();
 
   const handleWebSocketMessage = useCallback(
@@ -93,10 +94,25 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   const websocketUrl = getWebSocketUrl(chatId);
 
-  const { status } = useWebSocket({
+  const { status, reconnect } = useWebSocket({
     url: websocketUrl,
     onMessage: handleWebSocketMessage,
   });
+
+  useEffect(() => {
+    const handler = () => {
+      if (status === "disconnected") {
+        reconnect();
+        clearMessages();
+      }
+    };
+
+    window.addEventListener("focus", handler);
+
+    return () => {
+      window.removeEventListener("focus", handler);
+    };
+  }, [status, reconnect]);
 
   const handleSendMessage = useCallback(
     (message: string, cbChatId?: string) => {
@@ -111,7 +127,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
 
   const handleActionHold = useCallback(
     (query: string) => {
-      console.log("🚀 ~ ChatInterface ~ query:", query);
       handleSendMessage(query, chatId);
     },
     [handleSendMessage, chatId]
