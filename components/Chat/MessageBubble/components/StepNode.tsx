@@ -1,11 +1,7 @@
 "use client";
 
-// import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import {
-  // ChevronDown,
-  // ChevronRight,
-  // GitPullRequest,
-  // Terminal,
   Lightbulb,
   ListChecks,
   Wrench,
@@ -16,10 +12,18 @@ import {
   Clock,
   Zap,
   Loader2,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ExecutionStep } from "@/types/chat";
+import { StepContent } from "./StepContent";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const stepIcons = {
   intention: Lightbulb,
@@ -55,57 +59,101 @@ export const StepNode = ({
   isDone?: boolean;
   onClick?: () => void;
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const Icon = stepIcons[step.type];
   const StatusIcon =
     statusIcons[
-      step.isError ? "error" : step.isComplete ? "success" : "running"
+    step.isError ? "error" : step.isComplete ? "success" : "running"
     ];
   const statusColor = step.isError
     ? "text-destructive"
     : step.isComplete
-    ? "text-green-500"
-    : "text-amber-500";
+      ? "text-green-500"
+      : "text-amber-500";
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+    if (onClick) onClick();
+  };
 
   return (
-    <div
-      className={cn(
-        "relative flex items-start gap-3 p-3 rounded-lg transition-all duration-200 cursor-pointer hover:bg-accent/50",
-        isActive ? "bg-accent" : ""
-      )}
-      onClick={onClick}
-    >
-      <div className="absolute left-6 top-0 bottom-0 w-px bg-border" />
-
+    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-full">
       <div
         className={cn(
-          "relative z-10 shrink-0 w-6 h-6 rounded-full flex items-center justify-center border-2",
-          stepColors[step.type].split(" ")[0],
-          stepColors[step.type].split(" ")[1],
-          "border-background"
+          "relative p-3 rounded-lg transition-all duration-200 hover:bg-accent/50 group",
+          isActive ? "bg-accent" : ""
         )}
       >
-        <Icon className="w-3 h-3" />
-      </div>
+        <div className="absolute left-6 top-0 bottom-0 w-px bg-border" />
 
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{step.name}</span>
+        <div className="flex items-start gap-3">
+          <div
+            className={cn(
+              "relative z-10 shrink-0 w-6 h-6 rounded-full flex items-center justify-center border-2",
+              stepColors[step.type].split(" ")[0],
+              stepColors[step.type].split(" ")[1],
+              "border-background"
+            )}
+          >
+            <Icon className="w-3 h-3" />
+          </div>
 
-          {/* tmp solution */}
-          {!Boolean(step.output) || step.output === "Running..." ? (
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-          ) : isDone ? (
-            <CheckCircle2 className={cn("w-3.5 h-3.5", "text-green-500")} />
-          ) : (
-            <StatusIcon className={cn("w-3.5 h-3.5", statusColor)} />
-          )}
+          <div className="flex-1 min-w-0">
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={handleToggle}
+            >
+              <span className="text-sm font-medium">{step.name}</span>
+
+              {!Boolean(step.output) || step.output === "Running..." ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : isDone ? (
+                <CheckCircle2 className={cn("w-3.5 h-3.5", "text-green-500")} />
+              ) : (
+                <StatusIcon className={cn("w-3.5 h-3.5", statusColor)} />
+              )}
+
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                {isOpen ? (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                )}
+              </div>
+            </div>
+
+            <CollapsibleContent className="mt-2">
+              <div className="space-y-4 pt-1">
+                {step.input && (
+                  <StepContent
+                    content={step.input}
+                    label="Input"
+                    language={step.language}
+                  />
+                )}
+
+                {step.output && (
+                  <StepContent
+                    content={step.output}
+                    label="Output"
+                    language={step.language}
+                  />
+                )}
+              </div>
+            </CollapsibleContent>
+
+            {!isOpen && step.output && (
+              <p
+                className="text-xs text-muted-foreground line-clamp-1 mt-1 cursor-pointer"
+                onClick={handleToggle}
+              >
+                {step.output}
+              </p>
+            )}
+          </div>
         </div>
-        {step.output && (
-          <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-            {step.output}
-          </p>
-        )}
       </div>
-    </div>
+    </Collapsible>
   );
 };
