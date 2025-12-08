@@ -94,7 +94,7 @@ export function MarkdownContent({
             ),
             table: ({ children }) => (
               <div className="overflow-x-auto my-4">
-                <table className="border-collapse rounded-lg overflow-hidden w-full">
+                <table className="border-collapse rounded-lg overflow-hidden w-full min-w-[600px]">
                   {children}
                 </table>
               </div>
