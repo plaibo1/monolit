@@ -63,13 +63,13 @@ export const StepNode = ({
   const Icon = stepIcons[step.type];
   const StatusIcon =
     statusIcons[
-    step.isError ? "error" : step.isComplete ? "success" : "running"
+      step.isError ? "error" : step.isComplete ? "success" : "running"
     ];
   const statusColor = step.isError
     ? "text-destructive"
     : step.isComplete
-      ? "text-green-500"
-      : "text-amber-500";
+    ? "text-green-500"
+    : "text-amber-500";
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -145,7 +145,7 @@ export const StepNode = ({
 
             {!isOpen && step.output && (
               <p
-                className="text-xs text-muted-foreground line-clamp-1 mt-1 cursor-pointer"
+                className="text-xs text-muted-foreground line-clamp-2 mt-1 cursor-pointer"
                 onClick={handleToggle}
               >
                 {step.output}
