@@ -114,6 +114,14 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     };
   }, [status, reconnect]);
 
+  useEffect(() => {
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/chats/reports/${chatId}/share`
+    ).then((res) => {
+      console.log(res);
+    });
+  }, [chatId]);
+
   const handleSendMessage = useCallback(
     (message: string, cbChatId?: string) => {
       sendMessage(message, cbChatId || chatId);

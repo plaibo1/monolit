@@ -103,6 +103,10 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
         setStatus("disconnected");
         onCloseRef.current?.();
 
+        if (event.code === 1006) {
+          setStatus("error");
+        }
+
         // Автоматическое переподключение
         if (
           shouldReconnect &&
