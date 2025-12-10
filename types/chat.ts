@@ -1,3 +1,5 @@
+import { DefaultResponse } from ".";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type SocketMessage = AgentMessage | UserMessage;
 
@@ -154,3 +156,12 @@ export type ChatsHistory = {
     };
   };
 };
+
+export type ShareType = {
+  shared: boolean;
+  can_read: boolean;
+  can_modify: boolean;
+}
+
+export type ShareDashboardResponse = DefaultResponse<ShareType>
+export type ShareChatResponse = DefaultResponse<ShareType>

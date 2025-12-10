@@ -1,3 +1,4 @@
+import { ShareDashboardResponse } from "@/types/chat";
 import { API_BASE_URL, WS_URL } from "./consts";
 
 export type SendMessageResponse = {
@@ -47,23 +48,6 @@ export const getHtmlReportUrl = ({
   return `${API_BASE_URL}/chats/reports/${chatId}/${messageId}`;
 };
 
-// POST /api/v1/chats/reports/{chat_id}/{message_id}/share
-
-// request:
-// JSON
-// {
-// "shared":  true/false
-// }
-// response:
-
-// JSON
-// {
-//     "status": 200,
-//     "data": {
-//         "shared": true/false
-//     }
-// }
-
 export const publishDashboard = async ({
   chatId,
   messageId,
@@ -97,10 +81,7 @@ export const getDashboardPublishStatus = async ({
 }: {
   chatId: string;
   messageId: string;
-}): Promise<{
-  status: number;
-  data: { shared: boolean; can_read: boolean; can_modify: boolean };
-}> => {
+}): Promise<ShareDashboardResponse> => {
   const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/share`);
 
   if (!data.ok) {

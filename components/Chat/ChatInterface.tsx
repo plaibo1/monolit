@@ -7,11 +7,11 @@ import { WebSocketMessageHandler } from "@/lib/websocket-handler";
 import { MessageList } from "./MessageList";
 import { InputArea, type InputAreaRef } from "./InputArea";
 import { HtmlPanel } from "./HtmlPanel";
-import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Wifi, WifiOff } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { MessageListHeader } from "./MessageListHeader";
 
 type ChatInterfaceProps = {
   chatId: string;
@@ -114,14 +114,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     };
   }, [status, reconnect]);
 
-  useEffect(() => {
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/chats/reports/${chatId}/share`
-    ).then((res) => {
-      console.log(res);
-    });
-  }, [chatId]);
-
   const handleSendMessage = useCallback(
     (message: string, cbChatId?: string) => {
       sendMessage(message, cbChatId || chatId);
@@ -169,22 +161,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         <div className="relative flex-1">
           <MessageList
             header={
-              <div className="sticky top-0 z-30 p-4 flex items-center justify-end gap-2">
-                {/* TODO: replace to sidebar */}
-                {/* <ThemeToggle /> */}
-
-                <Badge
-                  variant={status === "connected" ? "default" : "destructive"}
-                  className="gap-1"
-                >
-                  {status === "connected" ? (
-                    <Wifi className="w-3 h-3" />
-                  ) : (
-                    <WifiOff className="w-3 h-3" />
-                  )}
-                  <span className="hidden sm:inline">{status}</span>
-                </Badge>
-              </div>
+              <MessageListHeader chatId={chatId} connectionStatus={status} />
             }
             messages={messages}
             isProcessing={isProcessing}
