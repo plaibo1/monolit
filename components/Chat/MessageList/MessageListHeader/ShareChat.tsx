@@ -1,4 +1,4 @@
-import { useGetChatPublishStatus, usePublishChat } from "@/api/chat";
+import { useChatPublish } from "@/api/chat";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -11,18 +11,24 @@ import { toast } from "sonner";
 
 export const ShareChat = () => {
   const { chatId } = useParams<{ chatId: string }>();
-  const { data: publishState, isLoading: isLoadingPublishState } =
-    useGetChatPublishStatus(chatId);
-  const { publish, isMutating } = usePublishChat(chatId);
-
-  const isLoading = isLoadingPublishState || isMutating;
+  const { data: publishState, publish, isLoading } = useChatPublish(chatId);
 
   if (!publishState?.can_modify) {
     return null;
   }
 
   const handlePublish = () => {
-    publish(!publishState.shared);
+    publish(!publishState.shared).catch(() => {
+      const isPublishProcessing = !publishState.shared;
+
+      toast("Error", {
+        description: `Failed to ${
+          isPublishProcessing ? "publish" : "unpublish"
+        } chat`,
+        icon: <CheckCircle className="ml-2 h-4 w-4 text-red-500" />,
+        position: "top-center",
+      });
+    });
   };
 
   const handleShare = async () => {

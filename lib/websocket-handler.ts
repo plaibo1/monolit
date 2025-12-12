@@ -32,6 +32,7 @@ export type WebSocketHandlerCallbacks = {
   onUnknownMessage: (message: ChatMessage) => void; // Added callback for unknown messages
 };
 
+// TODO: rename with ChatMessageHandler
 export class WebSocketMessageHandler {
   private callbacks: WebSocketHandlerCallbacks;
 

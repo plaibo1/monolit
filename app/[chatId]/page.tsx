@@ -17,12 +17,7 @@ export default function ChatPage({ params }: PageProps) {
   const { data, isLoading: isLoadingChat } = useGetChatPublishStatus(chatId);
 
   useEffect(() => {
-    if (
-      !isAuthenticated &&
-      !isLoading &&
-      !isLoadingChat &&
-      !data?.data.can_read
-    ) {
+    if (!isAuthenticated && !isLoading && !isLoadingChat && !data?.can_read) {
       redirect("/");
     }
   }, [isAuthenticated, isLoading, isLoadingChat, data]);
