@@ -11,7 +11,7 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { MessageListHeader } from "./MessageListHeader";
+import { MessageListHeader } from "./MessageList/MessageListHeader";
 
 type ChatInterfaceProps = {
   chatId: string;
@@ -160,9 +160,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       <div className="flex-1 flex flex-col relative w-full max-w-full max-h-screen">
         <div className="relative flex-1">
           <MessageList
-            header={
-              <MessageListHeader chatId={chatId} connectionStatus={status} />
-            }
+            header={<MessageListHeader connectionStatus={status} />}
             messages={messages}
             isProcessing={isProcessing}
             onActionClick={handleActionClick}
