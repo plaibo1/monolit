@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { useChatMessages } from "@/hooks/useChatMessages";
-import { WebSocketMessageHandler } from "@/lib/websocket-handler";
+import { ChatMessageHandler } from "@/lib/message-handler";
 import { MessageList } from "./MessageList";
 import { InputArea, type InputAreaRef } from "./InputArea";
 import { HtmlPanel } from "./HtmlPanel";
@@ -41,7 +41,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
   const handleWebSocketMessage = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (data: any) => {
-      const handler = new WebSocketMessageHandler({
+      const handler = new ChatMessageHandler({
         onUserMessage: addMessage,
         onAssistantMessage: (message) => {
           currentAssistantMessageId.current = message.id;

@@ -91,7 +91,7 @@ export type ActionPayload = {
 // Internal message types for UI
 export type ChatMessage = {
   id: string;
-  role: "user" | "agent" | "unknown"; // Added "unknown" role for unhandled messages
+  role: "user" | "agent" | "unknown";
   content: string;
   timestamp: string;
   isError?: boolean;
@@ -161,7 +161,7 @@ export type ShareType = {
   shared: boolean;
   can_read: boolean;
   can_modify: boolean;
-}
+};
 
-export type ShareDashboardResponse = DefaultResponse<ShareType>
-export type ShareChatResponse = DefaultResponse<ShareType>
+export type ShareDashboardResponse = DefaultResponse<ShareType>;
+export type ShareChatResponse = DefaultResponse<ShareType>;

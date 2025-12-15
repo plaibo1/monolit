@@ -47,13 +47,11 @@ export function useChatMessages() {
     []
   );
 
-  /** @deprecated */
   const addStepToMessage = useCallback(
     (messageId: string, step: ExecutionStep) => {
       setMessages((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(messageId);
-        // console.log("🚀🚀🚀🚀🚀 ~ existing:", existing);
 
         if (existing) {
           newMap.set(messageId, {
@@ -72,7 +70,7 @@ export function useChatMessages() {
       setMessages((prev) => {
         const newMap = new Map(prev);
         const existing = newMap.get(messageId);
-        // console.log("🚀🚀🚀🚀🚀 ~ ALREADY existing:", existing);
+
         if (existing && existing.steps) {
           const updatedSteps = existing.steps.map((step) =>
             step.id === stepId ? { ...step, ...updates } : step

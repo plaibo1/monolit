@@ -101,19 +101,3 @@ export function actionPayloadToButton(payload: ActionPayload): ActionButton {
     query: payload.payload.query || "",
   };
 }
-
-export function formatTimestamp(timestamp: string): string {
-  const date = new Date(timestamp);
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-
-  if (diff < 60000) {
-    return "Just now";
-  } else if (diff < 3600000) {
-    return `${Math.floor(diff / 60000)}m ago`;
-  } else if (diff < 86400000) {
-    return `${Math.floor(diff / 3600000)}h ago`;
-  } else {
-    return date.toLocaleDateString();
-  }
-}

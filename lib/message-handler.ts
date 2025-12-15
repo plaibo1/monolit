@@ -17,7 +17,7 @@ import {
   generateId,
 } from "./message-utils";
 
-export type WebSocketHandlerCallbacks = {
+export type ChatMessageHandlerCallbacks = {
   onUserMessage: (message: ChatMessage) => void;
   onAssistantMessage: (message: ChatMessage) => void;
   onUpdateAssistantMessage: (id: string, updates: Partial<ChatMessage>) => void;
@@ -29,14 +29,13 @@ export type WebSocketHandlerCallbacks = {
   onFirstInteraction: (data: FirstInteractionPayload) => void;
   onClearAsk: () => void;
   onClearCallFn: () => void;
-  onUnknownMessage: (message: ChatMessage) => void; // Added callback for unknown messages
+  onUnknownMessage: (message: ChatMessage) => void;
 };
 
-// TODO: rename with ChatMessageHandler
-export class WebSocketMessageHandler {
-  private callbacks: WebSocketHandlerCallbacks;
+export class ChatMessageHandler {
+  private callbacks: ChatMessageHandlerCallbacks;
 
-  constructor(callbacks: WebSocketHandlerCallbacks) {
+  constructor(callbacks: ChatMessageHandlerCallbacks) {
     this.callbacks = callbacks;
   }
 
