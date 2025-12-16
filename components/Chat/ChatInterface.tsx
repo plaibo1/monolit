@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { getWebSocketUrl, sendMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { MessageListHeader } from "./MessageList/MessageListHeader";
+import { useChatStore } from "@/store/useChatStore";
 
 type ChatInterfaceProps = {
   chatId: string;
@@ -36,7 +37,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     updateStepInMessage,
     getOrderedMessages,
     clearMessages,
-  } = useChatMessages();
+  } = useChatStore();
 
   const handleWebSocketMessage = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,6 +114,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       window.removeEventListener("focus", handler);
     };
   }, [status, reconnect]);
+
+  useEffect(() => {
+    return () => {
+      clearMessages();
+    };
+  }, []);
 
   const handleSendMessage = useCallback(
     (message: string, cbChatId?: string) => {
