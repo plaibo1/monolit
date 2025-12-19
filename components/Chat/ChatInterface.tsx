@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useWebSocket } from "@/hooks/useWebSocket";
-import { useChatMessages } from "@/hooks/useChatMessages";
 import { ChatMessageHandler } from "@/lib/message-handler";
 import { MessageList } from "./MessageList";
 import { InputArea, type InputAreaRef } from "./InputArea";
@@ -19,17 +18,16 @@ type ChatInterfaceProps = {
 };
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
   const [selectedHtml, setSelectedHtml] = useState<{
     html: string;
     messageId: string;
   } | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const currentAssistantMessageId = useRef<string | null>(null);
 
   const inputRef = useRef<InputAreaRef>(null);
 
   const {
+    isProcessing,
     addMessage,
     updateMessage,
     addActionToMessage,
@@ -37,6 +35,8 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     updateStepInMessage,
     getOrderedMessages,
     clearMessages,
+    onTaskStart,
+    onTaskEnd,
   } = useChatStore();
 
   const handleWebSocketMessage = useCallback(
@@ -45,28 +45,14 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       const handler = new ChatMessageHandler({
         onUserMessage: addMessage,
         onAssistantMessage: (message) => {
-          currentAssistantMessageId.current = message.id;
-          addMessage(message);
+          addMessage(message, true);
         },
         onUpdateAssistantMessage: updateMessage,
-        onStep: (step) => {
-          if (currentAssistantMessageId.current) {
-            addStepToMessage(currentAssistantMessageId.current, step);
-          }
-        },
-        onUpdateStep: (id, updates) => {
-          if (currentAssistantMessageId.current) {
-            updateStepInMessage(currentAssistantMessageId.current, id, updates);
-          }
-        },
+        onStep: addStepToMessage,
+        onUpdateStep: updateStepInMessage,
         onAction: addActionToMessage,
-        onTaskStart: () => {
-          setIsProcessing(true);
-        },
-        onTaskEnd: () => {
-          setIsProcessing(false);
-          currentAssistantMessageId.current = null;
-        },
+        onTaskStart,
+        onTaskEnd,
         onFirstInteraction: (data) => {
           // setThreadId(data.thread_id);
         },
@@ -76,9 +62,7 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
         onClearCallFn: () => {
           // Handle clear call function if needed
         },
-        onUnknownMessage: (message) => {
-          addMessage(message);
-        },
+        onUnknownMessage: addMessage,
       });
 
       handler.handleMessage(data);
@@ -89,7 +73,6 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
       addActionToMessage,
       addStepToMessage,
       updateStepInMessage,
-      currentAssistantMessageId,
     ]
   );
 

@@ -2,28 +2,39 @@ import { create } from "zustand";
 import type { ActionButton, ChatMessage, ExecutionStep } from "@/types/chat";
 
 interface ChatState {
+  isProcessing: boolean;
   messages: Map<string, ChatMessage>;
   messageOrder: string[];
-  addMessage: (message: ChatMessage) => void;
+  currentAssistantMessageId: string | null;
+  addMessage: (message: ChatMessage, isAssistant?: boolean) => void;
   updateMessage: (id: string, updates: Partial<ChatMessage>) => void;
   addActionToMessage: (messageId: string, action: ActionButton) => void;
-  addStepToMessage: (messageId: string, step: ExecutionStep) => void;
+  addStepToMessage: (step: ExecutionStep) => void;
   updateStepInMessage: (
-    messageId: string,
     stepId: string,
     updates: Partial<ExecutionStep>
   ) => void;
+
   loadHistory: (history: ChatMessage[]) => void;
   clearMessages: () => void;
   getOrderedMessages: () => ChatMessage[];
+
+  onTaskStart: () => void;
+  onTaskEnd: () => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
+  isProcessing: false,
   messages: new Map(),
   messageOrder: [],
+  currentAssistantMessageId: null,
 
-  addMessage: (message: ChatMessage) => {
+  addMessage: (message: ChatMessage, isAssistant = false) => {
     set((state) => {
+      if (isAssistant) {
+        state.currentAssistantMessageId = message.id;
+      }
+
       const newMap = new Map(state.messages);
       newMap.set(message.id, message);
       return {
@@ -58,7 +69,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     });
   },
 
-  addStepToMessage: (messageId: string, step: ExecutionStep) => {
+  addStepToMessage: (step: ExecutionStep) => {
+    const messageId = get().currentAssistantMessageId;
+    if (!messageId) {
+      return;
+    }
+
     set((state) => {
       const newMap = new Map(state.messages);
       const existing = newMap.get(messageId);
@@ -73,11 +89,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
     });
   },
 
-  updateStepInMessage: (
-    messageId: string,
-    stepId: string,
-    updates: Partial<ExecutionStep>
-  ) => {
+  updateStepInMessage: (stepId: string, updates: Partial<ExecutionStep>) => {
+    const messageId = get().currentAssistantMessageId;
+    if (!messageId) {
+      return;
+    }
+
     set((state) => {
       const newMap = new Map(state.messages);
       const existing = newMap.get(messageId);
@@ -121,5 +138,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
       }
       return acc;
     }, [] as ChatMessage[]);
+  },
+
+  onTaskStart: () => {
+    set(() => {
+      return { isProcessing: true };
+    });
+  },
+
+  onTaskEnd: () => {
+    set(() => {
+      return { isProcessing: false, currentAssistantMessageId: null };
+    });
   },
 }));
