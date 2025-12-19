@@ -7,10 +7,9 @@ import { ChatLoader } from "../ChatLoader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageBubble } from "../MessageBubble";
 import { cn } from "@/lib/utils";
+import { useChatStore } from "@/store/useChatStore";
 
 type MessageListProps = {
-  messages: ChatMessage[];
-  isProcessing: boolean;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
   onHtmlClick?: ({
@@ -24,13 +23,14 @@ type MessageListProps = {
 };
 
 export function MessageList({
-  messages,
-  isProcessing,
   onActionClick,
   onActionHold,
   onHtmlClick,
   header,
 }: MessageListProps) {
+  const { getOrderedMessages, isProcessing } = useChatStore();
+  const messages = getOrderedMessages();
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

@@ -28,6 +28,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: new Map(),
   messageOrder: [],
   currentAssistantMessageId: null,
+  socketStatus: "disconnected",
 
   addMessage: (message: ChatMessage, isAssistant = false) => {
     set((state) => {
