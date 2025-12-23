@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { ConnectionStatus, SocketMessage } from "@/types/chat";
+import type { SocketMessage } from "@/types/chat";
+import { useSocketStore } from "@/store/useSocketStore";
 
 type UseWebSocketOptions = {
   url: string;
@@ -31,13 +32,15 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     devDisable = false,
   } = options;
 
+  const status = useSocketStore((state) => state.socketStatus);
+  const setStatus = useSocketStore((state) => state.setSocketStatus);
+
   const ws = useRef<WebSocket | null>(null);
   const reconnectCount = useRef(0);
   const reconnectTimeout = useRef<NodeJS.Timeout>(null);
   const isManuallyClosed = useRef(false);
   const messageQueue = useRef<unknown[]>([]);
 
-  const [status, setStatus] = useState<ConnectionStatus>("connecting");
   const [lastMessage, setLastMessage] = useState<SocketMessage | null>(null);
 
   // Сохраняем коллбэки в рефы для стабильности

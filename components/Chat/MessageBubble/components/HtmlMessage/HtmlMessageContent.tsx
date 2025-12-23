@@ -1,20 +1,17 @@
 import { ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ChatMessage } from "@/types/chat";
+import { useChatStore } from "@/store/useChatStore";
 
-export const HtmlMessageContent = ({
-  message,
-  onHtmlClick,
-}: {
-  message: ChatMessage;
-  onHtmlClick?: (params: { html: string; messageId: string }) => void;
-}) => {
+export const HtmlMessageContent = ({ message }: { message: ChatMessage }) => {
+  const setChatHtmlId = useChatStore((state) => state.setChatHtmlId);
+
   return (
     <Card
       className="w-full h-auto min-h-[100px] p-[1px] border-0 bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer flex flex-col justify-center relative group overflow-hidden rounded-xl"
-      onClick={() =>
-        onHtmlClick?.({ html: message.content, messageId: message.id })
-      }
+      onClick={() => {
+        setChatHtmlId(message.id);
+      }}
     >
       {/* Border Beam Animation - Behind the content */}
       <div className="absolute inset-[-50%] animate-[spin_4s_linear_infinite] pointer-events-none z-0 will-change-transform">

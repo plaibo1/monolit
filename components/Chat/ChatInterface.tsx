@@ -1,118 +1,19 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
-import { useWebSocket } from "@/hooks/useWebSocket";
-import { useChatMessages } from "@/hooks/useChatMessages";
-import { ChatMessageHandler } from "@/lib/message-handler";
+import { useCallback, useRef } from "react";
 import { MessageList } from "./MessageList";
 import { InputArea, type InputAreaRef } from "./InputArea";
 import { HtmlPanel } from "./HtmlPanel";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getWebSocketUrl, sendMessage } from "@/lib/api";
+import { sendMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import { MessageListHeader } from "./MessageList/MessageListHeader";
+import { ChatCore } from "./ChatCore";
 
 type ChatInterfaceProps = {
   chatId: string;
 };
 
 export function ChatInterface({ chatId }: ChatInterfaceProps) {
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [selectedHtml, setSelectedHtml] = useState<{
-    html: string;
-    messageId: string;
-  } | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const currentAssistantMessageId = useRef<string | null>(null);
-
   const inputRef = useRef<InputAreaRef>(null);
-
-  const {
-    addMessage,
-    updateMessage,
-    addActionToMessage,
-    addStepToMessage,
-    updateStepInMessage,
-    getOrderedMessages,
-    clearMessages,
-  } = useChatMessages();
-
-  const handleWebSocketMessage = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (data: any) => {
-      const handler = new ChatMessageHandler({
-        onUserMessage: addMessage,
-        onAssistantMessage: (message) => {
-          currentAssistantMessageId.current = message.id;
-          addMessage(message);
-        },
-        onUpdateAssistantMessage: updateMessage,
-        onStep: (step) => {
-          if (currentAssistantMessageId.current) {
-            addStepToMessage(currentAssistantMessageId.current, step);
-          }
-        },
-        onUpdateStep: (id, updates) => {
-          if (currentAssistantMessageId.current) {
-            updateStepInMessage(currentAssistantMessageId.current, id, updates);
-          }
-        },
-        onAction: addActionToMessage,
-        onTaskStart: () => {
-          setIsProcessing(true);
-        },
-        onTaskEnd: () => {
-          setIsProcessing(false);
-          currentAssistantMessageId.current = null;
-        },
-        onFirstInteraction: (data) => {
-          // setThreadId(data.thread_id);
-        },
-        onClearAsk: () => {
-          // Handle clear ask if needed
-        },
-        onClearCallFn: () => {
-          // Handle clear call function if needed
-        },
-        onUnknownMessage: (message) => {
-          addMessage(message);
-        },
-      });
-
-      handler.handleMessage(data);
-    },
-    [
-      addMessage,
-      updateMessage,
-      addActionToMessage,
-      addStepToMessage,
-      updateStepInMessage,
-      currentAssistantMessageId,
-    ]
-  );
-
-  const websocketUrl = getWebSocketUrl(chatId);
-
-  const { status, reconnect } = useWebSocket({
-    url: websocketUrl,
-    onMessage: handleWebSocketMessage,
-  });
-
-  useEffect(() => {
-    const handler = () => {
-      if (status === "disconnected") {
-        reconnect();
-        clearMessages();
-      }
-    };
-
-    window.addEventListener("focus", handler);
-
-    return () => {
-      window.removeEventListener("focus", handler);
-    };
-  }, [status, reconnect]);
 
   const handleSendMessage = useCallback(
     (message: string, cbChatId?: string) => {
@@ -132,40 +33,15 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
     [handleSendMessage, chatId]
   );
 
-  const handleHtmlClick = useCallback(
-    ({ html, messageId }: { html: string; messageId: string }) => {
-      setSelectedHtml({ html, messageId });
-      setIsPanelOpen(true);
-    },
-    []
-  );
-
-  const messages = getOrderedMessages();
-
   return (
     <div className="flex h-screen bg-background max-h-screen">
-      {status === "error" && (
-        <Alert
-          variant="destructive"
-          className="absolute top-12 left-0 right-0 m-4 z-50 max-w-[90%] sm:max-w-fit mx-auto"
-        >
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Failed to connect to the chat server. Please check your connection
-            and try again.
-          </AlertDescription>
-        </Alert>
-      )}
+      {chatId && <ChatCore />}
 
       <div className="flex-1 flex flex-col relative w-full max-w-full max-h-screen">
         <div className="relative flex-1">
           <MessageList
-            header={<MessageListHeader connectionStatus={status} />}
-            messages={messages}
-            isProcessing={isProcessing}
             onActionClick={handleActionClick}
             onActionHold={handleActionHold}
-            onHtmlClick={handleHtmlClick}
           />
 
           <div
@@ -174,22 +50,12 @@ export function ChatInterface({ chatId }: ChatInterfaceProps) {
             )}
           >
             <div className="mx-auto md:max-w-2xl lg:max-w-3xl xl:max-w-4xl ">
-              <InputArea
-                ref={inputRef}
-                onSendMessage={handleSendMessage}
-                disabled={status !== "connected" || isProcessing}
-              />
+              <InputArea ref={inputRef} onSendMessage={handleSendMessage} />
             </div>
           </div>
         </div>
       </div>
-
-      <HtmlPanel
-        messageId={selectedHtml?.messageId ?? ""}
-        chatId={chatId}
-        open={isPanelOpen}
-        onOpenChange={setIsPanelOpen}
-      />
+      <HtmlPanel chatId={chatId} />
     </div>
   );
 }

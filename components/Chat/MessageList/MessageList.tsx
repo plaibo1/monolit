@@ -1,36 +1,27 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { ChatMessage } from "@/types/chat";
 import { TypingIndicator } from "../TypingIndicator";
 import { ChatLoader } from "../ChatLoader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageBubble } from "../MessageBubble";
 import { cn } from "@/lib/utils";
+import { useChatStore } from "@/store/useChatStore";
+import { MessageListHeader } from "./MessageListHeader";
+import { getOrderedMessages } from "@/store/useChatStore/utils";
 
 type MessageListProps = {
-  messages: ChatMessage[];
-  isProcessing: boolean;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
-  onHtmlClick?: ({
-    html,
-    messageId,
-  }: {
-    html: string;
-    messageId: string;
-  }) => void;
-  header?: React.ReactNode;
 };
 
-export function MessageList({
-  messages,
-  isProcessing,
-  onActionClick,
-  onActionHold,
-  onHtmlClick,
-  header,
-}: MessageListProps) {
+export function MessageList({ onActionClick, onActionHold }: MessageListProps) {
+  const isProcessing = useChatStore((state) => state.isProcessing);
+  const messagesMap = useChatStore((state) => state.messages);
+  const messageOrder = useChatStore((state) => state.messageOrder);
+
+  const messages = getOrderedMessages(messagesMap, messageOrder);
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,7 +37,7 @@ export function MessageList({
 
   return (
     <ScrollArea className="h-screen" ref={scrollRef}>
-      {header}
+      <MessageListHeader />
       <div
         className={cn(
           "relative w-full max-h-full space-y-4 px-4 pt-6 pb-28 mx-auto",
@@ -59,7 +50,6 @@ export function MessageList({
             message={message}
             onActionClick={onActionClick}
             onActionHold={onActionHold}
-            onHtmlClick={onHtmlClick}
           />
         ))}
         {isProcessing && <TypingIndicator />}

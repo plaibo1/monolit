@@ -14,14 +14,12 @@ type MessageBubbleProps = {
   message: ChatMessage;
   onActionClick: (query: string) => void;
   onActionHold?: (query: string) => void;
-  onHtmlClick?: (params: { html: string; messageId: string }) => void;
 };
 
 export function MessageBubble({
   message,
   onActionClick,
   onActionHold,
-  onHtmlClick,
 }: MessageBubbleProps) {
   // Message type checks
   const isUser = message.role === "user";
@@ -78,13 +76,7 @@ export function MessageBubble({
           />
         )}
 
-        {isHtml && (
-          <HtmlMessage
-            message={message}
-            isLoading={isEmpty}
-            onHtmlClick={onHtmlClick}
-          />
-        )}
+        {isHtml && <HtmlMessage message={message} isLoading={isEmpty} />}
       </div>
     </div>
   );

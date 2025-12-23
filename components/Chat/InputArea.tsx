@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Mic, StopCircle, ArrowRight } from "lucide-react";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { cn } from "@/lib/utils";
+import { useChatStore } from "@/store/useChatStore";
 
 type InputAreaProps = {
   onSendMessage: (message: string) => void;
-  disabled: boolean;
+  disabled?: boolean;
 };
 
 export type InputAreaRef = {
@@ -27,7 +28,11 @@ const MIN_HEIGHT = 44; // Минимальная высота для одной 
 const MAX_HEIGHT = 200; // Максимальная высота
 
 export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
-  ({ onSendMessage, disabled }, ref) => {
+  ({ onSendMessage, disabled: disabledProp }, ref) => {
+    const isProcessing = useChatStore((state) => state.isProcessing);
+
+    const disabled = disabledProp || isProcessing;
+
     const [input, setInput] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [isFocused, setIsFocused] = useState(false);
