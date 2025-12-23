@@ -7,6 +7,19 @@ import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { AlertCircle } from "lucide-react";
+import { useShallow } from "zustand/react/shallow";
+import { ChatState } from "@/store/useChatStore";
+
+const shallow = (state: ChatState) => ({
+  addMessage: state.addMessage,
+  updateMessage: state.updateMessage,
+  addActionToMessage: state.addActionToMessage,
+  addStepToMessage: state.addStepToMessage,
+  updateStepInMessage: state.updateStepInMessage,
+  clearMessages: state.clearMessages,
+  onTaskStart: state.onTaskStart,
+  onTaskEnd: state.onTaskEnd,
+});
 
 export const ChatCore = () => {
   const { chatId } = useParams<{ chatId: string }>();
@@ -21,7 +34,7 @@ export const ChatCore = () => {
     clearMessages,
     onTaskStart,
     onTaskEnd,
-  } = useChatStore();
+  } = useChatStore(useShallow(shallow));
 
   const handleWebSocketMessage = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -73,6 +86,7 @@ export const ChatCore = () => {
         {
           cancel: true,
           dismissible: true,
+          position: "top-center",
           action: (
             <>
               <Button variant="outline" onClick={reconnect}>

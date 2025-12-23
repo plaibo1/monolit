@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { ActionButton, ChatMessage, ExecutionStep } from "@/types/chat";
 
-interface ChatState {
+export interface ChatState {
   isProcessing: boolean;
   messages: Map<string, ChatMessage>;
   messageOrder: string[];
@@ -17,10 +17,12 @@ interface ChatState {
 
   loadHistory: (history: ChatMessage[]) => void;
   clearMessages: () => void;
-  getOrderedMessages: () => ChatMessage[];
 
   onTaskStart: () => void;
   onTaskEnd: () => void;
+
+  chatHtmlId: string | null;
+  setChatHtmlId: (id: string | null) => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -28,7 +30,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messages: new Map(),
   messageOrder: [],
   currentAssistantMessageId: null,
-  socketStatus: "disconnected",
+  chatHtmlId: null,
 
   addMessage: (message: ChatMessage, isAssistant = false) => {
     set((state) => {
@@ -129,18 +131,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
     set({ messages: new Map(), messageOrder: [] });
   },
 
-  getOrderedMessages: () => {
-    const { messages, messageOrder } = get();
-
-    return messageOrder.reduce((acc, id) => {
-      const message = messages.get(id);
-      if (message) {
-        acc.push(message);
-      }
-      return acc;
-    }, [] as ChatMessage[]);
-  },
-
   onTaskStart: () => {
     set(() => {
       return { isProcessing: true };
@@ -150,6 +140,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
   onTaskEnd: () => {
     set(() => {
       return { isProcessing: false, currentAssistantMessageId: null };
+    });
+  },
+
+  setChatHtmlId: (id: string | null) => {
+    set(() => {
+      return { chatHtmlId: id };
     });
   },
 }));

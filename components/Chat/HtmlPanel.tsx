@@ -5,6 +5,7 @@ import {
   Upload,
   XIcon,
 } from "lucide-react";
+
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import {
@@ -17,20 +18,16 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { LiquidGlassIframe } from "../LiquidGlassIframe";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import { useChatStore } from "@/store/useChatStore";
 
 interface HtmlPanelProps {
-  messageId: string;
   chatId: string;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
 }
 
-export function HtmlPanel({
-  messageId,
-  chatId,
-  open,
-  onOpenChange,
-}: HtmlPanelProps) {
+export function HtmlPanel({ chatId }: HtmlPanelProps) {
+  const messageId = useChatStore((state) => state.chatHtmlId);
+  const setChatHtmlId = useChatStore((state) => state.setChatHtmlId);
+
   const [title, setTitle] = useState("Dashboard");
 
   const [publishState, setPublishState] = useState({
@@ -40,12 +37,12 @@ export function HtmlPanel({
   });
   const [loading, setLoading] = useState(false);
 
-  const url = getHtmlReportUrl({ chatId, messageId });
+  const url = getHtmlReportUrl({ chatId, messageId: messageId || "" });
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    if (open) {
+    if (messageId) {
       // fetch publish status
       setLoading(true);
       getDashboardPublishStatus({ chatId, messageId })
@@ -59,9 +56,11 @@ export function HtmlPanel({
           setLoading(false);
         });
     }
-  }, [chatId, messageId, open]);
+  }, [chatId, messageId]);
 
   const handlePublish = () => {
+    if (!messageId) return;
+
     setLoading(true);
     publishDashboard({
       chatId,
@@ -105,8 +104,14 @@ export function HtmlPanel({
     }
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      setChatHtmlId(null);
+    }
+  };
+
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={messageId !== null} onOpenChange={handleOpenChange}>
       <SheetContent
         className="w-full sm:max-w-full md:w-[60%] md:max-w-[60%] p-0 gap-0"
         side="right"
@@ -144,7 +149,7 @@ export function HtmlPanel({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
               className="ml-4"
             >
               <XIcon className="w-4 h-4" />
