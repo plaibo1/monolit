@@ -5,9 +5,32 @@ import useSWRMutation from "swr/mutation";
 
 import { ShareType } from "@/types/chat";
 import { fetcher } from "@/lib/fetcher";
+import { API_BASE_URL } from "@/lib/consts";
+
+export const useChat = (chatId: string) => {
+  const { data, error, isLoading } = useSWR(
+    `${API_BASE_URL}/chats/${chatId}`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }
+  );
+
+  return {
+    data,
+    error,
+    isLoading,
+  };
+};
 
 export const useGetChatPublishStatus = (chatId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chats/reports/${chatId}/share`;
+  const url = `${API_BASE_URL}/chats/reports/${chatId}/share`;
 
   const { data, error, isLoading } = useSWR<ShareType>(url, fetcher, {
     revalidateOnFocus: false,
@@ -21,7 +44,7 @@ export const useGetChatPublishStatus = (chatId: string) => {
 };
 
 export const useChatPublish = (chatId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/chats/reports/${chatId}/share`;
+  const url = `${API_BASE_URL}/chats/reports/${chatId}/share`;
 
   const { data, error, isLoading, mutate } = useSWR<ShareType>(url, fetcher, {
     revalidateOnFocus: false,

@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { AlertCircle } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { ChatState } from "@/store/useChatStore";
+import { useChat } from "@/api/chat";
 
 const shallow = (state: ChatState) => ({
   addMessage: state.addMessage,
@@ -24,6 +25,8 @@ const shallow = (state: ChatState) => ({
 export const ChatCore = () => {
   const { chatId } = useParams<{ chatId: string }>();
   const websocketUrl = getWebSocketUrl(chatId);
+
+  const { data, isLoading } = useChat(chatId);
 
   const {
     addMessage,
@@ -73,9 +76,16 @@ export const ChatCore = () => {
     ]
   );
 
+  useEffect(() => {
+    if (data && !isLoading) {
+      handleWebSocketMessage(data);
+    }
+  }, [data, isLoading]);
+
   const { status, reconnect } = useWebSocket({
     url: websocketUrl,
     onMessage: handleWebSocketMessage,
+    awaitHistory: !!data && !isLoading,
   });
 
   useEffect(() => {
@@ -121,12 +131,6 @@ export const ChatCore = () => {
       window.removeEventListener("focus", handler);
     };
   }, [status, reconnect]);
-
-  useEffect(() => {
-    return () => {
-      clearMessages();
-    };
-  }, []);
 
   return null;
 };
