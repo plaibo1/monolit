@@ -85,7 +85,6 @@ export const ChatCore = () => {
   const { status, reconnect } = useWebSocket({
     url: websocketUrl,
     onMessage: handleWebSocketMessage,
-    awaitHistory: !!data && !isLoading,
   });
 
   useEffect(() => {
@@ -121,7 +120,6 @@ export const ChatCore = () => {
     const handler = () => {
       if (status === "disconnected") {
         reconnect();
-        clearMessages();
       }
     };
 
@@ -131,6 +129,12 @@ export const ChatCore = () => {
       window.removeEventListener("focus", handler);
     };
   }, [status, reconnect]);
+
+  useEffect(() => {
+    return () => {
+      clearMessages();
+    };
+  }, []);
 
   return null;
 };

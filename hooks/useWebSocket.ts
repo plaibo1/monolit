@@ -15,7 +15,6 @@ type UseWebSocketOptions = {
   protocols?: string | string[];
   shouldReconnect?: boolean;
 
-  awaitHistory?: boolean;
   devDisable?: boolean;
 };
 
@@ -31,7 +30,6 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     protocols,
     shouldReconnect = true,
     devDisable = false,
-    awaitHistory = false,
   } = options;
 
   const status = useSocketStore((state) => state.socketStatus);
@@ -140,7 +138,6 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
     shouldReconnect,
     reconnectAttempts,
     reconnectInterval,
-    awaitHistory,
   ]);
 
   // Отправка сообщений
@@ -181,8 +178,6 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
 
   // Подключение при монтировании
   useEffect(() => {
-    if (awaitHistory) return;
-
     console.log("CONNECTED URL: ", url);
     connect();
 
@@ -199,7 +194,7 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
         ws.current.close(1000, "Component unmounting");
       }
     };
-  }, [connect, awaitHistory]);
+  }, [connect]);
 
   return {
     status,

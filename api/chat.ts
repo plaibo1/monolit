@@ -30,7 +30,7 @@ export const useChat = (chatId: string) => {
 };
 
 export const useGetChatPublishStatus = (chatId: string) => {
-  const url = `${API_BASE_URL}/chats/reports/${chatId}/share`;
+  const url = `${API_BASE_URL}/chats/reports/${chatId}/info`;
 
   const { data, error, isLoading } = useSWR<ShareType>(url, fetcher, {
     revalidateOnFocus: false,
@@ -44,18 +44,26 @@ export const useGetChatPublishStatus = (chatId: string) => {
 };
 
 export const useChatPublish = (chatId: string) => {
-  const url = `${API_BASE_URL}/chats/reports/${chatId}/share`;
+  const url = `${API_BASE_URL}/chats/reports/${chatId}`;
+  const infoUrl = `${url}/info`;
+  const shareUrl = `${url}/share`;
 
-  const { data, error, isLoading, mutate } = useSWR<ShareType>(url, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data, error, isLoading, mutate } = useSWR<ShareType>(
+    infoUrl,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+    }
+  );
 
   const {
     trigger,
     isMutating,
     error: mutationError,
-  } = useSWRMutation(url, (url, { arg }: { arg: { shared: boolean } }) =>
-    fetcher(url, { method: "POST", body: JSON.stringify(arg) })
+  } = useSWRMutation(
+    shareUrl,
+    (shareUrl, { arg }: { arg: { shared: boolean } }) =>
+      fetcher(shareUrl, { method: "POST", body: JSON.stringify(arg) })
   );
 
   const publish = (shared: boolean) =>
