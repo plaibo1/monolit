@@ -20,14 +20,20 @@ export function ChatLayout({ children }: ChatLayoutProps) {
 
   // Expand on desktop by default
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsSidebarCollapsed(false);
-      }
-    };
+    const storedState = localStorage.getItem("sidebar_collapsed");
 
-    // Initial check
-    handleResize();
+    if (storedState !== null) {
+      setIsSidebarCollapsed(JSON.parse(storedState));
+    } else {
+      const handleResize = () => {
+        if (window.innerWidth >= 768) {
+          setIsSidebarCollapsed(false);
+        }
+      };
+
+      // Initial check
+      handleResize();
+    }
 
     // Optional: Listen for resize if we want dynamic behavior,
     // but usually we just want initial state.
@@ -35,7 +41,11 @@ export function ChatLayout({ children }: ChatLayoutProps) {
   }, []);
 
   const handleToggleSidebar = useCallback(() => {
-    setIsSidebarCollapsed((prev) => !prev);
+    setIsSidebarCollapsed((prev) => {
+      const newState = !prev;
+      localStorage.setItem("sidebar_collapsed", JSON.stringify(newState));
+      return newState;
+    });
   }, []);
 
   return (

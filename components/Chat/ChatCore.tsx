@@ -98,18 +98,24 @@ export const ChatCore = () => {
           position: "top-center",
           action: (
             <>
-              <Button variant="outline" onClick={reconnect}>
+              <Button
+                variant="outline"
+                // onClick={reconnect}
+                onClick={() => {
+                  window.location.reload();
+                }}
+              >
                 Retry
               </Button>
 
-              <Button
+              {/* <Button
                 variant="outline"
                 onClick={() => {
                   window.location.reload();
                 }}
               >
                 Reload
-              </Button>
+              </Button> */}
             </>
           ),
           icon: <AlertCircle className="h-4 w-4" />,
