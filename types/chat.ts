@@ -14,6 +14,7 @@ export type UserMessage = {
 // Agent messages (multiple event types)
 export type AgentMessage = {
   type: "agent";
+  message_id?: string | undefined;
   message: [AgentEventType, AgentPayload];
 };
 

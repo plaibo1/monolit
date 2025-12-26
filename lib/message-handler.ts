@@ -54,14 +54,6 @@ export class ChatMessageHandler {
           return;
         }
 
-        if (message.message[1]) {
-          if (
-            message.message[1].id === "13727bf4-cc01-49d7-9a4b-c451d167fb91"
-          ) {
-            console.log("🚀 ~ handleMessage ~ payload:", message.message[1]);
-          }
-        }
-
         if (message.type === "system") {
           if (message.message?.text === "start_processing") {
             this.callbacks.onTaskStart();
