@@ -1,16 +1,35 @@
 import { ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { ChatMessage } from "@/types/chat";
 import { useChatStore } from "@/store/useChatStore";
+import { Report } from "@/types/chat";
 
-export const HtmlMessageContent = ({ message }: { message: ChatMessage }) => {
+export const HtmlMessageContent = ({
+  messageBlockId,
+  report,
+}: {
+  messageBlockId: string;
+  report: Report;
+}) => {
   const setChatHtmlId = useChatStore((state) => state.setChatHtmlId);
+  const completedMessageIds = useChatStore(
+    (state) => state.completedMessageIds
+  );
+  const isCompleted = completedMessageIds.has(messageBlockId);
+
+  if (!isCompleted) {
+    return null;
+  }
+
+  const isReportCreated = report.created;
 
   return (
     <Card
       className="w-full h-auto min-h-[100px] p-[1px] border-0 bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer flex flex-col justify-center relative group overflow-hidden rounded-xl"
       onClick={() => {
-        setChatHtmlId(message.id);
+        if (!isReportCreated) {
+          return;
+        }
+        setChatHtmlId(messageBlockId);
       }}
     >
       {/* Border Beam Animation - Behind the content */}
@@ -29,20 +48,24 @@ export const HtmlMessageContent = ({ message }: { message: ChatMessage }) => {
         <div className="absolute inset-0 rounded-[11px] border border-white/5 pointer-events-none z-0" />
 
         {/* Action Trigger */}
-        <div className="absolute top-4 right-4 text-zinc-600 group-hover:text-white transition-colors z-20">
-          <ArrowUpRight className="w-5 h-5" />
-        </div>
+        {isReportCreated && (
+          <div className="absolute top-4 right-4 text-zinc-600 group-hover:text-white transition-colors z-20">
+            <ArrowUpRight className="w-5 h-5" />
+          </div>
+        )}
 
         {/* Header (Title) */}
         <h2 className="text-3xl sm:text-4xl font-black tracking-tighter uppercase mb-2 relative z-10">
-          DASHBOARD
+          {isReportCreated ? "DASHBOARD" : "GENERATE"}
           <br />
           REPORT
         </h2>
 
         {/* Subheader (Metadata) */}
         <div className="text-[10px] sm:text-xs font-mono text-zinc-500 uppercase tracking-wider relative z-10">
-          ANALYSIS WAS COMPLETED
+          {isReportCreated
+            ? "ANALYSIS WAS COMPLETED"
+            : "REPORT IS BEING GENERATED"}
         </div>
       </div>
     </Card>

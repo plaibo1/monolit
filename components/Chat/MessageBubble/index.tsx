@@ -9,6 +9,7 @@ import { ExecutionSteps } from "./components/ExecutionSteps";
 import { MessageActions } from "./components/MessageActions";
 import { cn } from "@/lib/utils";
 import { HtmlMessage } from "./components/HtmlMessage";
+import { ActionHeader } from "../ActionHeader";
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -25,7 +26,7 @@ export function MessageBubble({
   const isUser = message.role === "user";
   const isUnknown = message.role === "unknown";
   const isEmpty = !message.content || message.content.trim() === "";
-  const isHtml = message.type === "final_html";
+  const isFollowUp = message.type === "assistant_message_follow_up";
 
   const renderMessageContent = () => {
     if (isUnknown) {
@@ -38,13 +39,11 @@ export function MessageBubble({
       return <UserMessage content={message.content} />;
     }
 
-    return (
-      <AgentMessageContent
-        content={message.content}
-        isEmpty={isEmpty}
-        messageType={message.type}
-      />
-    );
+    if (isFollowUp) {
+      return <ActionHeader />;
+    }
+
+    return <AgentMessageContent content={message.content} isEmpty={isEmpty} />;
   };
 
   return (
@@ -73,6 +72,11 @@ export function MessageBubble({
           />
         )}
 
+        {/* Временное решение чтобы рисовать только под ExecutionSteps */}
+        {!isUser && !message.actions?.length && (
+          <HtmlMessage message={message} />
+        )}
+
         {!isUser && (
           <MessageActions
             actions={message.actions}
@@ -80,8 +84,6 @@ export function MessageBubble({
             onActionHold={onActionHold}
           />
         )}
-
-        {isHtml && <HtmlMessage message={message} isLoading={isEmpty} />}
       </div>
     </div>
   );

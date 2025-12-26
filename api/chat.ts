@@ -3,7 +3,7 @@
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { ShareType } from "@/types/chat";
+import { ChatInfo, ShareType } from "@/types/chat";
 import { fetcher } from "@/lib/fetcher";
 import { API_BASE_URL } from "@/lib/consts";
 
@@ -29,10 +29,10 @@ export const useChat = (chatId: string) => {
   };
 };
 
-export const useGetChatPublishStatus = (chatId: string) => {
+export const useGetChatInfo = (chatId: string) => {
   const url = `${API_BASE_URL}/chats/reports/${chatId}/info`;
 
-  const { data, error, isLoading } = useSWR<ShareType>(url, fetcher, {
+  const { data, error, isLoading } = useSWR<ChatInfo>(url, fetcher, {
     revalidateOnFocus: false,
   });
 

@@ -165,5 +165,17 @@ export type ShareType = {
   can_modify: boolean;
 };
 
+export type Report = ShareType & {
+  active: boolean;
+  created: boolean;
+};
+
+export type ChatInfo = ShareType & {
+  active: boolean;
+  reports: {
+    [key: string]: Report;
+  };
+};
+
 export type ShareDashboardResponse = DefaultResponse<ShareType>;
 export type ShareChatResponse = DefaultResponse<ShareType>;

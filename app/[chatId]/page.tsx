@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetChatPublishStatus } from "@/api/chat";
+import { useGetChatInfo } from "@/api/chat";
 import { ChatInterface } from "@/components/Chat";
 import { useAuth } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
@@ -14,7 +14,7 @@ export default function ChatPage({ params }: PageProps) {
   const { chatId } = use(params);
 
   const { isAuthenticated, isLoading } = useAuth();
-  const { data, isLoading: isLoadingChat } = useGetChatPublishStatus(chatId);
+  const { data, isLoading: isLoadingChat } = useGetChatInfo(chatId);
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading && !isLoadingChat && !data?.can_read) {
