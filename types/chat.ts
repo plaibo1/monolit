@@ -101,6 +101,7 @@ export type ChatMessage = {
   steps?: ExecutionStep[];
   rawData?: any; // Store raw message data for unknown messages
   type?: MessageTypes;
+  messageBlockId?: string;
 };
 
 export type ExecutionStep = {

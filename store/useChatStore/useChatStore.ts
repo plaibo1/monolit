@@ -19,10 +19,12 @@ export interface ChatState {
   clearMessages: () => void;
 
   onTaskStart: () => void;
-  onTaskEnd: () => void;
+  onTaskEnd: (messageId?: string) => void;
 
   chatHtmlId: string | null;
   setChatHtmlId: (id: string | null) => void;
+
+  completedMessageIds: Set<string>;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -31,6 +33,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   messageOrder: [],
   currentAssistantMessageId: null,
   chatHtmlId: null,
+  completedMessageIds: new Set(),
 
   addMessage: (message: ChatMessage, isAssistant = false) => {
     set((state) => {
@@ -137,9 +140,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
     });
   },
 
-  onTaskEnd: () => {
-    set(() => {
-      return { isProcessing: false, currentAssistantMessageId: null };
+  onTaskEnd: (messageId?: string) => {
+    set((state) => {
+      const newCompletedIds = new Set(state.completedMessageIds);
+      if (messageId) {
+        newCompletedIds.add(messageId);
+      }
+      return {
+        isProcessing: false,
+        currentAssistantMessageId: null,
+        completedMessageIds: newCompletedIds,
+      };
     });
   },
 

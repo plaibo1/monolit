@@ -66,7 +66,12 @@ export function MessageBubble({
           {renderMessageContent()}
         </div>
 
-        {!isUser && message.steps && <ExecutionSteps steps={message.steps} />}
+        {!isUser && message.steps && (
+          <ExecutionSteps
+            steps={message.steps}
+            messageId={message.messageBlockId}
+          />
+        )}
 
         {!isUser && (
           <MessageActions

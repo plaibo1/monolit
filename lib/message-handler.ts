@@ -25,7 +25,7 @@ export type ChatMessageHandlerCallbacks = {
   onUpdateStep: (id: string, updates: Partial<ExecutionStep>) => void;
   onAction: (messageId: string, action: ActionButton) => void;
   onTaskStart: () => void;
-  onTaskEnd: () => void;
+  onTaskEnd: (messageId?: string) => void;
   onFirstInteraction: (data: FirstInteractionPayload) => void;
   onClearAsk: () => void;
   onClearCallFn: () => void;
@@ -61,7 +61,7 @@ export class ChatMessageHandler {
           }
 
           if (message.message?.text === "finish_processing_success") {
-            this.callbacks.onTaskEnd();
+            this.callbacks.onTaskEnd((message as AgentMessage).message_id);
             return;
           }
 
@@ -128,11 +128,11 @@ export class ChatMessageHandler {
         break;
 
       case "task_end":
-        this.callbacks.onTaskEnd();
+        this.callbacks.onTaskEnd(data.message_id);
         break;
 
       case "new_message":
-        this.handleNewMessage(payload as MessagePayload);
+        this.handleNewMessage(payload as MessagePayload, data.message_id);
         break;
 
       case "update_message":
@@ -157,11 +157,14 @@ export class ChatMessageHandler {
     }
   }
 
-  private handleNewMessage(payload: MessagePayload) {
+  private handleNewMessage(payload: MessagePayload, messageBlockId?: string) {
     const category = categorizeMessage(payload);
 
     if (category === "chat") {
       const message = messagePayloadToChatMessage(payload);
+      if (messageBlockId) {
+        message.messageBlockId = messageBlockId;
+      }
       this.callbacks.onAssistantMessage(message);
     } else if (category === "step") {
       const step = messagePayloadToStep(payload);
