@@ -20,6 +20,9 @@ export async function sendMessage(
     body: JSON.stringify({
       text,
       chat_id: chatId,
+      ...(process.env.NEXT_PUBLIC_MESSAGE_DEBUG === "true" && {
+        debug: true,
+      }),
     }),
   });
 
