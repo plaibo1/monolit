@@ -73,7 +73,7 @@ export function MessageBubble({
         )}
 
         {/* Временное решение чтобы рисовать только под ExecutionSteps */}
-        {!isUser && !message.actions?.length && (
+        {!isUser && !message.actions?.length && !isEmpty && (
           <HtmlMessage message={message} />
         )}
 

@@ -12,7 +12,7 @@ export const HtmlMessage = ({ message }: { message: ChatMessage }) => {
     return null;
   }
 
-  if (data?.reports[message.messageBlockId].active) {
+  if (data?.reports[message.messageBlockId]?.active) {
     return <GridArchitectLoader />;
   }
 

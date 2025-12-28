@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import { AlertCircle } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
 import { ChatState } from "@/store/useChatStore";
-import { useChat } from "@/api/chat";
+import { useChat, useGetChatInfo } from "@/api/chat";
 
 const shallow = (state: ChatState) => ({
   addMessage: state.addMessage,
@@ -27,6 +27,7 @@ export const ChatCore = () => {
   const websocketUrl = getWebSocketUrl(chatId);
 
   const { data, isLoading } = useChat(chatId);
+  const { mutate } = useGetChatInfo(chatId);
 
   const {
     addMessage,
@@ -63,6 +64,9 @@ export const ChatCore = () => {
           // Handle clear call function if needed
         },
         onUnknownMessage: addMessage,
+        onHtmlGenerated: () => {
+          mutate();
+        },
       });
 
       handler.handleMessage(data);
@@ -140,7 +144,7 @@ export const ChatCore = () => {
     return () => {
       clearMessages();
     };
-  }, []);
+  }, [chatId]);
 
   return null;
 };

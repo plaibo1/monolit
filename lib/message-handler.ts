@@ -30,6 +30,7 @@ export type ChatMessageHandlerCallbacks = {
   onClearAsk: () => void;
   onClearCallFn: () => void;
   onUnknownMessage: (message: ChatMessage) => void;
+  onHtmlGenerated: (messageId?: string) => void;
 };
 
 export class ChatMessageHandler {
@@ -62,6 +63,13 @@ export class ChatMessageHandler {
 
           if (message.message?.text === "finish_processing_success") {
             this.callbacks.onTaskEnd((message as AgentMessage).message_id);
+            return;
+          }
+
+          if (message.message?.text === "html_generated") {
+            this.callbacks.onHtmlGenerated(
+              (message as AgentMessage).message_id
+            );
             return;
           }
 

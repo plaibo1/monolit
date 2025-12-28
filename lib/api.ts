@@ -82,7 +82,7 @@ export const getDashboardPublishStatus = async ({
   chatId: string;
   messageId: string;
 }): Promise<ShareDashboardResponse> => {
-  const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/share`);
+  const data = await fetch(`${getHtmlReportUrl({ chatId, messageId })}/info`);
 
   if (!data.ok) {
     throw new Error("Failed to get dashboard publish status");
