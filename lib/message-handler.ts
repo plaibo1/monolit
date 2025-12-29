@@ -25,11 +25,12 @@ export type ChatMessageHandlerCallbacks = {
   onUpdateStep: (id: string, updates: Partial<ExecutionStep>) => void;
   onAction: (messageId: string, action: ActionButton) => void;
   onTaskStart: () => void;
-  onTaskEnd: () => void;
+  onTaskEnd: (messageId?: string) => void;
   onFirstInteraction: (data: FirstInteractionPayload) => void;
   onClearAsk: () => void;
   onClearCallFn: () => void;
   onUnknownMessage: (message: ChatMessage) => void;
+  onHtmlGenerated: (messageId?: string) => void;
 };
 
 export class ChatMessageHandler {
@@ -54,14 +55,6 @@ export class ChatMessageHandler {
           return;
         }
 
-        if (message.message[1]) {
-          if (
-            message.message[1].id === "13727bf4-cc01-49d7-9a4b-c451d167fb91"
-          ) {
-            console.log("🚀 ~ handleMessage ~ payload:", message.message[1]);
-          }
-        }
-
         if (message.type === "system") {
           if (message.message?.text === "start_processing") {
             this.callbacks.onTaskStart();
@@ -69,7 +62,14 @@ export class ChatMessageHandler {
           }
 
           if (message.message?.text === "finish_processing_success") {
-            this.callbacks.onTaskEnd();
+            this.callbacks.onTaskEnd((message as AgentMessage).message_id);
+            return;
+          }
+
+          if (message.message?.text === "html_generated") {
+            this.callbacks.onHtmlGenerated(
+              (message as AgentMessage).message_id
+            );
             return;
           }
 
@@ -136,11 +136,11 @@ export class ChatMessageHandler {
         break;
 
       case "task_end":
-        this.callbacks.onTaskEnd();
+        this.callbacks.onTaskEnd(data.message_id);
         break;
 
       case "new_message":
-        this.handleNewMessage(payload as MessagePayload);
+        this.handleNewMessage(payload as MessagePayload, data.message_id);
         break;
 
       case "update_message":
@@ -165,11 +165,14 @@ export class ChatMessageHandler {
     }
   }
 
-  private handleNewMessage(payload: MessagePayload) {
+  private handleNewMessage(payload: MessagePayload, messageBlockId?: string) {
     const category = categorizeMessage(payload);
 
     if (category === "chat") {
       const message = messagePayloadToChatMessage(payload);
+      if (messageBlockId) {
+        message.messageBlockId = messageBlockId;
+      }
       this.callbacks.onAssistantMessage(message);
     } else if (category === "step") {
       const step = messagePayloadToStep(payload);

@@ -14,6 +14,7 @@ export type UserMessage = {
 // Agent messages (multiple event types)
 export type AgentMessage = {
   type: "agent";
+  message_id?: string | undefined;
   message: [AgentEventType, AgentPayload];
 };
 
@@ -100,6 +101,7 @@ export type ChatMessage = {
   steps?: ExecutionStep[];
   rawData?: any; // Store raw message data for unknown messages
   type?: MessageTypes;
+  messageBlockId?: string;
 };
 
 export type ExecutionStep = {
@@ -161,6 +163,18 @@ export type ShareType = {
   shared: boolean;
   can_read: boolean;
   can_modify: boolean;
+};
+
+export type Report = ShareType & {
+  active: boolean;
+  created: boolean;
+};
+
+export type ChatInfo = ShareType & {
+  active: boolean;
+  reports: {
+    [key: string]: Report;
+  };
 };
 
 export type ShareDashboardResponse = DefaultResponse<ShareType>;

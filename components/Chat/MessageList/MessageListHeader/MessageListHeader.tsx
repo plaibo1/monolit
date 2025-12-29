@@ -1,21 +1,18 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Wifi, WifiOff } from "lucide-react";
+// import { Badge } from "@/components/ui/badge";
+// import { Wifi, WifiOff } from "lucide-react";
 import { ShareChat } from "./ShareChat";
+// import { useSocketStore } from "@/store/useSocketStore";
 
-interface MessageListHeaderProps {
-  connectionStatus: string;
-}
+export function MessageListHeader() {
+  // const connectionStatus = useSocketStore((state) => state.socketStatus);
 
-export function MessageListHeader({
-  connectionStatus,
-}: MessageListHeaderProps) {
   return (
     <div className="sticky top-0 z-30 p-4 flex items-center justify-end gap-2">
       <ShareChat />
 
-      <Badge
+      {/* <Badge
         variant={connectionStatus === "connected" ? "default" : "destructive"}
         className="gap-1"
       >
@@ -25,7 +22,7 @@ export function MessageListHeader({
           <WifiOff className="w-3 h-3" />
         )}
         <span className="hidden sm:inline">{connectionStatus}</span>
-      </Badge>
+      </Badge> */}
     </div>
   );
 }
