@@ -34,6 +34,7 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
 
   const status = useSocketStore((state) => state.socketStatus);
   const setStatus = useSocketStore((state) => state.setSocketStatus);
+  const addLog = useSocketStore((state) => state.addLog);
 
   const ws = useRef<WebSocket | null>(null);
   const reconnectCount = useRef(0);
@@ -73,6 +74,7 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
       ws.current.onopen = () => {
         console.log("WebSocket connected");
         setStatus("connected");
+        addLog({ type: "info", message: "WebSocket connected", data: { url } });
         reconnectCount.current = 0;
 
         // Отправляем накопленные сообщения из очереди
@@ -87,10 +89,16 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
       ws.current.onmessage = (event: MessageEvent) => {
         try {
           const data = JSON.parse(event.data);
+          addLog({ type: "in", message: "Received message", data });
           setLastMessage(data);
           onMessageRef.current(data);
         } catch (error) {
           console.error("Error parsing message:", error);
+          addLog({
+            type: "error",
+            message: "Error parsing message",
+            data: { error, raw: event.data },
+          });
           onMessageRef.current(event.data);
         }
       };
@@ -98,16 +106,23 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
       ws.current.onerror = (error: Event) => {
         console.error("WebSocket error:", error);
         setStatus("error");
+        addLog({ type: "error", message: "WebSocket error", data: error });
         onErrorRef.current?.(error);
       };
 
       ws.current.onclose = (event: CloseEvent) => {
         console.log("WebSocket closed:", event.code, event.reason);
         setStatus("disconnected");
+        addLog({
+          type: "info",
+          message: "WebSocket closed",
+          data: { code: event.code, reason: event.reason },
+        });
         onCloseRef.current?.();
 
         if (event.code === 1006) {
           setStatus("error");
+          addLog({ type: "error", message: "Abnormal closure (1006)" });
         }
 
         // Автоматическое переподключение
@@ -146,8 +161,10 @@ export const useWebSocket = (options: UseWebSocketOptions) => {
 
     if (ws.current?.readyState === WebSocket.OPEN) {
       ws.current.send(message);
+      addLog({ type: "out", message: "Sent message", data: message });
     } else {
       console.warn("WebSocket is not connected. Message queued.");
+      addLog({ type: "info", message: "Message queued (disconnected)" });
       messageQueue.current.push(message);
     }
   }, []);

@@ -13,6 +13,8 @@ export const useChat = (chatId: string) => {
     fetcher,
     {
       revalidateOnFocus: false,
+      revalidateIfStale: false,
+
       onSuccess: (data) => {
         console.log(data);
       },

@@ -1,5 +1,6 @@
 import { ShareDashboardResponse } from "@/types/chat";
 import { API_BASE_URL, WS_URL } from "./consts";
+import { isHesoyamCodeString } from "@/components/Chat/ChatDebugger/utils";
 
 export type SendMessageResponse = {
   status: number;
@@ -20,7 +21,8 @@ export async function sendMessage(
     body: JSON.stringify({
       text,
       chat_id: chatId,
-      ...(process.env.NEXT_PUBLIC_MESSAGE_DEBUG === "true" && {
+      ...((process.env.NEXT_PUBLIC_MESSAGE_DEBUG === "true" ||
+        isHesoyamCodeString(text)) && {
         debug: true,
       }),
     }),

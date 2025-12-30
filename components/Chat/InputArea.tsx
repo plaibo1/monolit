@@ -13,6 +13,10 @@ import { Mic, StopCircle, ArrowRight } from "lucide-react";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { cn } from "@/lib/utils";
 import { useChatStore } from "@/store/useChatStore";
+import {
+  dispatchChatDebuggerEvent,
+  isKonamiCodeString,
+} from "./ChatDebugger/utils";
 
 type InputAreaProps = {
   onSendMessage: (message: string) => void;
@@ -81,8 +85,15 @@ export const InputArea = forwardRef<InputAreaRef, InputAreaProps>(
     }, [input]);
 
     const handleSend = () => {
-      if (input.trim() && !disabled) {
-        onSendMessage(input.trim());
+      const message = input.trim();
+      if (message && !disabled) {
+        if (isKonamiCodeString(message)) {
+          dispatchChatDebuggerEvent();
+          setInput("debug was activated");
+          return;
+        }
+
+        onSendMessage(message);
         setInput("");
         resetTranscript();
       }
