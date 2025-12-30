@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChatDebugger } from "../ChatDebugger/ChatDebugger";
 
 type ChatLayoutProps = {
   children: React.ReactNode;
@@ -80,6 +81,7 @@ export function ChatLayout({ children }: ChatLayoutProps) {
       >
         {children}
       </main>
+      <ChatDebugger />
     </div>
   );
 }
